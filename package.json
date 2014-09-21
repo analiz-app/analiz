@@ -1,0 +1,36 @@
+{
+  "name": "analiz",
+  "version": "0.0.1",
+  "description": "A complete analysis toolkit for web developers.",
+  "private": true,
+  "homepage": "https://github.com/hepl-ria/analiz",
+  "contributors":
+  [
+    {
+      "name": "Pierre-Antoine 'leny' Delnatte",
+      "email": "info@flatland.be",
+      "url": "http://leny.me"
+    },
+    {
+      "name": "Dominique Vilain",
+      "email": "domi@domy.be",
+      "url": "http://www.web-artisan.be/"
+    },
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hepl-ria/analiz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hepl-ria/analiz/issues"
+  },
+  "licenses": [
+    {
+      "type": "UNLICENSE",
+      "url": "https://github.com/hepl-ria/analiz/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.10.0"
+  }
+}

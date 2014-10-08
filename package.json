@@ -4,8 +4,7 @@
   "description": "A complete analysis toolkit for web developers.",
   "private": true,
   "homepage": "https://github.com/hepl-ria/analiz",
-  "contributors":
-  [
+  "contributors": [
     {
       "name": "Pierre-Antoine 'leny' Delnatte",
       "email": "info@flatland.be",
@@ -15,7 +14,7 @@
       "name": "Dominique Vilain",
       "email": "domi@domy.be",
       "url": "http://www.web-artisan.be/"
-    },
+    }
   ],
   "repository": {
     "type": "git",
@@ -32,5 +31,19 @@
   ],
   "engines": {
     "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bumpup": "^0.6.1",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compress": "^0.12.0",
+    "grunt-contrib-copy": "^0.6.0",
+    "grunt-contrib-stylus": "^0.20.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-install-dependencies": "^0.2.0",
+    "grunt-markdown": "^0.6.1",
+    "grunt-node-webkit-builder": "^0.2.3",
+    "kouto-swiss": "^0.10.3",
+    "matchdep": "^0.3.0"
   }
 }

@@ -3,7 +3,7 @@
 module.exports = function( grunt ) {
 
     // dynamically loading all grunt files in dev dependencies
-    require( "matchdep" ).filterDev( "grunt-*" ).foreach( grunt.loadNpmTasks );
+    require( "matchdep" ).filterDev( "grunt-*" ).forEach( grunt.loadNpmTasks );
 
     // App Targets, change values during development, accelerating compilation times
     var oAppTargets = {
@@ -19,7 +19,7 @@ module.exports = function( grunt ) {
         "bumpup": "src/manifest.json",
         /* clean: empty folders before working */
         "clean": {
-            "binaries": [ "bin" ],
+            "bin": [ "bin" ],
             "releases": [ "releases" ]
         },
         /* copy: copy static files */
@@ -34,11 +34,16 @@ module.exports = function( grunt ) {
                 "cwd": "src/",
                 "dest": "bin/"
             },
-            "vendors": {
+            "js": {
                 "expand": true,
-                "src": [ "vendors/**/*" ],
+                "src": [ "js/**/*" ],
                 "cwd": "src/",
                 "dest": "bin/"
+            },
+            "html": {
+                "files": {
+                    "bin/index.html": "src/index.html"
+                }
             }
         },
         /* markdown: compile markdown documents, for about text */
@@ -100,41 +105,50 @@ module.exports = function( grunt ) {
                 "options": {
                     "archive": "releases/mac/analiz.zip"
                 },
-                "files": {
-                    "expand": true,
-                    "cwd": "builds/analiz/osx/",
-                    "src": [ "**/*" ]
-                }
+                "files": [
+                    {
+                        "expand": true,
+                        "cwd": "builds/analiz/osx/",
+                        "src": [ "**/*" ]
+                    }
+                ]
             },
             "win": {
                 "options": {
                     "archive": "releases/win/analiz.zip"
                 },
-                "files": {
-                    "expand": true,
-                    "cwd": "builds/analiz/win/",
-                    "src": [ "**/*" ]
-                }
+                "files": [
+                    {
+                        "expand": true,
+                        "cwd": "builds/analiz/win/",
+                        "src": [ "**/*" ]
+                    }
+                ]
             },
             "linux32": {
                 "options": {
                     "archive": "releases/linux32/analiz.zip"
                 },
-                "files": {
-                    "expand": true,
-                    "cwd": "builds/analiz/linux32/",
-                    "src": [ "**/*" ]
-                }
+                "files": [
+                    {
+                        "expand": true,
+                        "cwd": "builds/analiz/linux32/",
+                        "src": [ "**/*" ]
+                    }
+                ]
             },
             "linux64": {
                 "options": {
                     "archive": "releases/linux64/analiz.zip"
                 },
-                "files": {
-                    "expand": true,
-                    "cwd": "builds/analiz/linux64/",
-                    "src": [ "**/*" ]
-                }
+                "files":
+                [
+                    {
+                        "expand": true,
+                        "cwd": "builds/analiz/linux64/",
+                        "src": [ "**/*" ]
+                    }
+                ]
             }
         },
         /* watch: watching files and launch some tasks at changes */
@@ -153,14 +167,14 @@ module.exports = function( grunt ) {
         "clean",
         "bumpup:prerelease",
         "copy:manifest",
-        "copy:vendors",
+        "copy:html",
+        "copy:js",
         "copy:assets",
         "markdown",
         "stylus",
         "install-dependencies",
         "nodewebkit",
-        "compress",
-        "clean:bin",
+        "compress"
     ] );
 
     // TODO : install & configure JSHint tasks

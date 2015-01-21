@@ -46,7 +46,8 @@ module.exports = function( grunt ) {
                 "options": {
                     "targetDir": 'bin/components',
                     "install": true,
-                    "cleanBowerDir": true
+                    "cleanBowerDir": true,
+                    "cleanTargetDir": true
                 }
             }
         },
@@ -172,6 +173,10 @@ module.exports = function( grunt ) {
             "styles": {
                 "files": "src/stylus/styles.styl",
                 "tasks": [ "stylus" ]
+            },
+            "jade": {
+                "files": "src/jade/**/*",
+                "tasks": [ "jade" ]
             }
         }
     } );

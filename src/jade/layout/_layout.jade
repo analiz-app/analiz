@@ -8,15 +8,27 @@ html
 
         link(rel="import", href="components/core-header-panel/core-header-panel.html")
         link(rel="import", href="components/core-toolbar/core-toolbar.html")
+        link(rel="import", href="components/core-drawer-panel/core-drawer-panel.html")
+        link(rel="import", href="components/core-pages/core-pages.html")
+
         link(rel="import", href="components/paper-tabs/paper-tabs.html")
+        link(rel="import", href="components/paper-toggle-button/paper-toggle-button.html")
+        link(rel="import", href="components/paper-menu-button/paper-menu-button.html")
+        link(rel="import", href="components/paper-dropdown/paper-dropdown.html")
+        link(rel="import", href="components/paper-item/paper-item.html")
+        block links
 
         link(rel="stylesheet", href="css/styles.css")
 
-    block links
-    body(unresolved)
+    body(unresolved fullbleed vertical)
         core-header-panel
             include partials/_nav
 
-            block content
+            core-drawer-panel
+                core-header-panel.side(drawer)
+                    include partials/_side
+                core-header-panel(main)
+                    button(core-drawer-toggle) Afficher le menu
+                    block content
 
         include partials/_scripts

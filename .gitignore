@@ -3,3 +3,5 @@ bin
 builds
 cache
 releases
+bower_components
+.idea

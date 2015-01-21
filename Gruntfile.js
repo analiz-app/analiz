@@ -7,10 +7,10 @@ module.exports = function( grunt ) {
 
     // App Targets, change values during development, accelerating compilation times
     var oAppTargets = {
-        "mac": true,
+        "mac": false,
         "win": true,
-        "linux32": true,
-        "linux64": true
+        "linux32": false,
+        "linux64": false
     };
 
     // configure tasks
@@ -39,10 +39,25 @@ module.exports = function( grunt ) {
                 "src": [ "js/**/*" ],
                 "cwd": "src/",
                 "dest": "bin/"
-            },
-            "html": {
+            }
+        },
+        "bower": {
+            "install": {
+                "options": {
+                    "targetDir": 'bin/components',
+                    "install": true,
+                    "cleanBowerDir": true
+                }
+            }
+        },
+        /* jade: compile jade files into html */
+        "jade": {
+            "jades": {
+                "options": {
+                    "pretty": true
+                },
                 "files": {
-                    "bin/index.html": "src/index.html"
+                    "bin/index.html": "src/jade/index.jade"
                 }
             }
         },
@@ -91,7 +106,8 @@ module.exports = function( grunt ) {
                 "mac_icns": "bin/assets/icons/icon.icns",
                 "win": oAppTargets.win,
                 "linux32": oAppTargets.linux32,
-                "linux64": oAppTargets.linux64
+                "linux64": oAppTargets.linux64,
+                "forceDownload": false
             },
             "src": "bin/**/*"
         },
@@ -167,7 +183,8 @@ module.exports = function( grunt ) {
         "clean",
         "bumpup:prerelease",
         "copy:manifest",
-        "copy:html",
+        "jade",
+        "bower",
         "copy:js",
         "copy:assets",
         "markdown",

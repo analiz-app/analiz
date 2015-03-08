@@ -1,6 +1,6 @@
 {
   "name": "analiz",
-  "version": "0.0.1-3",
+  "version": "0.0.1",
   "description": "A complete analysis toolkit for web developers.",
   "main": "index.html",
   "window": {
@@ -49,6 +49,7 @@
     }
   ],
   "dependencies": {
+    "express": "^4.12.2",
     "jquery": "^2.1.1",
     "os-name": "^0.1.2"
   }

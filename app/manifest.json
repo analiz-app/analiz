@@ -2,10 +2,10 @@
   "name": "analiz",
   "version": "0.0.1",
   "description": "A complete analysis toolkit for web developers.",
-  "main": "index.html",
+  "main": "server.html",
   "window": {
     "title": "analiz",
-    "icon": "assets/icons/icon.png",
+    "icon": "public/assets/icons/icon.png",
     "toolbar": false,
     "frame": true,
     "width": 1280,

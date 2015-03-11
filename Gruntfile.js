@@ -10,7 +10,9 @@ module.exports = function (grunt) {
   // configurable paths
   var yeomanConfig = {
     app: 'app',
-    dist: 'dist'
+    app_public: 'app/public',
+    dist: 'dist',
+    dist_public: 'dist/public'
   };
 
   // App Targets, change values during development, accelerating compilation times
@@ -36,29 +38,29 @@ module.exports = function (grunt) {
       },
       default: {
         files: [
-          '<%= yeoman.app %>/*.html',
-          '<%= yeoman.app %>/elements/{,*/}*.html',
-          '{.tmp,<%= yeoman.app %>}/elements/{,*/}*.{css,js}',
-          '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+          '<%= yeoman.app_public %>/*.html',
+          '<%= yeoman.app_public %>/elements/{,*/}*.html',
+          '{.tmp,<%= yeoman.app_public %>}/elements/{,*/}*.{css,js}',
+          '{.tmp,<%= yeoman.app_public %>}/styles/{,*/}*.css',
+          '{.tmp,<%= yeoman.app_public %>}/scripts/{,*/}*.js',
+          '<%= yeoman.app_public %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: ['<%= yeoman.app_public %>/scripts/{,*/}*.js'],
         tasks: ['jshint']
       },
       styles: {
         files: [
-          '<%= yeoman.app %>/styles/{,*/}*.css',
-          '<%= yeoman.app %>/elements/{,*/}*.css'
+          '<%= yeoman.app_public %>/styles/{,*/}*.css',
+          '<%= yeoman.app_public %>/elements/{,*/}*.css'
         ],
         tasks: ['copy:styles', 'autoprefixer:server']
       },
       sass: {
         files: [
-          '<%= yeoman.app %>/styles/{,*/}*.{scss,sass}',
-          '<%= yeoman.app %>/elements/{,*/}*.{scss,sass}'
+          '<%= yeoman.app_public %>/styles/{,*/}*.{scss,sass}',
+          '<%= yeoman.app_public %>/elements/{,*/}*.{scss,sass}'
         ],
         tasks: ['sass:server', 'autoprefixer:server']
       }
@@ -74,16 +76,16 @@ module.exports = function (grunt) {
         },
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
+          cwd: '<%= yeoman.app_public %>',
           src: ['styles/{,*/}*.{scss,sass}', 'elements/{,*/}*.{scss,sass}'],
-          dest: '<%= yeoman.dist %>',
+          dest: '<%= yeoman.dist_public %>',
           ext: '.css'
         }]
       },
       server: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
+          cwd: '<%= yeoman.app_public %>',
           src: ['styles/{,*/}*.{scss,sass}', 'elements/{,*/}*.{scss,sass}'],
           dest: '.tmp',
           ext: '.css'
@@ -105,9 +107,9 @@ module.exports = function (grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.dist %>',
+          cwd: '<%= yeoman.dist_public %>',
           src: ['**/*.css', '!bower_components/**/*.css'],
-          dest: '<%= yeoman.dist %>'
+          dest: '<%= yeoman.dist_public %>'
         }]
       }
     },
@@ -122,7 +124,7 @@ module.exports = function (grunt) {
           watchTask: true,
           injectChanges: false, // can't inject Shadow DOM
           server: {
-            baseDir: ['.tmp', '<%= yeoman.app %>'],
+            baseDir: ['.tmp', '<%= yeoman.app_public %>'],
             routes: {
               '/bower_components': 'bower_components'
             }
@@ -130,7 +132,7 @@ module.exports = function (grunt) {
         },
         src: [
           '.tmp/**/*.{css,html,js}',
-          '<%= yeoman.app %>/**/*.{css,html,js}'
+          '<%= yeoman.app_public %>/**/*.{css,html,js}'
         ]
       },
       dist: {
@@ -140,8 +142,8 @@ module.exports = function (grunt) {
           }
         },
         src: [
-          '<%= yeoman.dist %>/**/*.{css,html,js}',
-          '!<%= yeoman.dist %>/bower_components/**/*'
+          '<%= yeoman.dist_public %>/**/*.{css,html,js}',
+          '!<%= yeoman.dist_public %>/bower_components/**/*'
         ]
       }
     },
@@ -157,22 +159,22 @@ module.exports = function (grunt) {
         reporter: require('jshint-stylish')
       },
       all: [
-        '<%= yeoman.app %>/scripts/{,*/}*.js',
-        '!<%= yeoman.app %>/scripts/vendor/*',
+        '<%= yeoman.app_public %>/scripts/{,*/}*.js',
+        '!<%= yeoman.app_public %>/scripts/vendor/*',
         'test/spec/{,*/}*.js'
       ]
     },
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
+      html: '<%= yeoman.app_public %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.dist_public %>'
       }
     },
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      html: ['<%= yeoman.dist_public %>/{,*/}*.html'],
+      css: ['<%= yeoman.dist_public %>/styles/{,*/}*.css'],
       options: {
-        dirs: ['<%= yeoman.dist %>']
+        dirs: ['<%= yeoman.dist_public %>']
       }
     },
     replace: {
@@ -184,7 +186,7 @@ module.exports = function (grunt) {
           }]
         },
         files: {
-          '<%= yeoman.dist %>/index.html': ['<%= yeoman.dist %>/index.html']
+          '<%= yeoman.dist_public %>/index.html': ['<%= yeoman.dist_public %>/index.html']
         }
       }
     },
@@ -194,8 +196,8 @@ module.exports = function (grunt) {
           strip: true
         },
         files: {
-          '<%= yeoman.dist %>/elements/elements.vulcanized.html': [
-            '<%= yeoman.dist %>/elements/elements.html'
+          '<%= yeoman.dist_public %>/elements/elements.vulcanized.html': [
+            '<%= yeoman.dist_public %>/elements/elements.html'
           ]
         }
       }
@@ -204,9 +206,9 @@ module.exports = function (grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= yeoman.app_public %>/images',
           src: '{,*/}*.{png,jpg,jpeg,svg}',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= yeoman.dist_public %>/images'
         }]
       }
     },
@@ -219,19 +221,19 @@ module.exports = function (grunt) {
       app: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.dist %>',
+          cwd: '<%= yeoman.dist_public %>',
           src: '*.html',
-          dest: '<%= yeoman.dist %>'
+          dest: '<%= yeoman.dist_public %>'
         }]
       }
     },
     copy: {
-      dist: {
+      dist_public: {
         files: [{
           expand: true,
           dot: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
+          cwd: '<%= yeoman.app_public %>',
+          dest: '<%= yeoman.dist_public %>',
           src: [
             '*.{ico,txt}',
             '.htaccess',
@@ -243,14 +245,30 @@ module.exports = function (grunt) {
         }, {
           expand: true,
           dot: true,
+          dest: '<%= yeoman.dist_public %>',
+          src: ['bower_components/**']
+        }]
+      },
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
+          src: [
+            '*.html', '*.js', '*.css'
+          ]
+        }, {
+          expand: true,
+          dot: true,
+          dest: '<%= yeoman.dist_public %>',
           src: ['bower_components/**']
         }]
       },
       styles: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
+          cwd: '<%= yeoman.app_public %>',
           dest: '.tmp',
           src: ['{styles,elements}/{,*/}*.css']
         }]
@@ -265,8 +283,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           src: [ 'assets/**/*' ],
-          cwd: '<%= yeoman.app %>/',
-          dest: '<%= yeoman.dist %>/'
+          cwd: '<%= yeoman.app_public %>/',
+          dest: '<%= yeoman.dist_public %>/'
         }]
       },
     },
@@ -326,7 +344,7 @@ module.exports = function (grunt) {
         appVersion: grunt.file.readJSON(yeomanConfig.app + '/manifest.json').version,
         credits: yeomanConfig.dist + '/about.html',
         mac: oAppTargets.mac,
-        mac_icns: yeomanConfig.dist + '/assets/icons/icon.icns',
+        mac_icns: yeomanConfig.dist_public + '/assets/icons/icon.icns',
         win: oAppTargets.win,
         linux32: oAppTargets.linux32,
         linux64: oAppTargets.linux64,
@@ -389,6 +407,14 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+    'bower-install-simple': {
+      server: {
+        options: {
+          cwd: '<%= yeoman.app %>',
+          directory: '../<%= yeoman.dist %>/bower_components'
+        }
+      }
     }
   });
 
@@ -419,6 +445,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'sass',
     'copy',
+    'bower-install-simple',
     'useminPrepare',
     'imagemin',
     'concat',
@@ -430,11 +457,13 @@ module.exports = function (grunt) {
     'minifyHtml'
   ]);
 
-  grunt.registerTask('build-binaries', [
+  grunt.registerTask('build-bin', [
     'clean:dist',
     'bumpup:prerelease',
     'sass',
     'copy',
+    'bower-install-simple',
+    'markdown',
     'useminPrepare',
     'imagemin',
     'concat',

@@ -19,8 +19,9 @@ You can build the app by yourself:
 
 1. Clone the repository
 2. Run `npm install` to get the dependencies
-3. Run `grunt build` to build the app
-4. Find the app binaries in `/releases` folder.
+3. Run `bower install` to get the front-end dependencies
+4. Run `grunt build` to build the app
+5. Find the app binaries in `/releases` folder.
 
 ## Contributing
 
@@ -29,7 +30,7 @@ You can build the app by yourself:
 During the active development, some of the pull requests can be delayed until the deliverance of the project, which will be at mid-2015.
 
 ## Release History
-
+* **2015/03/12:** Base project is running with Polymer and ExpressJs ! Yepeeee !
 * **2014/09/21:** starting project
 
 ## License

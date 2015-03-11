@@ -1,6 +1,6 @@
 {
   "name": "analiz",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "A complete analysis toolkit for web developers.",
   "main": "server.html",
   "window": {
@@ -32,6 +32,11 @@
       "name": "Dominique Vilain",
       "email": "domi@domy.be",
       "url": "http://www.web-artisan.be/"
+    },
+    {
+      "name": "Luc 'Quelu' Matagne",
+      "email": "quelumatagne@gmail.com",
+      "url": "http://que.lu"
     }
   ],
   "repository": {

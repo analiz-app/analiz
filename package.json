@@ -16,7 +16,7 @@
       "url": "http://www.web-artisan.be/"
     },
     {
-      "name": "Luc Matagne",
+      "name": "Luc 'Quelu' Matagne",
       "email": "quelumatagne@gmail.com",
       "url": "http://que.lu"
     }
@@ -38,10 +38,10 @@
     "express": "^4.12.2"
   },
   "devDependencies": {
-    "grunt-bower-install-simple": "^1.1.0",
     "connect-livereload": "^0.5.2",
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "^2.0.0",
+    "grunt-bower-install-simple": "^1.1.0",
     "grunt-browser-sync": "^1.9.1",
     "grunt-bumpup": "^0.6.1",
     "grunt-contrib-clean": "^0.6.0",

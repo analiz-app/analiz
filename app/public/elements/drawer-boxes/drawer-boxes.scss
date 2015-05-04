@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  @import '../../styles/colors';
+
+  .drawer-box__item {
+    margin: 20px;
+    paper-shadow {
+      padding: 20px 5px;
+      width: 100%;
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        width: 100%;
+      }
+
+      @each $name, $color in $material_colors {
+        &.box--#{$name}:after { background-color: $color }
+      }
+    }
+  }
+
+  .filter-details__item {
+    paper-shadow {
+      position: fixed;
+      top: 25%;
+      left: 50%;
+      width: 50%;
+      height: 50%;
+      margin-left: -25%;
+      z-index: -1;
+      background-color: #fff;
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        width: 100%;
+      }
+
+      @each $name, $color in $material_colors {
+        &.box--#{$name}:after { background-color: $color }
+      }
+    }
+  }
+}

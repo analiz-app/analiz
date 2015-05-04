@@ -1,0 +1,56 @@
+<link rel="import" href="./../../bower_components/polymer/polymer.html">
+
+<polymer-element name="drawer-boxes" attributes="items">
+  <template>
+    <link rel="stylesheet" href="drawer-boxes.css">
+
+    <core-animated-pages selected="{{page}}" transitions="hero-transition" on-core-animated-pages-transition-end="{{complete}}">
+      <section class="drawer-box__container" on-tap="filter_transition">
+
+        <template repeat="{{ item in items }}">
+
+          <div class="drawer-box__item" hero-id="{{ item.id }}">
+            <paper-shadow z="1" draggable="true" class="box--{{ item.color }}" hero-id="{{ item.id }}-box" on-tap="{{ filter_transition }}">
+              <core-item icon="open-with" label="{{ item.name }}"></core-item>
+            </paper-shadow>
+          </div>
+
+        </template>
+
+      </section>
+
+      <section class="filter-details__container">
+        <div class="filter-details__item" hero-id="{{ selected_filter.id }}" layout horizontal hero>
+          <paper-shadow z="3" class="box--{{ selected_filter.color }}"hero-id="{{ item.id }}-box" hero>
+            <h1>{{ selected_filter.name }}</h1>
+          </paper-shadow>
+        </div>
+      </section>
+
+    </core-animated-pages>
+  </template>
+  <script>
+    (function () {
+      Polymer({
+        items: [
+          {
+            name: 'NO LABEL',
+            color: 'white'
+          }
+        ],
+
+        page: 0,
+        selected_filter: null,
+
+        filter_transition: function( e ) {
+          if (this.page === 0 && e.target.templateInstance.model.item) {
+            this.selected_filter = e.target.templateInstance.model.item;
+            this.page = 1;
+          } else {
+            this.page = 0;
+          }
+        }
+      });
+    })();
+  </script>
+</polymer-element>

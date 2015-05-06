@@ -58,7 +58,6 @@
     "grunt-markdown": "^0.6.1",
     "grunt-minify-html": "^1.1.1",
     "grunt-node-webkit-builder": "latest",
-    "grunt-pagespeed": "^0.3.0",
     "grunt-replace": "^0.8.0",
     "grunt-rev": "^0.1.0",
     "grunt-usemin": "^3.0.0",
@@ -66,8 +65,7 @@
     "jshint-stylish": "^1.0.0",
     "load-grunt-tasks": "^2.0.0",
     "serve-static": "^1.7.1",
-    "time-grunt": "^1.0.0",
-    "web-component-tester": "^2.2.3"
+    "time-grunt": "^1.0.0"
   },
   "engines": {
     "node": ">=0.10.0"

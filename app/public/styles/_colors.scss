@@ -44,10 +44,12 @@ $material_colors: (
   'deep-orange': $deep-orange,
   'brown': $brown,
   'grey': $grey,
-  'blue-grey': $blue-grey,
-  'white': $white
+  'blue-grey': $blue-grey
 );
 
 @each $name, $color in $material_colors {
   .bg--#{$name} { background-color: $color }
 }
+
+$primary_color: $teal;
+$accent_color: $red;

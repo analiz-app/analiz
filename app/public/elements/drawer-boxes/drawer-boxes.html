@@ -4,15 +4,15 @@
   <template>
     <link rel="stylesheet" href="drawer-boxes.css">
 
-    <core-animated-pages selected="{{page}}" transitions="hero-transition" on-core-animated-pages-transition-end="{{complete}}">
-      <section class="drawer-box__container" on-tap="filter_transition">
+    <core-animated-pages selected="{{ page }}" transitions="hero-transition cross-fade">
+      <section class="drawer-box__container">
 
         <template repeat="{{ item in items }}">
 
-          <div class="drawer-box__item" hero-id="{{ item.id }}">
-            <paper-shadow z="1" draggable="true" class="box--{{ item.color }}" hero-id="{{ item.id }}-box" on-tap="{{ filter_transition }}">
-              <core-item icon="open-with" label="{{ item.name }}"></core-item>
-            </paper-shadow>
+          <div class="drawer-box__item" draggable="true" on-tap="{{ filter_transition }}" hero-id="{{ item.id }}" hero>
+            <paper-ripple fit></paper-ripple>
+            <div class="drawer-box__color bg--{{ item.color.main }}" hero-id="{{ item.id }}-color"></div>
+            <h1 class="drawer-box_title" cross-fade>{{ item.name }}</h1>
           </div>
 
         </template>
@@ -20,10 +20,12 @@
       </section>
 
       <section class="filter-details__container">
-        <div class="filter-details__item" hero-id="{{ selected_filter.id }}" layout horizontal hero>
-          <paper-shadow z="3" class="box--{{ selected_filter.color }}"hero-id="{{ item.id }}-box" hero>
-            <h1>{{ selected_filter.name }}</h1>
-          </paper-shadow>
+        <div class="filter-details__item" draggable="true" hero-id="{{ selected_filter.id }}" hero>
+          <paper-icon-button class="filter-details__back" icon="arrow-back" on-tap="{{ filter_transition }}"></paper-icon-button>
+          <div class="filter-details__color bg--{{ selected_filter.color.main }}" hero-id="{{ selected_filter.id }}-color">
+            <h1 class="filter-details_title" cross-fade>{{ selected_filter.name }}</h1>
+          </div>
+          <paper-fab class="filter-details__button bg--{{ selected_filter.color.accent }}" icon="add"></paper-fab>
         </div>
       </section>
 
@@ -32,13 +34,6 @@
   <script>
     (function () {
       Polymer({
-        items: [
-          {
-            name: 'NO LABEL',
-            color: 'white'
-          }
-        ],
-
         page: 0,
         selected_filter: null,
 

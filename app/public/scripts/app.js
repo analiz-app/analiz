@@ -6,87 +6,67 @@
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
 
+
+  app.appName = 'Analyz';
+  app.selected_page = 0;
+
   var colors = [
     {
       'main': 'red',
       'accent': 'green'
-    },
-    {
+    }, {
       'main': 'pink',
       'accent': 'light-green'
-    },
-    {
+    }, {
       'main': 'purple',
       'accent': 'lime'
-    },
-    {
+    }, {
       'main': 'deep-purple',
       'accent': 'yellow'
-    },
-    {
+    }, {
       'main': 'indigo',
       'accent': 'pink'
-    },
-    {
+    }, {
       'main': 'blue',
       'accent': 'orange'
-    },
-    {
+    }, {
       'main': 'light-blue',
       'accent': 'amber'
-    },
-    {
+    }, {
       'main': 'cyan',
       'accent': 'orange'
-    },
-    {
+    }, {
       'main': 'teal',
       'accent': 'red'
-    },
-    {
+    }, {
       'main': 'green',
       'accent': 'purple'
-    },
-    {
+    }, {
       'main': 'light-green',
       'accent': 'pink'
-    },
-    {
+    }, {
       'main': 'lime',
       'accent': 'deep-purple'
-    },
-    // {
-    //   'main': 'yellow',
-    //   'accent': 'indigo'
-    // },
-    {
+    }, {
       'main': 'amber',
       'accent': 'cyan'
-    },
-    {
+    }, {
       'main': 'orange',
       'accent': 'teal'
-    },
-    {
+    }, {
       'main': 'deep-orange',
       'accent': 'light-blue'
-    },
-    {
+    }, {
       'main': 'brown',
       'accent': 'lime'
-    },
-    {
+    }, {
       'main': 'grey',
       'accent': 'blue-grey'
-    },
-    {
+    }, {
       'main': 'blue-grey',
       'accent': 'grey'
     }
   ];
-
-  app.appName = 'Analyz';
-  app.selected_page = 0;
 
   var i = 0;
   app.filters = [
@@ -127,11 +107,25 @@
     },
   ];
 
-  // Listen for template bound event to know when bindings
-  // have resolved and content has been stamped to the page
   app.addEventListener('template-bound', function() {
-    console.log('Our app is ready to rock!');
+    //
+    // Toggle button for the drawer
+    //
+    var drawerPanel = document.getElementById( 'app_content' );
+    var drawerPanelToggle = document.getElementById( 'toggle_drawer_icon' );
+
+    drawerPanelToggle.classList.toggle('hide');
+
+    drawerPanel.addEventListener('core-responsive-change', function () {
+      drawerPanelToggle.classList.toggle('hide');
+    });
+
+    app.toggle_drawer = function ( e ) {
+      drawerPanel.togglePanel();
+    };
   });
+
+
 
 // wrap document so it plays nice with other libraries
 // http://www.polymer-project.org/platform/shadow-dom.html#wrappers

@@ -25,13 +25,29 @@
 <body unresolved fullbleed layout vertical>
   <template is="auto-binding" id="app">
 
-    <core-drawer-panel>
+    <core-toolbar class="medium-tall">
+
+      <core-icon-button id="toggle_drawer_icon" icon="menu" on-tap="{{ toggle_drawer }}"></core-icon-button>
+
+      <div flex>{{appName}}</div>
+      <!-- advanced mode -->
+      <core-icon-button icon="more-vert"></core-icon-button>
+
+
+      <div class="bottom fit" horizontal layout>
+        <paper-tabs selected="{{selected_page}}" noink="true" flex>
+          <paper-tab>Nouvelle analyse</paper-tab>
+          <paper-tab>Historique</paper-tab>
+        </paper-tabs>
+      </div>
+    </core-toolbar>
+
+    <core-drawer-panel id="app_content">
 
       <!-- Drawer -->
       <core-header-panel drawer>
 
         <!-- Drawer Toolbar -->
-        <core-toolbar>{{appName}}</core-toolbar>
 
         <drawer-boxes items="{{ filters }}"></drawer-boxes>
       </core-header-panel>
@@ -40,13 +56,7 @@
       <core-header-panel main>
 
         <!-- Main Toolbar -->
-        <core-toolbar>
-          <paper-icon-button icon="menu" core-drawer-toggle></paper-icon-button>
-          <paper-tabs selected="{{selected_page}}" noink="true" flex>
-            <paper-tab>Nouvelle analyse</paper-tab>
-            <paper-tab>Historique</paper-tab>
-          </paper-tabs>
-        </core-toolbar>
+
 
         <!-- Main Content -->
 

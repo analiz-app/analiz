@@ -17,10 +17,10 @@ module.exports = function (grunt) {
 
   // App Targets, change values during development, accelerating compilation times
   var oAppTargets = {
-    mac: false,
+    mac: true,
     win: true,
-    linux32: false,
-    linux64: false
+    linux32: true,
+    linux64: true
   };
 
   var oBinariesTargets = {
@@ -312,6 +312,7 @@ module.exports = function (grunt) {
     nodewebkit: {
       options: {
         build_dir: 'builds',
+        version: '0.12.0',
         appName: 'analiz',
         appVersion: grunt.file.readJSON(yeomanConfig.app + '/manifest.json').version,
         credits: yeomanConfig.dist + '/about.html',

@@ -5,5 +5,8 @@
     "paper-spinner": "Polymer/paper-spinner#~0.5.5",
     "polymer": "Polymer/polymer#~0.5.5",
     "pure": "~0.6.0"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.6.0"
   }
 }

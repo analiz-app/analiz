@@ -1,0 +1,17 @@
+.fab--half-bottom {
+  position: absolute;
+  bottom: -28px;
+  right: 16px;
+}
+
+.mini-fab--half-bottom {
+  position: absolute;
+  bottom: -19px;
+  right: 20px;
+}
+
+.fab--bottom {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}

@@ -1,4 +1,6 @@
 <dom-module id="drawer-box">
+  <link rel="import" type="css" href="../colors.css">
+  
   <style>
     :host {
       display: block;
@@ -33,7 +35,7 @@
   </style>
   <template>
     <paper-material elevation="1">
-      <div class$="{{createColorCircle(color)}}" id="circle"></div>
+      <div class$="{{_computeClass(color.main, 500)}}" id="circle"></div>
       <div class="content">
         <content></content>
       </div>
@@ -48,8 +50,8 @@
       color: Object
     },
 
-    createColorCircle: function (color) {
-      return 'circle bg--' + color.main;
+    _computeClass: function (color) {
+      return 'circle ' + color + '-' + 500;
     }
   });
 </script>

@@ -10,7 +10,43 @@
   </head>
   <body unresolved class="fullbleed layout vertical">
     <template is="dom-bind" id="app">
-      
+      <paper-drawer-panel id="paperDrawerPanel" forceNarrow>
+        <paper-header-panel drawer>
+
+          <!-- Drawer Toolbar -->
+          <paper-toolbar id="drawerToolbar">
+            <span>Menu</span>
+          </paper-toolbar>
+
+          <!-- Drawer Content -->
+          <template is="dom-repeat" items="{{filters}}">
+            <drawer-box id="{{item.id}}" color="{{item.color}}">{{item.name}}</drawer-box>
+          </template>
+
+        </paper-header-panel>
+        <paper-header-panel main>
+          <!-- Main Toolbar -->
+          <paper-toolbar>
+            <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+            <paper-tabs selected="{{selected}}" class="flex" noink="true">
+              <paper-tab on-click="contentNew">Nouvelle analyse</paper-tab>
+              <paper-tab on-click="contentHistory">Historique</paper-tab>
+            </paper-tabs>
+            <!-- Toolbar icons -->
+            <paper-icon-button icon="more-vert"></paper-icon-button>
+          </paper-toolbar>
+          <!-- Main Content -->
+          <neon-animated-pages selected="[[selected]]" entry-animation="[[contentEntryAnimation]]" exit-animation="[[contentExitAnimation]]">
+            <neon-animatable>
+              <page-new></page-new>
+            </neon-animatable>
+            <neon-animatable>
+              <page-history></page-history>
+            </neon-animatable>
+          </neon-animated-pages>
+
+        </paper-header-panel>
+      </paper-drawer-panel>
     </template>
     <script src="scripts/app.js"></script>
   </body>

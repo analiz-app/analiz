@@ -3,4 +3,5 @@ dist
 bower_components
 builds
 cache
+.ac-poly.json
 releases

@@ -27,16 +27,16 @@ gulp.task('serve', [], function () {
 });
 
 // Build the app
-gulp.task('electron', ['default'], function(cb) {
+gulp.task('electron', ['default', 'cleanReleases'], function(cb) {
   gulp.src("")
   .pipe(electron({
       src: './dist',
       packageJson: packageJson,
       release: './releases',
       cache: './cache',
-      version: 'v0.27.2',
+      version: 'v0.28.1',
       packaging: false,
-      platforms: ['linux-x64', 'win32-x64']
+      platforms: ['linux-x64', 'win32-x64', 'darwin-x64']
   }))
   .pipe(gulp.dest(""));
 });
@@ -53,7 +53,9 @@ gulp.task('copy', [], function () {
 });
 
 // Clean Output Directory
-gulp.task('clean', del.bind(null, ['releases', 'dist']));
+gulp.task('clean', del.bind(null, ['dist']));
+gulp.task('cleanReleases', del.bind(null, ['releases']));
+
 
 gulp.task('default', ['copy'],function() {
   // place code for your default task here

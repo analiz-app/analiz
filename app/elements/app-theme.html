@@ -21,12 +21,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /* Application theme */
 
 :root {
-    --dark-primary-color: #a8d903;
-    --default-primary-color:#4CAF50;
+    --dark-primary-color: var(--paper-blue-700);
+    --default-primary-color: var(--paper-blue-500);
     --light-primary-color: #C8E6C9;
     --text-primary-color: #ffffff; /*text/icons*/
-    --accent-color: #FFC107;
-    --primary-background-color: #c5cae9;
+    --accent-color: var(--paper-amber-500);
+    --primary-background-color: var(--paper-blue-50);
     --primary-text-color: #212121;
     --secondary-text-color: #727272;
     --disabled-text-color: #bdbdbd;
@@ -34,7 +34,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     /** Components **/
 
-    /* paper-fab */
     --paper-fab-background: var(--accent-color);
 
+    --paper-drawer-panel-left-drawer-container: {
+      background-color: var(--primary-background-color);
+    };
+
+    --paper-tabs-selection-bar-color: var(--accent-color);
 }
+
+.bg--red::shadow { background-color: var(--paper-red-500) }
+.bg--pink::shadow { background-color: var(--paper-pink-500) }
+.bg--purple::shadow { background-color: var(--paper-purple-500) }
+.bg--deep-purple::shadow { background-color: var(--paper-deep-purple-500) }
+.bg--indigo::shadow { background-color: var(--paper-indigo-500) }
+.bg--blue::shadow { background-color: var(--paper-blue-500) }
+.bg--light-blue::shadow { background-color: var(--paper-light-blue-500) }
+.bg--cyan::shadow { background-color: var(--paper-cyan-500) }
+.bg--teal::shadow { background-color: var(--paper-teal-500) }
+.bg--green::shadow { background-color: var(--paper-green-500) }
+.bg--light-green::shadow { background-color: var(--paper-light-green-500) }
+.bg--lime::shadow { background-color: var(--paper-lime-500) }
+.bg--yellow::shadow { background-color: var(--paper-yellow-500) }
+.bg--amber::shadow { background-color: var(--paper-amber-500) }
+.bg--orange::shadow { background-color: var(--paper-orange-500) }
+.bg--deep-orange::shadow { background-color: var(--paper-deep-orange-500) }
+.bg--brown::shadow { background-color: var(--paper-brown-500) }
+.bg--grey::shadow { background-color: var(--paper-grey-500) }
+.bg--blue-grey::shadow { background-color: var(--paper-blue-grey-500) }

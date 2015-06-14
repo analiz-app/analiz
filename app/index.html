@@ -36,14 +36,14 @@
             <paper-icon-button icon="more-vert"></paper-icon-button>
           </paper-toolbar>
           <!-- Main Content -->
-          <neon-animated-pages selected="[[selected]]" entry-animation="[[contentEntryAnimation]]" exit-animation="[[contentExitAnimation]]">
-            <neon-animatable>
+          <iron-pages selected="[[selected]]">
+            <section>
               <page-new></page-new>
-            </neon-animatable>
-            <neon-animatable>
+            </section>
+            <section>
               <page-history></page-history>
-            </neon-animatable>
-          </neon-animated-pages>
+            </section>
+          </iron-pages>
 
         </paper-header-panel>
       </paper-drawer-panel>

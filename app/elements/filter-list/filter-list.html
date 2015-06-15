@@ -1,0 +1,42 @@
+<dom-module id="filter-list">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    neon-animated-pages {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <template>
+    <neon-animated-pages id="filters" selected="0" >
+
+      <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
+
+      <filter-settings id="filter-settings" on-back-click="_onBackClick"></filter-settings>
+
+    </neon-animated-pages>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-list',
+    properties: {
+      filters: Object
+    },
+
+    _onFilterClick: function ( e ) {
+      this.$['filter-settings'].filter = e.detail.filter;
+      this.$.filters.selected = 1;
+    },
+
+    _onBackClick: function () {
+      this.$.filters.selected = 0;
+    }
+  });
+</script>

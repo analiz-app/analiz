@@ -1,0 +1,82 @@
+<dom-module id="filter-settings">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      height: 100%;
+    }
+
+    .content {
+      padding: 1em;
+    }
+
+    paper-checkbox {
+      margin: .5em 0;
+    }
+
+  </style>
+  <template>
+    <div class$="{{_computeContainerClass(filter.color.main, 100)}}">
+      <paper-toolbar class$="{{_computeTitleClass(filter.color.main, 500)}}">
+        <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
+        <div title>{{filter.name}}</div>
+      </paper-toolbar>
+      <div class="content layout vertical">
+        <paper-checkbox checked>Option</paper-checkbox>
+        <paper-checkbox checked>Option</paper-checkbox>
+        <paper-checkbox>Option</paper-checkbox>
+        <paper-checkbox>Option</paper-checkbox>
+        <paper-checkbox>Option</paper-checkbox>
+        <paper-checkbox>Option</paper-checkbox>
+        <paper-checkbox>Option</paper-checkbox>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-settings',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      filter: Object,
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'slide-from-left-animation',
+              node: this
+            },
+            'exit': {
+              name: 'slide-left-animation',
+              node: this
+            }
+          }
+        }
+      }
+    },
+
+    _computeContainerClass: function (color, tint) {
+      return 'container ' + color + '-' + tint;
+    },
+
+    _computeTitleClass: function (color, tint) {
+      return color + '-' + tint;
+    },
+
+    _onBackClick: function ( e ) {
+      this.fire('back-click');
+    }
+  });
+</script>

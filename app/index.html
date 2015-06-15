@@ -19,9 +19,7 @@
           </paper-toolbar>
 
           <!-- Drawer Content -->
-          <template is="dom-repeat" items="{{filters}}">
-            <drawer-box id="{{item.id}}" color="{{item.color}}">{{item.name}}</drawer-box>
-          </template>
+          <filter-list filters="{{filters}}"></filter-list>
 
         </paper-header-panel>
         <paper-header-panel main>

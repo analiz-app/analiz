@@ -8,19 +8,6 @@
   // Default page
   app.selected = 0;
 
-  // Page animations
-
-  app.contentNew = function () {
-    this.contentEntryAnimation = 'slide-from-left-animation';
-    this.contentExitAnimation = 'slide-right-animation';
-  }
-
-  app.contentHistory = function () {
-    this.contentEntryAnimation = 'slide-from-right-animation';
-    this.contentExitAnimation = 'slide-left-animation';
-  }
-
-
   var colors = [
     {
       'main': 'red',

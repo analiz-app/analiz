@@ -1,20 +1,25 @@
 var browserSync = require('browser-sync');
-var reload = browserSync.reload;
-var gulp = require('gulp');
 var del = require('del');
 var electron = require('gulp-electron');
+var gulp = require('gulp');
+var install = require("gulp-install");
 var merge = require('merge-stream');
 
+var reload = browserSync.reload;
 var packageJson = require('./app/package.json');
+
+// CONFIG
+var electronVersion = 'v0.28.1';
+var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 
 // Watch Files For Changes & Reload
 gulp.task('serve', [], function () {
+  gulp.src(['./app/package.json'])
+    .pipe(gulp.dest("./.tmp"))
+    .pipe(install({production: true}));
+
   browserSync({
     notify: false,
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
       routes: {
@@ -27,18 +32,20 @@ gulp.task('serve', [], function () {
 });
 
 // Build the app
-gulp.task('electron', ['default', 'cleanReleases'], function(cb) {
-  gulp.src("")
-  .pipe(electron({
+// TODO : Add gulp-bump for automatic version name when the first usable app prototype is done
+gulp.task('electron', ['default', 'cleanBuilds'], function() {
+  return gulp.src("")
+    .pipe(electron({
       src: './dist',
       packageJson: packageJson,
-      release: './releases',
+      release: './builds',
       cache: './cache',
-      version: 'v0.28.1',
+      version: electronVersion,
       packaging: false,
-      platforms: ['linux-x64', 'win32-x64', 'darwin-x64']
-  }))
-  .pipe(gulp.dest(""));
+      asar: true,
+      platforms: aPlatforms
+    }))
+    .pipe(gulp.dest(""));
 });
 
 // Copy files in the dist folder
@@ -52,11 +59,16 @@ gulp.task('copy', [], function () {
   return merge(app, bower);
 });
 
+gulp.task('install', [], function () {
+  gulp.src(['./dist/package.json'])
+  .pipe(install({production: true}));
+});
+
 // Clean Output Directory
-gulp.task('clean', del.bind(null, ['dist']));
-gulp.task('cleanReleases', del.bind(null, ['releases']));
+gulp.task('clean', del.bind(null, ['dist', '.tmp']));
+gulp.task('cleanBuilds', del.bind(null, ['builds']));
 
 
-gulp.task('default', ['copy'],function() {
+gulp.task('default', ['install', 'copy'], function() {
   // place code for your default task here
 });

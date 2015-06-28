@@ -11,8 +11,8 @@ var packageJson = require('./app/package.json');
 var electronVersion = 'v0.28.1';
 // Set your platform as for dev
 var sCurrentPlatform = 'linux-x64';
-var aPlatforms = [sCurrentPlatform];
-// var aPlatforms = [sCurrentPlatform, 'win32-x64', 'darwin-x64'];
+// var aPlatforms = [sCurrentPlatform];
+var aPlatforms = [sCurrentPlatform, 'win32-x64', 'darwin-x64'];
 
 // Misc
 var sBuildFolder = 'builds/' + electronVersion + '/' + sCurrentPlatform;
@@ -46,24 +46,21 @@ gulp.task('copy', [], function () {
 });
 
 gulp.task('install', [], function () {
-  gulp.src(['./dist/package.json'])
-  .pipe(install({production: true}));
+  return gulp.src(['./dist/package.json'])
+  .pipe(install({production: false}));
 });
 
 // Clean Output Directory
 gulp.task('clean', del.bind(null, ['dist', '.tmp']));
 gulp.task('cleanBuilds', del.bind(null, ['builds']));
 
-
-gulp.task('default', ['electron'], function () {
-  run(sBuildFolder + '/' + packageJson.name).exec();
-});
+gulp.task('default', ['electron']);
 
 gulp.task('dev', ['default'], function () {
   gulp.watch(['app/**/*'], ['update']);
 });
 
 gulp.task('update', [], function () {
-  gulp.src(['app/**/*'])
+  return gulp.src(['app/**/*'])
     .pipe(gulp.dest(sAppFolder));
 });

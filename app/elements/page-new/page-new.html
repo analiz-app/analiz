@@ -7,6 +7,9 @@
   <template>
     <h1>Nouvelle analyse</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div>
+      <button type="button" name="button" on-click="installJquery">Install jquery</button>
+    </div>
   </template>
 </dom-module>
 
@@ -32,6 +35,18 @@
           };
         }
       }
+    },
+    installJquery: function () {
+      app.npm.load(function (err) {
+        // catch errors
+        app.npm.commands.install(["jquery"], function (er, data) {
+          // log the error or data
+        });
+        app.npm.on("log", function (message) {
+          // log the progress of the installation
+          console.log(message);
+        });
+      });
     }
   });
 </script>

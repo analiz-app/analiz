@@ -20,8 +20,9 @@ You can build the app by yourself:
 1. Clone the repository
 2. Run `npm install` to get the dependencies
 3. Run `bower install` to get the front-end dependencies
-4. Run `gulp electron` to build the app
-5. Find the app binaries in `/releases` folder.
+4. Run `gulp` to build the app
+  - Run `gulp dev` to build the app & watch the files (ctrl+r ro refresh)
+5. Find the app binaries in `/builds` folder.
 
 ## Contributing
 

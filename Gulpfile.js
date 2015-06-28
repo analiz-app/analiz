@@ -1,39 +1,26 @@
-var browserSync = require('browser-sync');
 var del = require('del');
 var electron = require('gulp-electron');
 var gulp = require('gulp');
 var install = require("gulp-install");
 var merge = require('merge-stream');
+var run = require('gulp-run');
 
-var reload = browserSync.reload;
 var packageJson = require('./app/package.json');
 
 // CONFIG
 var electronVersion = 'v0.28.1';
-var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
+// Set your platform as for dev
+var sCurrentPlatform = 'linux-x64';
+var aPlatforms = [sCurrentPlatform];
+// var aPlatforms = [sCurrentPlatform, 'win32-x64', 'darwin-x64'];
 
-// Watch Files For Changes & Reload
-gulp.task('serve', [], function () {
-  gulp.src(['./app/package.json'])
-    .pipe(gulp.dest("./.tmp"))
-    .pipe(install({production: true}));
-
-  browserSync({
-    notify: false,
-    server: {
-      baseDir: ['.tmp', 'app'],
-      routes: {
-        '/bower_components': 'bower_components'
-      }
-    }
-  });
-
-  gulp.watch(['app/**/*'], reload);
-});
+// Misc
+var sBuildFolder = 'builds/' + electronVersion + '/' + sCurrentPlatform;
+var sAppFolder =  sBuildFolder + '/resources/app';
 
 // Build the app
 // TODO : Add gulp-bump for automatic version name when the first usable app prototype is done
-gulp.task('electron', ['default', 'cleanBuilds'], function() {
+gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({
       src: './dist',
@@ -41,9 +28,8 @@ gulp.task('electron', ['default', 'cleanBuilds'], function() {
       release: './builds',
       cache: './cache',
       version: electronVersion,
-      packaging: false,
-      asar: true,
-      platforms: aPlatforms
+      platforms: aPlatforms,
+      packaging: false
     }))
     .pipe(gulp.dest(""));
 });
@@ -69,6 +55,15 @@ gulp.task('clean', del.bind(null, ['dist', '.tmp']));
 gulp.task('cleanBuilds', del.bind(null, ['builds']));
 
 
-gulp.task('default', ['install', 'copy'], function() {
-  // place code for your default task here
+gulp.task('default', ['electron'], function () {
+  run(sBuildFolder + '/' + packageJson.name).exec();
+});
+
+gulp.task('dev', ['default'], function () {
+  gulp.watch(['app/**/*'], ['update']);
+});
+
+gulp.task('update', [], function () {
+  gulp.src(['app/**/*'])
+    .pipe(gulp.dest(sAppFolder));
 });

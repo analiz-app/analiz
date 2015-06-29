@@ -6,8 +6,7 @@
   app.appName = "Analiz";
 
   app.npm = require("npm");
-  app.npm.load(function () {
-  });
+  app.modulesDir = 'resources/app';
 
   var colors = require('./_colors.js');
 

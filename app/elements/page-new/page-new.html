@@ -39,7 +39,7 @@
     installJquery: function () {
       app.npm.load(function (err) {
         // catch errors
-        app.npm.commands.install(["jquery"], function (er, data) {
+        app.npm.commands.install(app.modulesDir ,["jquery"], function (er, data) {
           // log the error or data
         });
         app.npm.on("log", function (message) {

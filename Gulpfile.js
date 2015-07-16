@@ -8,7 +8,7 @@ var run = require('gulp-run');
 var packageJson = require('./app/package.json');
 
 // CONFIG
-var electronVersion = 'v0.28.1';
+var electronVersion = 'v0.29.2';
 // Set your platform as for dev
 var sCurrentPlatform = 'linux-x64';
 // var aPlatforms = [sCurrentPlatform];
@@ -29,7 +29,22 @@ gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
       cache: './cache',
       version: electronVersion,
       platforms: aPlatforms,
-      packaging: false
+      packaging: false,
+      platformResources: {
+        darwin: {
+          CFBundleDisplayName: packageJson.name,
+          CFBundleIdentifier: packageJson.name,
+          CFBundleName: packageJson.name,
+          CFBundleVersion: packageJson.version,
+          icon: 'analiz.icns'
+        },
+        win: {
+          "version-string": packageJson.version,
+          "file-version": packageJson.version,
+          "product-version": packageJson.version,
+          "icon": 'analiz.ico'
+        }
+      }
     }))
     .pipe(gulp.dest(""));
 });

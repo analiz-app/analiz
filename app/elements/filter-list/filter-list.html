@@ -27,7 +27,11 @@
   Polymer({
     is: 'filter-list',
     properties: {
-      filters: Object
+      filters: Object,
+      filter: {
+        type: Object,
+        notify: true
+      }
     },
 
     _onFilterClick: function ( e ) {

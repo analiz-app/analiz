@@ -26,6 +26,9 @@
       <paper-toolbar class$="{{_computeTitleClass(filter.color.main, 500)}}">
         <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
         <div title>{{filter.name}}</div>
+        <div class="bottom">
+          <paper-fab mini class$="{{_computeFabClass(filter.color.accent, 500)}}" icon="add" on-click="_onAddFilterClick"></paper-fab>
+        </div>
       </paper-toolbar>
       <div class="content layout vertical">
         <paper-checkbox checked>Option</paper-checkbox>
@@ -75,8 +78,19 @@
       return color + '-' + tint;
     },
 
+    _computeFabClass: function (color, tint) {
+      return color + '-' + tint + ' mini-fab--half-bottom';
+    },
+
     _onBackClick: function ( e ) {
       this.fire('back-click');
+    },
+
+    _onAddFilterClick: function ( e ) {
+      this.fire('iron-signal', {
+        name: 'filter',
+        data: this['__data__'].filter
+      });
     }
   });
 </script>

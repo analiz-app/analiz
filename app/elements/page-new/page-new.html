@@ -104,6 +104,8 @@
     },
 
     ready: function () {
+      var that = this;
+
       this.$.holder.ondragover = function () {
         this.classList.add("add-button--drag-hover");
         return false;
@@ -114,17 +116,23 @@
       };
       this.$.holder.ondrop = function (e) {
         e.preventDefault();
+
         this.classList.remove("add-button--drag-hover");
         var file = e.dataTransfer.files[0];
-        this.directoryPath = file.path;
 
-        return false;
+        that.directoryPath = file.path;
+
+        return true;
       };
     },
 
     _openFolder: function ( e ) {
       var dialog = app.remote.require('dialog');
-      this.directoryPath = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}).toString();
+      var response;
+      if ( response = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}) ) {
+        this.directoryPath = response.toString();
+      }
+      console.dir(this);
     },
 
     _listFolderContent: function () {

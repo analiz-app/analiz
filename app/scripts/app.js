@@ -8,6 +8,10 @@
   app.npm = require("npm");
   app.modulesDir = 'resources/app';
 
+  app.remote = require('remote');
+
+  app.directory = require('directory-tree');
+
   var colors = require('./_colors.js');
 
   // Default page
@@ -51,10 +55,6 @@
       'color': colors[Math.floor(Math.random()*colors.length)]
     },
   ];
-
-  app.addEventListener('template-bound', function() {
-    console.log('Our app is ready to rock!');
-  });
 
   window.addEventListener('WebComponentsReady', function() {
     document.querySelector('body').removeAttribute('unresolved');

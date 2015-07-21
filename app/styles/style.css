@@ -1,6 +1,6 @@
-body {
+/*body {
   font-family: Roboto;
-}
+}*/
 
 .fab--half-bottom {
   position: absolute;
@@ -18,4 +18,8 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
+}
+
+.hide {
+  display: none !important;
 }

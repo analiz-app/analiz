@@ -27,6 +27,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     --text-primary-color: #ffffff; /*text/icons*/
     --accent-color: var(--paper-amber-500);
     --primary-background-color: var(--paper-blue-50);
+    --primary-border-color: var(--paper-blue-100);
+    --primary-active-border-color: var(--paper-blue-200);
     --primary-text-color: #212121;
     --secondary-text-color: #727272;
     --disabled-text-color: #bdbdbd;
@@ -40,7 +42,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       background-color: var(--primary-background-color);
     };
 
+    --paper-item-icon-width: 32px;
+
     --paper-tabs-selection-bar-color: var(--accent-color);
+}
+
+body {
+  @apply(--paper-font-body1);
 }
 
 paper-tabs {

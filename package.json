@@ -41,5 +41,6 @@
     "gulp-install": "^0.4.0",
     "gulp-run": "^1.6.8",
     "merge-stream": "^0.1.7"
-  }
+  },
+  "dependencies": {}
 }

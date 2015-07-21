@@ -3,11 +3,64 @@
     :host {
       display: block;
     }
+
+    .file-tree__container {
+      @apply(--layout-flex);
+      box-sizing: border-box;
+      overflow-y: auto;
+      background-color: white;
+      padding: .5em;
+    }
+
+    .add-button {
+      height: 99%;
+      @apply(--layout-vertical);
+      @apply(--layout-center-center);
+      text-align: center;
+      padding: auto .5em;
+      border: 2px dashed var(--primary-border-color);
+    }
+
+    .add-button--drag-hover {
+      border-color: var(--primary-active-border-color);
+    }
+
+    .add-button paper-button {
+      background-color: var(--default-primary-color);
+      color: white;
+    }
+
+    .add-button iron-icon {
+      height: 24px;
+      width: 24px;
+      margin-right: 5px;
+    }
+
+    .add-button p {
+      @apply(--paper-font-caption);
+    }
   </style>
   <template>
-    <h1>Nouvelle analyse</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <pre id="filters"></pre>
+    <paper-drawer-panel>
+      <div drawer class="file-tree__container">
+        <div class="add-button" id="holder">
+          <paper-button raised on-click="_openFolder">
+            <iron-icon icon="folder"></iron-icon>
+            Ajouter un dossier
+          </paper-button>
+          <p>ou glisser-déposer le dossier à analyser</p>
+        </div>
+        <div class="file-tree__content">
+          <folder-tree id="folderTree"></folder-tree>
+        </div>
+      </div>
+      <div main>
+        <h1>Nouvelle analyse</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <pre id="filters"></pre>
+      </div>
+    </paper-drawer-panel>
+
     <iron-signals on-iron-signal-filter="_addFilter"></iron-signals>
   </template>
 </dom-module>
@@ -24,6 +77,16 @@
         type: Object,
         value: {}
       },
+      directoryPath: {
+        type: String,
+        value: '',
+        observer: '_listFolderContent'
+      },
+      treeDirectories: {
+        type: Object,
+        value: {},
+        notify: true
+      },
       animationConfig: {
         value: function() {
           return {
@@ -37,6 +100,41 @@
             }
           };
         }
+      }
+    },
+
+    ready: function () {
+      this.$.holder.ondragover = function () {
+        this.classList.add("add-button--drag-hover");
+        return false;
+      };
+      this.$.holder.ondragleave = this.$.holder.ondragend = function () {
+        this.classList.remove("add-button--drag-hover");
+        return false;
+      };
+      this.$.holder.ondrop = function (e) {
+        e.preventDefault();
+        this.classList.remove("add-button--drag-hover");
+        var file = e.dataTransfer.files[0];
+        this.directoryPath = file.path;
+
+        return false;
+      };
+    },
+
+    _openFolder: function ( e ) {
+      var dialog = app.remote.require('dialog');
+      this.directoryPath = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}).toString();
+    },
+
+    _listFolderContent: function () {
+      if (this.directoryPath) {
+        this.$.holder.classList.add('hide');
+        this.treeDirectories = app.directory.directoryTree(this.directoryPath);
+
+        this.$.folderTree.data = this.treeDirectories;
+      } else {
+        this.$.holder.classList.remove('hide');
       }
     },
 

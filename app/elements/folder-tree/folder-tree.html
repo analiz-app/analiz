@@ -1,0 +1,112 @@
+<dom-module id="folder-tree">
+  <style>
+    :host {
+      display: block;
+    }
+
+    .children {
+      box-sizing: border-box;
+      padding-left: 1em;
+      overflow: hidden;
+      height: auto;
+    }
+
+    .children.close { height: 0; }
+
+    paper-icon-item {
+      cursor: pointer;
+    }
+
+    paper-icon-item:hover {
+      background-color: var(--primary-background-color);
+    }
+
+  </style>
+  <template>
+    <div id="tree"></div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'folder-tree',
+
+    properties: {
+      data: {
+        type: Object,
+        value: {
+          path: "",
+          name: ".",
+          children: [],
+        },
+        notify: true,
+        observer: '_valueChanged'
+      },
+      tree: {
+        type: String,
+        value: ''
+      }
+    },
+
+    listeners: {
+      'click': '_toggleItem'
+    },
+
+    _valueChanged: function ( e ) {
+      this.tree = this.createNode(this.data, true);
+
+      Polymer.dom(this.$.tree).innerHTML = '<div>' + this.tree + '</div>';
+    },
+
+    createNode: function (data, isFirst) {
+      if (data.type == 'directory') {
+        var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
+        var openClass = (!isFirst) ? 'close' : 'open';
+
+        var html = '<paper-icon-item';
+
+        if ( data.children.length > 0 && this.isParent(data.children) ) {
+          html += ' class="togglable">';
+          html += '<iron-icon id="' + data.name + '-icon" icon="' + icon + '" item-icon></iron-icon>';
+        } else {
+          html += '>';
+          html += '<iron-icon icon="folder" item-icon></iron-icon>';
+
+        }
+        html += data.name;
+        html +='</paper-icon-item>';
+
+        html += '<div id="' + data.name + '" class="children ' + openClass + '">';
+        while ( data.children.length > 0 ) {
+          html += this.createNode(data.children.shift(), false);
+        }
+        html += '</div>';
+
+        return html;
+      } else {
+        return '';
+      }
+    },
+
+    _toggleItem: function ( e ) {
+      if (e.target.classList.contains('togglable')) {
+        Polymer.dom(document.getElementById(e.target.outerText)).classList.toggle('close');
+        if (document.getElementById(e.target.outerText).classList.contains('close')) {
+          Polymer.dom(document.getElementById(e.target.outerText + '-icon')).setAttribute('icon', 'chevron-right');
+        } else {
+          Polymer.dom(document.getElementById(e.target.outerText + '-icon')).setAttribute('icon', 'expand-more');
+        }
+      }
+    },
+
+    isParent: function ( children ) {
+      for ( var i = 0; i < children.length; i++ ) {
+        if ( children[i].type == 'directory' ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+  });
+</script>

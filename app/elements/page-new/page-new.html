@@ -44,6 +44,11 @@
 
     file-list {
       overflow: auto;
+      height: 100%;
+    }
+
+    #directoryContent::shadow {
+      overflow: auto;
       min-width: 400px;
     }
 
@@ -75,6 +80,11 @@
 
     #directoryContent::shadow th:first-child, #directoryContent::shadow td:first-child {
       display: none;
+    }
+
+    #directoryContent::shadow th:nth-child(2), #directoryContent::shadow td:nth-child(2) {
+      max-width: 200px;
+      overflow: hidden;
     }
 
     #directoryContent::shadow .column-head {
@@ -115,6 +125,7 @@
           <aha-column name="size" label="Taille" type="string" sortable></aha-column>
           <aha-column name="modified" label="Modification" type="datetime" sortable></aha-column>
         </aha-table>
+        <paper-fab icon="folder-open" class="fab--bottom" paper-drawer-toggle></paper-fab>
       </div>
       <pre id="filters"></pre>
     </paper-drawer-panel>

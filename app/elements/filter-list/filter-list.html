@@ -11,14 +11,32 @@
       height: 100%;
       width: 100%;
     }
+
+    .filter-status {
+      color: var(--secondary-text-color);
+      @apply(--paper-font-caption);
+      padding: 0 1.5em;
+    }
   </style>
   <template>
+
+
     <neon-animated-pages id="filters" selected="0" >
+      <section>
+        <template is="dom-if" if="{{isActivatedFilters}}">
+          <div>
+            <p class="filter-status">Filtres activés</p>
+            <template is="dom-repeat" items="{{activatedFilters}}">
+              <drawer-box filter="{{item}}" on-click="_onFilterActivatedClick">{{item.name}}</drawer-box>
+            </template>
+            <p class="filter-status">Filtres désactivés</p>
+          </div>
+        </template>
 
-      <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
+        <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
+      </section>
 
-      <filter-settings id="filter-settings" on-back-click="_onBackClick"></filter-settings>
-
+      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick"></filter-settings>
     </neon-animated-pages>
   </template>
 </dom-module>
@@ -27,20 +45,64 @@
   Polymer({
     is: 'filter-list',
     properties: {
-      filters: Object,
-      filter: {
-        type: Object,
+      filters: {
+        type: Array,
         notify: true
+      },
+      activatedFilters: {
+        type: Array,
+        value: function () {
+          return []
+        }
+      },
+      isActivatedFilters: {
+        type: Boolean,
+        value: false
       }
     },
 
     _onFilterClick: function ( e ) {
       this.$['filter-settings'].filter = e.detail.filter;
       this.$.filters.selected = 1;
+
+      this.$['filter-settings'].isActivated = false;
+
+    },
+
+    _onFilterActivatedClick: function ( e ) {
+      var target = e.target;
+      while ( target !== this && !target._templateInstance ) {
+        target = target.parentNode;
+      }
+
+      this.$['filter-settings'].isActivated = true;
+
+      this.$['filter-settings'].filter = target.filter;
+      this.$.filters.selected = 1;
     },
 
     _onBackClick: function () {
       this.$.filters.selected = 0;
+    },
+
+    _onAddFilterClick:function ( e ) {
+      this.filters.forEach(function ( element, index, array ) {
+        if ( element.id == e.detail.id ) {
+          this.splice( 'filters', index, 1 );
+        }
+      }, this);
+      this.push( 'activatedFilters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+    },
+
+    _onRemoveFilterClick:function ( e ) {
+      this.activatedFilters.forEach(function ( element, index, array ) {
+        if ( element.id == e.detail.id ) {
+          this.splice( 'activatedFilters', index, 1 );
+        }
+      }, this);
+      this.push( 'filters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
     }
   });
 </script>

@@ -129,8 +129,6 @@
       </div>
       <pre id="filters"></pre>
     </paper-drawer-panel>
-
-    <iron-signals on-iron-signal-filter="_addFilter"></iron-signals>
   </template>
 </dom-module>
 
@@ -284,17 +282,6 @@
         ++u;
       } while( Math.abs( size ) >= 1024 && u < units.length - 1 );
       return size.toFixed( 1 ) + ' ' + units[u];
-    },
-
-    _addFilter: function (data) {
-      var filter = data.detail;
-      this.filters[filter.id] = filter;
-
-      this._filtersChanged();
-    },
-
-    _filtersChanged: function () {
-      this.$.filters.innerHTML = JSON.stringify(this.filters, null, 4);
     },
 
     installJquery: function () {

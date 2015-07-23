@@ -6,7 +6,7 @@
   </style>
   <template>
     <template is="dom-repeat" items="{{filters}}">
-      <drawer-box filter="{{item}}">{{item.name}}</drawer-box>
+      <drawer-box filter="{{item}}" on-click="_onClick">{{item.name}}</drawer-box>
     </template>
   </template>
 </dom-module>
@@ -34,12 +34,8 @@
       }
     },
 
-    listeners: {
-      click: '_onClick'
-    },
-
     _onClick: function ( e ) {
-      var target = event.target;
+      var target = e.target;
       while (target !== this && !target._templateInstance) {
         target = target.parentNode;
       }

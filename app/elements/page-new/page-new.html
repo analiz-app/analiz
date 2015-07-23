@@ -1,4 +1,5 @@
 <dom-module id="page-new">
+  <link rel="import" type="css" href="../colors.css">
   <style>
     :host {
       display: block;
@@ -105,6 +106,7 @@
         </div>
         <div class="file-tree__content">
           <folder-tree id="folderTree" on-folder-click="_getFolderContent"></folder-tree>
+          <paper-fab mini icon="undo" class="red-500 fab--bottom" on-click="_resetFolder"></paper-fab>
         </div>
       </div>
       <div main class="file-list">
@@ -197,14 +199,22 @@
       }
     },
 
+    _resetFolder:function ( e ) {
+      this.directoryPath = '';
+      this.directoryContent = [];
+      this.$.directoryContent.data = this.directoryContent;
+    },
+
     _listFolderContent: function () {
       if (this.directoryPath) {
         this.$.holder.classList.add('hide');
+        this.querySelector('.file-tree__content').classList.remove('hide');
         this.treeDirectories = app.directory.directoryTree(this.directoryPath);
 
         this.$.folderTree.data = this.treeDirectories;
       } else {
         this.$.holder.classList.remove('hide');
+        this.querySelector('.file-tree__content').classList.add('hide');
       }
     },
 

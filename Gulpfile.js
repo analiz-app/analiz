@@ -8,7 +8,7 @@ var run = require('gulp-run');
 var packageJson = require('./app/package.json');
 
 // CONFIG
-var electronVersion = 'v0.29.2';
+var electronVersion = 'v0.30.0';
 // Set your platform as for dev
 var sCurrentPlatform = 'linux-x64';
 // var aPlatforms = [sCurrentPlatform];

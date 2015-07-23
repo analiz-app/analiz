@@ -10,6 +10,7 @@
       overflow-y: auto;
       background-color: white;
       padding: .5em;
+      border-right: 1px solid var(--divider-color);
     }
 
     .add-button {
@@ -39,6 +40,58 @@
     .add-button p {
       @apply(--paper-font-caption);
     }
+
+    file-list {
+      overflow: auto;
+      min-width: 400px;
+    }
+
+    #directoryContent::shadow table {
+      width: 100%;
+      border-spacing : 0;
+      border-collapse : collapse;
+    }
+
+    #directoryContent::shadow tfoot {
+      display: none;
+    }
+
+    #directoryContent::shadow tr {
+      height: 2.5em;
+    }
+
+    #directoryContent::shadow thead tr {
+      background-color: var(--primary-background-color);
+      border-bottom: 1px solid var(--divider-color);
+    }
+
+    #directoryContent::shadow thead th {
+      position: relative;
+      border-right: 1px solid var(--divider-color);
+      @apply(--paper-font-body1);
+      text-align: right;
+    }
+
+    #directoryContent::shadow th:first-child, #directoryContent::shadow td:first-child {
+      display: none;
+    }
+
+    #directoryContent::shadow .column-head {
+      padding: 0 1em;
+      display: block;
+      height: 2.5em;
+      line-height: 2.5em;
+    }
+
+    #directoryContent::shadow .sorting {
+      position: absolute;
+      left: 10%;
+      top: 50%;
+    }
+
+    #directoryContent::shadow td {
+      padding: 0 1em;
+    }
   </style>
   <template>
     <paper-drawer-panel>
@@ -51,14 +104,17 @@
           <p>ou glisser-déposer le dossier à analyser</p>
         </div>
         <div class="file-tree__content">
-          <folder-tree id="folderTree"></folder-tree>
+          <folder-tree id="folderTree" on-folder-click="_getFolderContent"></folder-tree>
         </div>
       </div>
-      <div main>
-        <h1>Nouvelle analyse</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <pre id="filters"></pre>
+      <div main class="file-list">
+        <aha-table id="directoryContent">
+          <aha-column name="name" label="Nom" type="string" sortable></aha-column>
+          <aha-column name="size" label="Taille" type="string" sortable></aha-column>
+          <aha-column name="modified" label="Modification" type="datetime" sortable></aha-column>
+        </aha-table>
       </div>
+      <pre id="filters"></pre>
     </paper-drawer-panel>
 
     <iron-signals on-iron-signal-filter="_addFilter"></iron-signals>
@@ -87,6 +143,11 @@
         value: {},
         notify: true
       },
+      directoryContent: {
+        type: Array,
+        value: [],
+        notify: true
+      },
       animationConfig: {
         value: function() {
           return {
@@ -107,20 +168,21 @@
       var that = this;
 
       this.$.holder.ondragover = function () {
-        this.classList.add("add-button--drag-hover");
+        this.classList.add( 'add-button--drag-hover' );
         return false;
       };
       this.$.holder.ondragleave = this.$.holder.ondragend = function () {
-        this.classList.remove("add-button--drag-hover");
+        this.classList.remove( 'add-button--drag-hover' );
         return false;
       };
-      this.$.holder.ondrop = function (e) {
+      this.$.holder.ondrop = function ( e ) {
         e.preventDefault();
 
-        this.classList.remove("add-button--drag-hover");
+        this.classList.remove( 'add-button--drag-hover' );
         var file = e.dataTransfer.files[0];
 
         that.directoryPath = file.path;
+        that._getFolderContent();
 
         return true;
       };
@@ -131,8 +193,8 @@
       var response;
       if ( response = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}) ) {
         this.directoryPath = response.toString();
+        this._getFolderContent();
       }
-      console.dir(this);
     },
 
     _listFolderContent: function () {
@@ -146,9 +208,67 @@
       }
     },
 
+    _getFolderContent: function ( e ) {
+      if ( !e ) {
+        var path = this.directoryPath;
+      } else {
+        var path = this.directoryPath + '/' + e.detail.dataset.path;
+        // If root directory remove the final "/"
+        path = ( path[path.length - 1] == '/' ) ? path.substring(0, path.length - 1) : path;
+      }
+
+      this.directoryContent = [];
+
+      // Get the content of the folder
+      var items = app.directory.fs.readdirSync(path);
+      for ( var i=0; i < items.length; i++ ) {
+        var file = path + '/' + items[i];
+        var stats = app.directory.fs.statSync(file);
+
+        if (stats.isFile()) {
+          this.directoryContent.push({
+            name: file.split('/').pop(),
+            modified: this.formatDate( stats.mtime ),
+            size: this.getSize( stats.size ),
+            path: file
+          });
+        }
+      }
+
+      this.$.directoryContent.data = this.directoryContent;
+    },
+
+    formatDate:function ( date ) {
+      var now = new Date();
+
+      // If date is today use today as date
+      if ( now.toDateString() == date.toDateString() ) {
+        return app.dateFormat( date, 'HH:MM' );
+      } else {
+        return app.dateFormat( date, 'dd/mm/yyyy HH:MM' );
+
+      }
+
+      return app.dateFormat(date, 'fullDate');
+    },
+
+    getSize:function ( size ) {
+      if( Math.abs( size ) < 1024 ) {
+        return size + ' B';
+      }
+      var units = ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+      var u = -1;
+      do {
+        size /= 1024;
+        ++u;
+      } while( Math.abs( size ) >= 1024 && u < units.length - 1 );
+      return size.toFixed( 1 ) + ' ' + units[u];
+    },
+
     _addFilter: function (data) {
       var filter = data.detail;
       this.filters[filter.id] = filter;
+
       this._filtersChanged();
     },
 

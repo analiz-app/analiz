@@ -5,6 +5,7 @@
   "description": "A complete analysis toolkit for web developers.",
   "homepage": "https://github.com/hepl-ria/analiz",
   "dependencies": {
+    "dateformat": "^1.0.11",
     "directory-tree": "^0.1.1",
     "i18next-client": "^1.10.1",
     "node-dir": "^0.1.8",

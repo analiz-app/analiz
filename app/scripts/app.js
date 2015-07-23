@@ -11,6 +11,8 @@
   app.remote = require('remote');
 
   app.directory = require('directory-tree');
+  app.directory.fs = require('fs');
+  app.dateFormat = require('dateformat');
 
   var colors = require('./_colors.js');
 

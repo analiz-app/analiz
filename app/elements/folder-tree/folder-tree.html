@@ -21,6 +21,10 @@
       background-color: var(--primary-background-color);
     }
 
+    .folder-selected, .folder-selected:hover {
+      background-color: var(--accent-color);
+    }
+
   </style>
   <template>
     <div id="tree"></div>
@@ -63,10 +67,12 @@
         var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
         var openClass = (!isFirst) ? 'close' : 'open';
 
-        var html = '<paper-icon-item';
+        var html = '<paper-icon-item data-path="' +  data.path + '" class="';
+        html += (isFirst) ? 'folder-selected' : '';
 
         if ( data.children.length > 0 && this.isParent(data.children) ) {
-          html += ' class="togglable">';
+          html += ' togglable'
+          html += '">';
           html += '<iron-icon id="' + data.name + '-icon" icon="' + icon + '" item-icon></iron-icon>';
         } else {
           html += '>';
@@ -76,7 +82,7 @@
         html += data.name;
         html +='</paper-icon-item>';
 
-        html += '<div id="' + data.name + '" class="children ' + openClass + '">';
+        html += '<div id="' + data.name + '-tree" class="children ' + openClass + '">';
         while ( data.children.length > 0 ) {
           html += this.createNode(data.children.shift(), false);
         }
@@ -89,13 +95,26 @@
     },
 
     _toggleItem: function ( e ) {
-      if (e.target.classList.contains('togglable')) {
-        Polymer.dom(document.getElementById(e.target.outerText)).classList.toggle('close');
-        if (document.getElementById(e.target.outerText).classList.contains('close')) {
-          Polymer.dom(document.getElementById(e.target.outerText + '-icon')).setAttribute('icon', 'chevron-right');
-        } else {
-          Polymer.dom(document.getElementById(e.target.outerText + '-icon')).setAttribute('icon', 'expand-more');
+      if (e.target.icon) {
+        var target = e.target.parentNode.parentNode;
+      } else {
+        var target = e.target;
+      }
+      if ( !e.target.classList.contains('children') ) {
+        var oldSelected = document.querySelector( '.folder-selected' );
+        oldSelected.classList.remove( 'folder-selected' );
+        if ( !target.classList.contains( 'folder-selected' ) ) {
+          target.classList.toggle( 'folder-selected' );
         }
+        if (target.classList.contains('togglable')) {
+          Polymer.dom(document.getElementById(target.outerText + '-tree')).classList.toggle('close');
+          if (document.getElementById(target.outerText + '-tree').classList.contains('close')) {
+            Polymer.dom(document.getElementById(target.outerText + '-icon')).setAttribute('icon', 'chevron-right');
+          } else {
+            Polymer.dom(document.getElementById(target.outerText + '-icon')).setAttribute('icon', 'expand-more');
+          }
+        }
+        this.fire( 'folder-click', target );
       }
     },
 

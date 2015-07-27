@@ -9,7 +9,8 @@
     }
 
     .container {
-      height: 100%;
+      min-height: 100%;
+      height: auto;
     }
 
     .content {
@@ -25,19 +26,18 @@
     <div class$="{{_computeContainerClass(filter.color.main, 100)}}">
       <paper-toolbar class$="{{_computeTitleClass(filter.color.main, 500)}}">
         <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
-        <div title>{{filter.name}}</div>
+        <div title>{{filter.config.name}}</div>
         <div class="bottom">
           <paper-fab mini class$="{{_computeFabClass(filter.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
         </div>
       </paper-toolbar>
       <div class="content layout vertical">
-        <paper-checkbox checked>Option</paper-checkbox>
-        <paper-checkbox checked>Option</paper-checkbox>
-        <paper-checkbox>Option</paper-checkbox>
-        <paper-checkbox>Option</paper-checkbox>
-        <paper-checkbox>Option</paper-checkbox>
-        <paper-checkbox>Option</paper-checkbox>
-        <paper-checkbox>Option</paper-checkbox>
+        <template is="dom-repeat" items="{{filter.config.options}}">
+          <p>[[item.label]]</p>
+          <template is="dom-if" if="[[_isType('list', item)]]">
+            <paper-select data="[[item.data]]" name="[[item.name]]" on-select-changed="_onSelectChanged"></paper-select>
+          </template>
+        </template>
       </div>
     </div>
   </template>
@@ -53,6 +53,7 @@
 
     properties: {
       filter: Object,
+      color: Object,
       isActivated: {
         type: Boolean,
         notify: true,
@@ -76,6 +77,10 @@
       }
     },
 
+    _isType: function ( type, item ) {
+      return ( item.type == type );
+    },
+
     _computeContainerClass: function ( color, tint ) {
       return 'container ' + color + '-' + tint;
     },
@@ -90,6 +95,11 @@
 
     _changeFabIcon: function () {
       this.fabIcon = ( this.isActivated ) ? 'remove' : 'add';
+    },
+
+    _onSelectChanged: function ( e ) {
+      console.log( 'value = ' + e.detail );
+      console.log( 'target = ' + e.target.name );
     },
 
     _onBackClick: function ( e ) {

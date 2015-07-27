@@ -36,9 +36,7 @@
   <template>
     <paper-material elevation="1">
       <div class$="{{_computeClass(filter.color.main, 500)}}" id="circle"></div>
-      <div class="content">
-        <content></content>
-      </div>
+      <div class="content"></div>
     </paper-material>
   </template>
 </dom-module>
@@ -52,6 +50,10 @@
 
     _computeClass: function (color) {
       return 'circle ' + color + '-' + 500;
+    },
+
+    ready: function() {
+      this.querySelector('.content').textContent = this.filter.config.name;
     }
   });
 </script>

@@ -1,0 +1,40 @@
+<dom-module id="paper-select">
+  <style>
+    :host {
+      display: block;
+    }
+
+    select {
+      box-sizing: border-box;
+      width: 100%;
+      height: 3rem;
+      padding: 5px;
+      border: 1px solid #f2f2f2;
+      border-radius: 2px;
+      background-color: transparent;
+    }
+  </style>
+  <template>
+    <select name="[[name]]" on-change="selectChanged">
+      <template is="dom-repeat" items="[[data]]" as="option">
+        <option value="[[option.value]]">[[option.name]]</option>
+      </template>
+    </select>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'paper-select',
+
+    properties: {
+      data: Object,
+      name: String,
+    },
+
+    selectChanged: function ( e ) {
+      this.fire( 'select-changed', e.srcElement.value );
+    },
+
+  });
+</script>

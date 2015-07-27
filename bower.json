@@ -29,11 +29,13 @@
     "neon-animation": "PolymerElements/neon-animation#^1.0.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
     "iron-signals": "PolymerElements/iron-signals#^1.0.0",
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.2",
-    "iron-list": "PolymerElements/iron-list#~1.0.0",
-    "paper-item": "PolymerElements/paper-item#~1.0.2",
-    "aha-table": "~2.0.7",
-    "paper-select": "Quelu/paper-select#~0.0.1"
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.2",
+    "iron-list": "PolymerElements/iron-list#^1.0.0",
+    "paper-item": "PolymerElements/paper-item#^1.0.2",
+    "aha-table": "^2.0.7",
+    "paper-select": "Quelu/paper-select#^0.0.1",
+    "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.1",
+    "paper-menu-button": "PolymerElements/paper-menu-button#^1.0.0"
   },
   "resolutions": {
     "font-roboto": "safetychanger/font-roboto#1.0.1"

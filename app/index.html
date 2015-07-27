@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Analiz</title>
 
     <link rel="stylesheet" href="styles/style.css" media="screen">
-
+    <meta charset="utf-8">
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
 
     <link rel="import" href="elements/elements.html">
@@ -31,7 +32,14 @@
               <paper-tab>Historique</paper-tab>
             </paper-tabs>
             <!-- Toolbar icons -->
-            <paper-icon-button icon="more-vert"></paper-icon-button>
+            <paper-menu-button class="settings-dropdown" horizontal-align="right">
+              <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content">
+                <paper-item on-click="pluginOpen">Plugins</paper-item>
+                <paper-item on-click="settingsOpen">Paramètres</paper-item>
+                <paper-item on-click="aboutOpen">A propos</paper-item>
+              </paper-menu>
+            </paper-menu-button>
           </paper-toolbar>
           <!-- Main Content -->
           <iron-pages selected="[[selected]]">

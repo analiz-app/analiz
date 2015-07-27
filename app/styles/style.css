@@ -23,3 +23,7 @@
 .hide {
   display: none !important;
 }
+
+.settings-dropdown paper-item {
+  cursor: pointer;
+}

@@ -36,7 +36,8 @@
     "paper-select": "Quelu/paper-select#^0.0.1",
     "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.1",
     "paper-menu-button": "PolymerElements/paper-menu-button#^1.0.0",
-    "paper-ripple": "PolymerElements/paper-ripple#~1.0.1"
+    "paper-ripple": "PolymerElements/paper-ripple#~1.0.1",
+    "paper-dialog": "PolymerElements/paper-dialog#~1.0.1"
   },
   "resolutions": {
     "font-roboto": "safetychanger/font-roboto#1.0.1"

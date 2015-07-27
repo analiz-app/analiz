@@ -35,9 +35,24 @@
             <paper-menu-button class="settings-dropdown" horizontal-align="right">
               <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content">
-                <paper-item on-click="pluginOpen">Plugins</paper-item>
-                <paper-item on-click="settingsOpen">Paramètres</paper-item>
-                <paper-item on-click="aboutOpen">A propos</paper-item>
+                <paper-item on-click="pluginOpen">
+                  <paper-item-body>
+                    Plugins
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+                <paper-item on-click="settingsOpen">
+                  <paper-item-body>
+                    Paramètres
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+                <paper-item on-click="aboutOpen">
+                  <paper-item-body>
+                    A propos
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
               </paper-menu>
             </paper-menu-button>
           </paper-toolbar>

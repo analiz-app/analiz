@@ -15,9 +15,15 @@
 }
 
 .fab--bottom {
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   right: 20px;
+}
+
+.fab--bottom-left {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
 }
 
 .hide {

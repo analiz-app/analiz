@@ -18,6 +18,26 @@
   app.filters = [];
   app.getFilters();
 
+  // Analyze config object
+  app.analyzeConfig = {
+    path: '',
+    config: [],
+
+    set: function ( property, value ) {
+      this[property] = value;
+      // If the path and the config are set show the 'Analiz !' button
+      if ( this.path && this.config.length > 0 ) {
+        document.getElementById( 'analyzeButton' ).disabled = false;
+      } else {
+        document.getElementById( 'analyzeButton' ).disabled = true;
+      }
+    }
+  };
+
+  app.analiz = function ( config ) {
+    console.dir(config);
+  };
+
   // Default page
   app.selected = 0;
 

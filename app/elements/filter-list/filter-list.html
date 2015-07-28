@@ -36,7 +36,7 @@
         <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
       </section>
 
-      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick"></filter-settings>
+      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick" on-select-value-changed="_selectValueChanged"></filter-settings>
     </neon-animated-pages>
   </template>
 </dom-module>
@@ -58,6 +58,34 @@
       isActivatedFilters: {
         type: Boolean,
         value: false
+      },
+      filtersOption: {
+        type: Array,
+        value: function () {
+          return []
+        }
+      }
+    },
+
+    _changeActivatedFilter: function () {
+      var config = this.activatedFilters;
+      var that = this;
+      // Retrieve all the config info and transform them to fit the analyze function
+      config.forEach( function ( element, index, array ) {
+        element.config.options.forEach( function ( optionElement, optionIndex, optionArray ) {
+          optionElement.data = that.filtersOption[ optionElement.name ];
+        } );
+      } );
+
+      app.analyzeConfig.set( 'config', config );
+    },
+
+    _selectValueChanged: function ( e ) {
+      // Fix because when try to set false after setting a string, false is a string
+      this.filtersOption[ e.detail.name ] = (e.detail.value === 'false') ? false : e.detail.value;
+
+      if ( e.detail.isActivated ) {
+        this._changeActivatedFilter();
       }
     },
 
@@ -93,6 +121,8 @@
       }, this);
       this.push( 'activatedFilters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      this._changeActivatedFilter();
     },
 
     _onRemoveFilterClick:function ( e ) {
@@ -103,6 +133,8 @@
       }, this);
       this.push( 'filters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      this._changeActivatedFilter();
     }
   });
 </script>

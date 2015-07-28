@@ -103,6 +103,23 @@
     #directoryContent::shadow td {
       padding: 0 1em;
     }
+
+    #analyzeButton {
+      background-color: var(--accent-color);
+      min-width: 150px;
+      color: white;
+      opacity: 1;
+
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #analyzeButton[disabled] {
+      background-color: var(--disabled-text-color);
+      color: var(--secondary-text-color);
+      opacity: 0;
+
+      right: -100px;
+    }
   </style>
   <template>
     <paper-drawer-panel>
@@ -125,9 +142,18 @@
           <aha-column name="size" label="Taille" type="string" sortable></aha-column>
           <aha-column name="modified" label="Modification" type="datetime" sortable></aha-column>
         </aha-table>
-        <paper-fab icon="folder-open" class="fab--bottom" paper-drawer-toggle></paper-fab>
+        <paper-fab mini icon="folder-open" class="fab--bottom-left" paper-drawer-toggle></paper-fab>
+
+        <paper-button
+          id="analyzeButton"
+          class="fab--bottom"
+          on-click="_launchAnalyze"
+          disabled
+          raised>
+          <iron-icon icon="send"></iron-icon>
+          Analiz !
+        </paper-button>
       </div>
-      <pre id="filters"></pre>
     </paper-drawer-panel>
   </template>
 </dom-module>
@@ -212,6 +238,8 @@
       this.directoryPath = '';
       this.directoryContent = [];
       this.$.directoryContent.data = this.directoryContent;
+      // Set the analyze object informations
+      app.analyzeConfig.set( 'path', '' );
     },
 
     _listFolderContent: function () {
@@ -235,6 +263,10 @@
         // If root directory remove the final "/"
         path = ( path[path.length - 1] == '/' ) ? path.substring(0, path.length - 1) : path;
       }
+
+      // Set the analyze object informations
+      app.analyzeConfig.set( 'path', path );
+
 
       this.directoryContent = [];
 
@@ -282,6 +314,10 @@
         ++u;
       } while( Math.abs( size ) >= 1024 && u < units.length - 1 );
       return size.toFixed( 1 ) + ' ' + units[u];
+    },
+
+    _launchAnalyze: function () {
+      app.analiz (app.analyzeConfig);
     }
   });
 </script>

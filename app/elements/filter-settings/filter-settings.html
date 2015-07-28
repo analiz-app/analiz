@@ -102,8 +102,11 @@
     },
 
     _onSelectChanged: function ( e ) {
-      console.log( 'value = ' + e.detail );
-      console.log( 'target = ' + e.target.name );
+      this.fire( 'select-value-changed', {
+        name: e.target.name,
+        value: e.detail,
+        isActivated: this.isActivated
+      } );
     },
 
     _onBackClick: function ( e ) {

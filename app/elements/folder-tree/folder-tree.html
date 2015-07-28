@@ -52,6 +52,16 @@
       tree: {
         type: String,
         value: ''
+      },
+      ignoredFiles: {
+        type: Array,
+        value: [
+          'bower_components',
+          'node_modules',
+          'dist',
+          'builds',
+          'cache'
+        ]
       }
     },
 
@@ -66,7 +76,7 @@
     },
 
     createNode: function (data, isFirst) {
-      if (data.type == 'directory') {
+      if ( data.type == 'directory' && this.ignoredFiles.indexOf( data.name ) < 0 ) {
         var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
         var openClass = (!isFirst) ? 'close' : 'open';
 
@@ -80,7 +90,6 @@
         } else {
           html += '>';
           html += '<iron-icon icon="folder" item-icon></iron-icon>';
-
         }
         html += data.name;
         html +='</paper-icon-item>';

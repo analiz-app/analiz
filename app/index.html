@@ -13,15 +13,25 @@
     <template is="dom-bind" id="app">
       <paper-drawer-panel id="paperDrawerPanel" forceNarrow>
         <paper-header-panel drawer>
-
           <!-- Drawer Toolbar -->
           <paper-toolbar id="drawerToolbar">
-            <span>Liste des filtres</span>
+            <iron-pages selected="[[selected]]">
+              <span>Liste des filtres</span>
+              <span></span>
+              <span>Filtrer les résultats</span>
+            </iron-pages>
           </paper-toolbar>
 
           <!-- Drawer Content -->
-          <filter-list filters="{{filters}}"></filter-list>
-
+          <iron-pages selected="[[selected]]">
+            <filter-list filters="{{filters}}"></filter-list>
+            <section></section>
+            <section>
+              <template is="dom-repeat" items="[[categoriesList]]">
+                <drawer-box data="[[item]]" color="[[item.color]]" toggleable is-toggle>[[item.label]]</drawer-box>
+              </template>
+            </section>
+          </iron-pages>
         </paper-header-panel>
         <paper-header-panel main>
           <!-- Main Toolbar -->
@@ -30,6 +40,9 @@
             <paper-tabs selected="{{selected}}" class="paper-tabs" noink="true">
               <paper-tab>Nouvelle analyse</paper-tab>
               <paper-tab>Historique</paper-tab>
+              <template is="dom-if" if=[[isAudit]]>
+                <paper-tab>Audit</paper-tab>
+              </template>
             </paper-tabs>
             <!-- Toolbar icons -->
             <paper-menu-button class="settings-dropdown" horizontal-align="right">

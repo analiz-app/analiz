@@ -5,8 +5,8 @@
     }
   </style>
   <template>
-    <template is="dom-repeat" items="{{filters}}">
-      <drawer-box filter="{{item}}" on-click="_onClick">{{item.name}}</drawer-box>
+    <template is="dom-repeat" items="[[filters]]">
+      <drawer-box data="[[item]]" color=[[item.category.color]] on-click="_onClick">{{item.config.name}}</drawer-box>
     </template>
   </template>
 </dom-module>
@@ -42,7 +42,7 @@
 
       if (target.localName == 'drawer-box') {
         this.fire('filter-click', {
-          filter: target.filter
+          filter: target.data
         });
       }
     }

@@ -14,6 +14,11 @@
   app.directory.fs = require( 'fs' );
   app.dateFormat = require( 'dateformat' );
 
+  app.categoriesList = [];
+  Object.getOwnPropertyNames(app.categories).forEach( function ( element, index, array ) {
+    app.categoriesList.push( app.categories[element] );
+  } );
+
   app.toast = function ( message ) {
     var toast = document.getElementById('toast');
 
@@ -44,10 +49,15 @@
   app.analiz = function ( config ) {
     console.dir(config);
     app.toast( 'Lancement de l\'analyse...');
+
+    app.isAudit = true;
+    app.selected = 2;
   };
 
+  app.isAudit = false;
+
   // Default page
-  app.selected = 0;
+  app.selected = 2;
 
   var i = 0;
 

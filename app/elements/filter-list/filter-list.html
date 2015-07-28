@@ -32,7 +32,7 @@
           <div>
             <p class="filter-status">Filtres activés</p>
             <template is="dom-repeat" items="{{activatedFilters}}">
-              <drawer-box filter="{{item}}" on-click="_onFilterActivatedClick">{{item.name}}</drawer-box>
+              <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{item.config.name}}</drawer-box>
             </template>
             <p class="filter-status">Filtres désactivés</p>
           </div>
@@ -103,14 +103,9 @@
     },
 
     _onFilterActivatedClick: function ( e ) {
-      var target = e.target;
-      while ( target !== this && !target._templateInstance ) {
-        target = target.parentNode;
-      }
-
       this.$['filter-settings'].isActivated = true;
 
-      this.$['filter-settings'].filter = target.filter;
+      this.$['filter-settings'].filter = e.detail;
       this.$.filters.selected = 1;
     },
 

@@ -27,12 +27,12 @@
 
   </style>
   <template>
-    <div class$="{{_computeContainerClass(filter.color.main, 100)}}">
-      <paper-toolbar class$="{{_computeTitleClass(filter.color.main, 500)}}">
+    <div class$="{{_computeContainerClass(filter.category.color.main, 100)}}">
+      <paper-toolbar class$="{{_computeTitleClass(filter.category.color.main, 500)}}">
         <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
         <div title>{{filter.config.name}}</div>
         <div class="bottom">
-          <paper-fab mini class$="{{_computeFabClass(filter.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
+          <paper-fab mini class$="{{_computeFabClass(filter.category.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
         </div>
       </paper-toolbar>
       <div class="content layout vertical">

@@ -26,7 +26,10 @@ module.exports = function () {
       var plugins = [];
       pluginsName.forEach( function ( element, index, array ) {
         var plugin = require( element );
-        plugin.color = that.categories[plugin.config.category];
+        var name = plugin.config.category.toLowerCase();
+        plugin.category = that.categories[name];
+        plugin.category.name = name;
+
         plugins.push( plugin );
       } );
 

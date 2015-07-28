@@ -13,6 +13,7 @@
       padding: 1em;
       margin: 1em auto;
       cursor: pointer;
+      overflow: hidden;
     }
 
     .circle {
@@ -23,10 +24,23 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
+
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .circle-activated {
+      transform: scale(15,15);
+    }
+
+    .circle-activated + .content {
+      color: white
     }
 
     .content {
+      position: relative;
       padding-left: 46px;
+
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     paper-material:hover {
@@ -34,10 +48,12 @@
     }
   </style>
   <template>
-    <paper-material elevation="1">
-      <div class$="{{_computeClass(filter.color.main, 500)}}" id="circle"></div>
-      <div class="content"></div>
-    <paper-ripple></paper-ripple>
+    <paper-material elevation="1" on-click="_onClick">
+      <div class$="{{_computeClass(color.main, 500)}}" id="circle"></div>
+      <div class="content">
+        <content></content>
+      </div>
+      <paper-ripple></paper-ripple>
     </paper-material>
   </template>
 </dom-module>
@@ -46,15 +62,33 @@
   Polymer({
     is: 'drawer-box',
     properties: {
-      filter: Object
-    },
-
-    _computeClass: function (color) {
-      return 'circle ' + color + '-' + 500;
+      data: Object,
+      color: Object,
+      toggleable: Boolean,
+      isToggle: Boolean
     },
 
     ready: function() {
-      this.querySelector('.content').textContent = this.filter.config.name;
+      if ( this.toggleable ) {
+        this.querySelector( 'paper-ripple' ).classList.add('hide');
+        if ( this.isToggle ) {
+          this.$.circle.classList.add( 'circle-activated' );
+        }
+      }
+    },
+
+    _onClick: function ( e ) {
+      this.fire( 'box-clicked', this.data );
+
+      if ( this.toggleable ) {
+        this.$.circle.classList.toggle( 'circle-activated' );
+        this.isToggle = !this.isToggle;
+        this.fire( 'box-toggled', this.isToggle );
+      }
+    },
+
+    _computeClass: function ( color ) {
+      return 'circle ' + color + '-' + 500;
     }
   });
 </script>

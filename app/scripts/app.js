@@ -5,6 +5,9 @@
 
   app.appName = "Analiz";
 
+  /**
+   * Require modules
+   */
   app.remote = require( 'remote' );
   app.npm = require( 'npm' );
   app.async = require( 'async' );
@@ -14,11 +17,18 @@
   app.directory.fs = require( 'fs' );
   app.dateFormat = require( 'dateformat' );
 
+  /**
+   * Get the categories list with the correct structure
+   */
   app.categoriesList = [];
   Object.getOwnPropertyNames(app.categories).forEach( function ( element, index, array ) {
     app.categoriesList.push( app.categories[element] );
   } );
 
+  /**
+   * Show a toast
+   * @param  {String} message Toast message
+   */
   app.toast = function ( message ) {
     var toast = document.getElementById('toast');
 
@@ -26,11 +36,16 @@
     toast.show();
   };
 
+  /**
+   * Get the filters from the external plugins
+   */
   app.npmPrefix = 'resources/app';
   app.filters = [];
   app.getFilters();
 
-  // Analyze config object
+  /**
+   * Analyze config object
+   */
   app.analyzeConfig = {
     path: '',
     config: [],
@@ -46,6 +61,10 @@
     }
   };
 
+  /**
+   * The analyse function
+   * @param  {Object} config Configuration object
+   */
   app.analiz = function ( config ) {
     console.dir(config);
     app.toast( 'Lancement de l\'analyse...');

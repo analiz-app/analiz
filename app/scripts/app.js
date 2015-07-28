@@ -14,6 +14,13 @@
   app.directory.fs = require( 'fs' );
   app.dateFormat = require( 'dateformat' );
 
+  app.toast = function ( message ) {
+    var toast = document.getElementById('toast');
+
+    toast.text = message;
+    toast.show();
+  };
+
   app.npmPrefix = 'resources/app';
   app.filters = [];
   app.getFilters();
@@ -36,6 +43,7 @@
 
   app.analiz = function ( config ) {
     console.dir(config);
+    app.toast( 'Lancement de l\'analyse...');
   };
 
   // Default page

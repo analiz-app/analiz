@@ -4,6 +4,8 @@ module.exports = function () {
   return this.async.waterfall([
     // Get the plugins name
     function ( callback ) {
+
+
       that.npm.load( { 'prefix': that.npmPrefix }, function () {
         that.npm.commands.ls( [], true, function ( error, data ) {
           var pluginsName = [];
@@ -28,6 +30,8 @@ module.exports = function () {
         plugins.push( plugin );
       } );
 
+      document.getElementById('filter-list-loader').classList.add('hide');
+      app.toast( 'Les plugins sont chargés' );
       that.filters = plugins;
     }
   ]);

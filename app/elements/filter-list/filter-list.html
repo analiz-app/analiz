@@ -17,10 +17,15 @@
       @apply(--paper-font-caption);
       padding: 0 1.5em;
     }
+
+    #filter-list-loader {
+      position: absolute;
+      top: 50%;
+      left: 45%;
+    }
   </style>
   <template>
-
-
+    <paper-spinner id="filter-list-loader" alt="Loading filters list" active></paper-spinner>
     <neon-animated-pages id="filters" selected="0" >
       <section>
         <template is="dom-if" if="{{isActivatedFilters}}">
@@ -122,6 +127,8 @@
       this.push( 'activatedFilters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
 
+      app.toast( 'Filtre “' + e.detail.config.name + '” ajouté.' );
+
       this._changeActivatedFilter();
     },
 
@@ -133,6 +140,8 @@
       }, this);
       this.push( 'filters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      app.toast( 'Filtre “' + e.detail.config.name + '” supprimé.' );
 
       this._changeActivatedFilter();
     }

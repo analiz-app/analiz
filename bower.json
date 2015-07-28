@@ -24,7 +24,7 @@
     "paper-radio-button": "PolymerElements/paper-radio-button#^1.0.0",
     "paper-styles": "PolymerElements/paper-styles#^1.0.0",
     "paper-tabs": "PolymerElements/paper-tabs#^1.0.0",
-    "paper-toast": "PolymerElements/paper-toast#^1.0.0",
+    "paper-toast": "PolymerElements/paper-toast#~1.0.0",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.0.0",
     "neon-animation": "PolymerElements/neon-animation#^1.0.0",
     "iron-pages": "PolymerElements/iron-pages#^1.0.0",
@@ -37,7 +37,8 @@
     "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.1",
     "paper-menu-button": "PolymerElements/paper-menu-button#^1.0.0",
     "paper-ripple": "PolymerElements/paper-ripple#~1.0.1",
-    "paper-dialog": "PolymerElements/paper-dialog#~1.0.1"
+    "paper-dialog": "PolymerElements/paper-dialog#~1.0.1",
+    "paper-spinner": "PolymerElements/paper-spinner#~1.0.2"
   },
   "resolutions": {
     "font-roboto": "safetychanger/font-roboto#1.0.1"

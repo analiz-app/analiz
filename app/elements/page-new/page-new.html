@@ -240,6 +240,7 @@
       this.$.directoryContent.data = this.directoryContent;
       // Set the analyze object informations
       app.analyzeConfig.set( 'path', '' );
+      app.toast( 'Dossier supprimé' );
     },
 
     _listFolderContent: function () {
@@ -267,7 +268,6 @@
       // Set the analyze object informations
       app.analyzeConfig.set( 'path', path );
 
-
       this.directoryContent = [];
 
       // Get the content of the folder
@@ -287,6 +287,7 @@
       }
 
       this.$.directoryContent.data = this.directoryContent;
+      app.toast( 'Contenu du dossier chargé !' );
     },
 
     formatDate:function ( date ) {

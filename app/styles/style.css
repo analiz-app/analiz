@@ -1,6 +1,7 @@
-/*body {
-  font-family: Roboto;
-}*/
+paper-toolbar {
+  position: relative;
+  z-index: 1
+}
 
 .fab--half-bottom {
   position: absolute;

@@ -1,0 +1,105 @@
+<dom-module id="animated-grid">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+      margin: 1em 0;
+
+      position: relative;
+      top: 0;
+      left: 0;
+      @apply(--layout-horizontal);
+      @apply(--layout-center-center);
+      @apply(--layout-wrap);
+    }
+
+    paper-material {
+      width: 300px;
+      margin: 1em;
+      overflow: hidden;
+      border-radius: 3px;
+    }
+
+    paper-material:hover {
+      @apply(--shadow-elevation-8dp);
+    }
+
+    .color-box {
+      height: 200px;
+    }
+
+    .caption-box {
+      padding: 1em 1.5em;
+      width: 100%;
+    }
+  </style>
+  <template>
+    <template is="dom-repeat" items=[[data]]>
+      <paper-material data="{{_compututeData(item)}}" elevation="1" on-click="_onClick">
+        <div class$="[[_computeColorBoxClass(item.category)]]"></div>
+        <div class="caption-box">[[item.name]]</div>
+      </paper-material>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'animated-grid',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'exit': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              fromPage: this
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              fromPage: this
+            }]
+          }
+        }
+      }
+    },
+
+    _onClick: function( e ) {
+      var target = e.target;
+      while ( target !== this && !target._templateInstance ) {
+        target = target.parentNode;
+      }
+
+      // configure the page animation
+      this.sharedElements = {
+        'hero': target.querySelector('.color-box'),
+        'fade-in-title': target.querySelector('.caption-box'),
+        'ripple': target
+      };
+      this.animationConfig[ 'exit' ][ 0 ].gesture = {
+        x: event.x || event.pageX,
+        y: event.y || event.pageY
+      };
+
+      this.fire('tile-click', {
+        tile: target,
+        data: target.data
+      });
+    },
+
+    _compututeData:function ( data ) {
+      data['color'] = app.categories[ data.category ].color.main;
+      return data;
+    },
+
+    _computeColorBoxClass: function ( category ) {
+      return 'color-box ' + app.categories[ category ].color.main + '-500';
+    }
+  });
+</script>

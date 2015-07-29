@@ -82,6 +82,7 @@
 
   window.addEventListener( 'WebComponentsReady', function() {
     document.querySelector( 'body' ).removeAttribute( 'unresolved' );
+    app.isNarrow = document.getElementById('paperDrawerPanel').narrow;
   });
 
   // About dialog
@@ -89,5 +90,24 @@
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'about-dialog paper-dialog' ).open();
   };
+
+  app.results = [
+    {
+      category: 'html',
+      name: 'Validation HTML'
+    },{
+      category: 'css',
+      name: 'Validation CSS'
+    },{
+      category: 'js',
+      name: 'JSHint'
+    },{
+      category: 'misc',
+      name: 'Contraste'
+    },{
+      category: 'html',
+      name: 'Analyse syntaxique'
+    },
+  ];
 
 })(document);

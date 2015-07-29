@@ -27,7 +27,7 @@ module.exports = {
       accent: 'red'
     }
   },
-  divers: {
+  misc: {
     label: 'Divers',
     color: {
       main: 'grey',

@@ -15,6 +15,7 @@
   app.getFilters = require( './moduleLister.js' );
   app.directory = require( 'directory-tree' );
   app.directory.fs = require( 'fs' );
+  app.directory.path = require( 'path' );
   app.dateFormat = require( 'dateformat' );
 
   /**
@@ -48,12 +49,12 @@
    */
   app.analyzeConfig = {
     path: '',
-    config: [],
+    plugins: [],
 
     set: function ( property, value ) {
       this[property] = value;
       // If the path and the config are set show the 'Analiz !' button
-      if ( this.path && this.config.length > 0 ) {
+      if ( this.path && this.plugins.length > 0 ) {
         document.getElementById( 'analyzeButton' ).disabled = false;
       } else {
         document.getElementById( 'analyzeButton' ).disabled = true;
@@ -63,12 +64,36 @@
 
   /**
    * The analyse function
-   * @param  {Object} config Configuration object
+   * @param  {Object} data Data configuration object
    */
-  app.analiz = function ( config ) {
-    console.dir(config);
+  app.analiz = function ( data ) {
+    var files;
     app.toast( 'Lancement de l\'analyse...');
 
+    // Get all the files in the directory
+    walk( data.path, function ( err, files ) {
+      // Run the plugins one by one
+      data.plugins.forEach( function ( plugin ) {
+        // Prepare the parameters
+        var parameters = {
+          files: [],
+          options: plugin.config.options
+        };
+
+        // Get the files the plugin need
+        files.forEach( function( file ) {
+          if ( plugin.config.fileTypes.indexOf( app.directory.path.extname( file ) ) >= 0 ) {
+            parameters.files.push( file );
+          }
+        } );
+
+        // Run the plugin
+        plugin.run( parameters.files, parameters.options, app.getAnalyzeResults );
+      } );
+    } );
+  };
+
+  app.getAnalyzeResults = function ( error, results ) {
     app.isAudit = true;
     app.selected = 2;
   };
@@ -76,7 +101,7 @@
   app.isAudit = false;
 
   // Default page
-  app.selected = 2;
+  app.selected = 0;
 
   var i = 0;
 
@@ -109,5 +134,28 @@
       name: 'Analyse syntaxique'
     },
   ];
+
+  var walk = function(dir, done) {
+    var results = [];
+    app.directory.fs.readdir(dir, function(err, list) {
+      if (err) return done(err);
+      var pending = list.length;
+      if (!pending) return done(null, results);
+      list.forEach(function(file) {
+        file = app.directory.path.resolve(dir, file);
+        app.directory.fs.stat(file, function(err, stat) {
+          if (stat && stat.isDirectory()) {
+            walk(file, function(err, res) {
+              results = results.concat(res);
+              if (!--pending) done(null, results);
+            });
+          } else {
+            results.push(file);
+            if (!--pending) done(null, results);
+          }
+        });
+      });
+    });
+  };
 
 })(document);

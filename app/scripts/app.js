@@ -54,13 +54,11 @@
     set: function ( property, value ) {
       this[property] = value;
       // If the path and the config are set show the 'Analiz !' button
-      if ( this.path && this.plugins.length > 0 ) {
-        document.getElementById( 'analyzeButton' ).disabled = false;
-      } else {
-        document.getElementById( 'analyzeButton' ).disabled = true;
-      }
+      document.getElementById( 'analyzeButton' ).disabled = ( this.path && this.plugins.length === 0 );
     }
   };
+
+  app.analyzeResults = [];
 
   /**
    * The analyse function
@@ -68,7 +66,11 @@
    */
   app.analiz = function ( data ) {
     var files;
+
+    app.loadingModal.set( 'data.pluginTotal', data.plugins.length);
     app.toast( 'Lancement de l\'analyse...');
+    // Open the loader modal
+    app.loadingModal.open();
 
     // Get all the files in the directory
     walk( data.path, function ( err, files ) {
@@ -77,7 +79,7 @@
         // Prepare the parameters
         var parameters = {
           files: [],
-          options: plugin.config.options
+          options: {}
         };
 
         // Get the files the plugin need
@@ -87,15 +89,51 @@
           }
         } );
 
+        // Get the options the plugin need
+        plugin.config.options.forEach( function( option ) {
+          parameters.options[option.name] = option;
+        } );
+
+        // Set the loading data for the current plugin
+        app.loadingModal.push( 'data.name', plugin.config.name );
+        app.loadingModal.set( 'data.fileTotal', parameters.files.length );
+
         // Run the plugin
-        plugin.run( parameters.files, parameters.options, app.getAnalyzeResults );
+        plugin.run( parameters.files, parameters.options, app.loadingResults );
       } );
     } );
   };
 
-  app.getAnalyzeResults = function ( error, results ) {
+  app.loadingResults = function ( error, results ) {
+    // Store the analyze results
+    app.analyzeResults.push( results );
+
+    // Set the file progress
+    app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
+    app.loadingModal.set( 'data.fileValue', Math.round( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ));
+    // Verify if all the files for the current plugin has been analyzed
+    if ( app.loadingModal.data.fileCount == app.loadingModal.data.fileTotal ) {
+      // Set the plugin progress
+      app.loadingModal.set( 'data.pluginCount', app.loadingModal.data.pluginCount + 1 );
+      app.loadingModal.set( 'data.pluginValue', Math.round( ( 100 * app.loadingModal.data.pluginCount ) / app.loadingModal.data.pluginTotal ));
+      // Verify if the analyze is over
+      if ( app.loadingModal.data.pluginCount == app.loadingModal.data.pluginTotal ) {
+        app.isLoaded( app.analyzeResults );
+      } else {
+        app.loadingModal.set( 'data.fileCount', 0);
+      }
+    }
+  };
+
+  app.isLoaded = function ( results ) {
+    // Close the modal, reset the loader and show the audit page
+    document.querySelector('loading-modal').close();
+    document.querySelector('loading-modal').reset();
+
     app.isAudit = true;
     app.selected = 2;
+
+    console.dir(results);
   };
 
   app.isAudit = false;
@@ -108,6 +146,8 @@
   window.addEventListener( 'WebComponentsReady', function() {
     document.querySelector( 'body' ).removeAttribute( 'unresolved' );
     app.isNarrow = document.getElementById('paperDrawerPanel').narrow;
+
+    app.loadingModal = document.querySelector('loading-modal');
   });
 
   // About dialog

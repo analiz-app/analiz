@@ -1,0 +1,81 @@
+<dom-module id="loading-modal">
+  <style>
+    :host {
+      display: block;
+    }
+
+    .loadingProgress {
+      text-align: center;
+      margin-top: 0
+    }
+  </style>
+  <template>
+    <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+      <h2>Analyse en cours</h2>
+      <template is="dom-repeat" items="[[data.name]]" index-as="index">
+        <paper-icon-item id="[[_computeID(index)]]">
+          <div item-icon>
+            <paper-spinner active></paper-spinner>
+            <iron-icon icon="check" class="hide"></iron-icon>
+          </div>
+          <div>[[item]]</div>
+        </paper-icon-item>
+      </template>
+      <paper-progress id="loadingBar" value="[[data.pluginValue]]" secondary-progress="[[data.fileValue]]" class="transiting"></paper-progress>
+      <div class="loadingProgress"><span>[[data.fileValue]]</span>/<span>[[data.fileValue]]</span>%</div>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'loading-modal',
+
+    properties: {
+      data: {
+        type: Object,
+        value: {
+          name: [],
+          pluginCount: 0,
+          pluginTotal: 0,
+          pluginValue: 0,
+          fileCount: 0,
+          fileTotal: 0,
+          fileValue: 0
+        },
+        notify: true,
+        observer: '_dataChanged'
+      },
+      isLast: true
+    },
+
+    open: function () {
+      this.querySelector( 'paper-dialog' ).open();
+    },
+
+    close: function () {
+      this.querySelector( 'paper-dialog' ).close();
+    },
+
+    reset: function () {
+      this.data.fileCount = 0;
+      this.data.pluginCount = 0;
+      this.data.fileValue = 0;
+      this.data.pluginValue = 0;
+    },
+
+    // TODO Not fired
+    _dataChanged: function () {
+      if ( this.data.pluginValue == 100 ) {
+        console.dir(this.data);
+        this.$[ 'plugin-index-' + this.data.pluginCount - 1].querySelector( 'paper-spinner' ).classList.add( 'hide' );
+        this.$[ 'plugin-index-' + this.data.pluginCount - 1].querySelector( 'iron-icon' ).classList.remove( 'hide' );
+      }
+    },
+
+    _computeID:function ( index ) {
+      return 'plugin-index-' + index;
+    }
+
+  });
+</script>

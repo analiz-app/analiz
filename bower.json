@@ -38,7 +38,8 @@
     "paper-menu-button": "PolymerElements/paper-menu-button#^1.0.0",
     "paper-ripple": "PolymerElements/paper-ripple#~1.0.1",
     "paper-dialog": "PolymerElements/paper-dialog#~1.0.1",
-    "paper-spinner": "PolymerElements/paper-spinner#~1.0.2"
+    "paper-spinner": "PolymerElements/paper-spinner#~1.0.2",
+    "paper-progress": "PolymerElements/paper-progress#~1.0.2"
   },
   "resolutions": {
     "font-roboto": "safetychanger/font-roboto#1.0.1"

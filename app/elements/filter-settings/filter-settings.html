@@ -1,0 +1,125 @@
+<dom-module id="filter-settings">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      min-height: 100%;
+      height: auto;
+    }
+
+    .content {
+      padding: 1em;
+    }
+
+    paper-checkbox {
+      margin: .5em 0;
+    }
+
+    paper-select {
+      --paper-select-border-color: #fff;
+    }
+
+  </style>
+  <template>
+    <div class$="{{_computeContainerClass(filter.category.color.main, 100)}}">
+      <paper-toolbar class$="{{_computeTitleClass(filter.category.color.main, 500)}}">
+        <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
+        <div title>{{filter.config.name}}</div>
+        <div class="bottom">
+          <paper-fab mini class$="{{_computeFabClass(filter.category.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
+        </div>
+      </paper-toolbar>
+      <div class="content layout vertical">
+        <template is="dom-repeat" items="{{filter.config.options}}">
+          <p>[[item.label]]</p>
+          <template is="dom-if" if="[[_isType('list', item)]]">
+            <paper-select data="[[item.data]]" name="[[item.name]]" on-select-changed="_onSelectChanged"></paper-select>
+          </template>
+        </template>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-settings',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      filter: Object,
+      color: Object,
+      isActivated: {
+        type: Boolean,
+        notify: true,
+        observer: '_changeFabIcon'
+      },
+      fabIcon: String,
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'slide-from-left-animation',
+              node: this
+            },
+            'exit': {
+              name: 'slide-left-animation',
+              node: this
+            }
+          }
+        }
+      }
+    },
+
+    _isType: function ( type, item ) {
+      return ( item.type == type );
+    },
+
+    _computeContainerClass: function ( color, tint ) {
+      return 'container ' + color + '-' + tint;
+    },
+
+    _computeTitleClass: function ( color, tint ) {
+      return color + '-' + tint;
+    },
+
+    _computeFabClass: function ( color, tint ) {
+      return color + '-' + tint + ' mini-fab--half-bottom';
+    },
+
+    _changeFabIcon: function () {
+      this.fabIcon = ( this.isActivated ) ? 'remove' : 'add';
+    },
+
+    _onSelectChanged: function ( e ) {
+      this.fire( 'select-value-changed', {
+        name: e.target.name,
+        value: e.detail,
+        isActivated: this.isActivated
+      } );
+    },
+
+    _onBackClick: function ( e ) {
+      this.fire( 'back-click' );
+    },
+
+    _onFabFilterClick: function ( e ) {
+      if (this.isActivated) {
+        this.fire( 'remove-filter-click', this['__data__'].filter );
+      } else {
+        this.fire( 'add-filter-click', this['__data__'].filter );
+      }
+      this.fire( 'back-click' );
+    }
+  });
+</script>

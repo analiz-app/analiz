@@ -1,0 +1,27 @@
+<dom-module id="about-dialog">
+  <style>
+    :host {
+      display: block;
+    }
+
+    paper-dialog p {
+      padding: 0 1.5em
+    }
+  </style>
+  <template>
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+      <h2>A propos</h2>
+        <p>Cette application a été entièrement réalisée sous Polymer 1.0 et Electron</p>
+      <div>
+        <paper-button dialog-confirm>Fermer</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'about-dialog',
+
+  });
+</script>

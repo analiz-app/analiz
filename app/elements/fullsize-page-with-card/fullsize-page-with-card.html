@@ -1,0 +1,167 @@
+<dom-module id="fullsize-page-with-card">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+    }
+
+    .container {
+      position: fixed;
+      top: 64px;
+      left: 256px;
+      width: 100%;
+
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container-small {
+      top: 56px;
+      left: 0px;
+    }
+
+    #fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
+
+    .card {
+      position: absolute;
+      top: 0;
+      height: 100px;
+      width: 100%;
+
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #caption-title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 1.5em 1.5em 1.5em;
+      color: white;
+      @apply(--paper-font-title);
+
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container-small .card {
+      height: 75px;
+    }
+
+    .container-small #caption-title {
+      padding-top: .8em;
+    }
+  </style>
+  <template>
+    <div class="container">
+      <div id="fixed" class$="[[_computeFixedBackgroundClass(data.color)]]"></div>
+      <div id="card" class$="[[_computeCardClass(data.color)]]">
+        <div id="caption-title">
+          <paper-icon-button icon="arrow-back" on-click="_backClicked"></paper-icon-button>
+          <span>[[data.name]]</span>
+        </div>
+      </div>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'fullsize-page-with-card',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      data: Object,
+      sharedElements: {
+        type: Object,
+        value: function() {
+          return {
+            'hero': this.$.card,
+            'ripple': this.$.fixed
+          }
+        }
+      },
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              toPage: this,
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              toPage: this,
+              timing: {
+                delay: 150
+              }
+            }, {
+              name: 'fade-in-animation',
+              node: this.$['caption-title'],
+              timing: {
+                delay: 150
+              }
+            }],
+            'exit': [{
+              name: 'fade-out-animation',
+              node: this.$.fixed
+            }, {
+              name: 'transform-animation',
+              transformFrom: 'none',
+              transformTo: 'translate(0px,-200vh) scale(0.9,1)',
+              node: this.$.card
+            }]
+          }
+        }
+      }
+    },
+
+    _computeCardClass: function( color ) {
+      var cls = 'card';
+      if ( color ) {
+        cls += ' ' + color + '-500';
+      }
+      return cls;
+    },
+
+    ready: function() {
+      var that = this;
+
+      window.addEventListener( 'WebComponentsReady', function() {
+        if (app.isNarrow) {
+          that.querySelector('.container').classList.add( 'container-small' );
+        }
+      });
+
+      window.addEventListener( 'paper-responsive-change', function( e ) {
+        if ( e.detail.narrow ) {
+          that.querySelector('.container').classList.add( 'container-small' );
+        } else {
+          that.querySelector('.container').classList.remove( 'container-small' );
+        }
+      });
+    },
+
+    _computeFixedBackgroundClass: function( color ) {
+      var cls = 'fixed';
+      if ( color ) {
+        cls += ' ' + color + '-100';
+      }
+      return cls;
+    },
+
+    _backClicked:function ( e ) {
+      this.fire( 'back-click' );
+    }
+  });
+</script>

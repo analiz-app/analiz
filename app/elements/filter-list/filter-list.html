@@ -1,0 +1,144 @@
+<dom-module id="filter-list">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    neon-animated-pages {
+      height: 100%;
+      width: 100%;
+    }
+
+    .filter-status {
+      color: var(--secondary-text-color);
+      @apply(--paper-font-caption);
+      padding: 0 1.5em;
+    }
+
+    #filter-list-loader {
+      position: absolute;
+      top: 50%;
+      left: 45%;
+    }
+  </style>
+  <template>
+    <paper-spinner id="filter-list-loader" alt="Loading filters list" active></paper-spinner>
+    <neon-animated-pages id="filters" selected="0" >
+      <section>
+        <template is="dom-if" if="{{isActivatedFilters}}">
+          <div>
+            <p class="filter-status">Filtres activés</p>
+            <template is="dom-repeat" items="{{activatedFilters}}">
+              <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{item.config.name}}</drawer-box>
+            </template>
+            <p class="filter-status">Filtres désactivés</p>
+          </div>
+        </template>
+
+        <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
+      </section>
+
+      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick" on-select-value-changed="_selectValueChanged"></filter-settings>
+    </neon-animated-pages>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-list',
+    properties: {
+      filters: {
+        type: Array,
+        notify: true
+      },
+      activatedFilters: {
+        type: Array,
+        value: function () {
+          return []
+        }
+      },
+      isActivatedFilters: {
+        type: Boolean,
+        value: false
+      },
+      filtersOption: {
+        type: Array,
+        value: function () {
+          return []
+        }
+      }
+    },
+
+    _changeActivatedFilter: function () {
+      var config = this.activatedFilters;
+      var that = this;
+      // Retrieve all the config info and transform them to fit the analyze function
+      config.forEach( function ( element, index, array ) {
+        element.config.options.forEach( function ( optionElement, optionIndex, optionArray ) {
+          optionElement.data = that.filtersOption[ optionElement.name ];
+        } );
+      } );
+
+      app.analyzeConfig.set( 'plugins', config );
+    },
+
+    _selectValueChanged: function ( e ) {
+      // Fix because when try to set false after setting a string, false is a string
+      this.filtersOption[ e.detail.name ] = (e.detail.value === 'false') ? false : e.detail.value;
+
+      if ( e.detail.isActivated ) {
+        this._changeActivatedFilter();
+      }
+    },
+
+    _onFilterClick: function ( e ) {
+      this.$['filter-settings'].filter = e.detail.filter;
+      this.$.filters.selected = 1;
+
+      this.$['filter-settings'].isActivated = false;
+
+    },
+
+    _onFilterActivatedClick: function ( e ) {
+      this.$['filter-settings'].isActivated = true;
+
+      this.$['filter-settings'].filter = e.detail;
+      this.$.filters.selected = 1;
+    },
+
+    _onBackClick: function () {
+      this.$.filters.selected = 0;
+    },
+
+    _onAddFilterClick:function ( e ) {
+      this.filters.forEach(function ( element, index, array ) {
+        if ( element.id == e.detail.id ) {
+          this.splice( 'filters', index, 1 );
+        }
+      }, this);
+      this.push( 'activatedFilters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      app.toast( 'Filtre “' + e.detail.config.name + '” ajouté.' );
+
+      this._changeActivatedFilter();
+    },
+
+    _onRemoveFilterClick:function ( e ) {
+      this.activatedFilters.forEach(function ( element, index, array ) {
+        if ( element.id == e.detail.id ) {
+          this.splice( 'activatedFilters', index, 1 );
+        }
+      }, this);
+      this.push( 'filters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      app.toast( 'Filtre “' + e.detail.config.name + '” supprimé.' );
+
+      this._changeActivatedFilter();
+    }
+  });
+</script>

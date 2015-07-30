@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analiz</title>
+
+    <link rel="stylesheet" href="styles/style.css" media="screen">
+    <meta charset="utf-8">
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+
+    <link rel="import" href="elements/elements.html">
+  </head>
+  <body unresolved class="fullbleed layout vertical">
+    <template is="dom-bind" id="app">
+      <paper-drawer-panel id="paperDrawerPanel" forceNarrow>
+        <paper-header-panel drawer>
+          <!-- Drawer Toolbar -->
+          <paper-toolbar id="drawerToolbar">
+            <iron-pages selected="[[selected]]">
+              <span>Liste des filtres</span>
+              <span></span>
+              <span>Filtrer les résultats</span>
+            </iron-pages>
+          </paper-toolbar>
+
+          <!-- Drawer Content -->
+          <iron-pages selected="[[selected]]">
+            <filter-list filters="{{filters}}"></filter-list>
+            <section></section>
+            <section>
+              <template is="dom-repeat" items="[[categoriesList]]">
+                <drawer-box data="[[item]]" color="[[item.color]]" on-box-clicked="filterResults" toggleable is-toggle>[[item.label]]</drawer-box>
+              </template>
+            </section>
+          </iron-pages>
+        </paper-header-panel>
+        <paper-header-panel main>
+          <!-- Main Toolbar -->
+          <paper-toolbar>
+            <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+            <paper-tabs selected="{{selected}}" class="paper-tabs" noink="true">
+              <paper-tab>Nouvelle analyse</paper-tab>
+              <paper-tab>Historique</paper-tab>
+              <template is="dom-if" if=[[isAudit]]>
+                <paper-tab>Audit</paper-tab>
+              </template>
+            </paper-tabs>
+            <!-- Toolbar icons -->
+            <paper-menu-button class="settings-dropdown" horizontal-align="right">
+              <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+              <paper-menu class="dropdown-content">
+                <paper-item on-click="pluginOpen">
+                  <paper-item-body>
+                    Plugins
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+                <paper-item on-click="settingsOpen">
+                  <paper-item-body>
+                    Paramètres
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+                <paper-item on-click="aboutOpen">
+                  <paper-item-body>
+                    A propos
+                  </paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+              </paper-menu>
+            </paper-menu-button>
+          </paper-toolbar>
+          <!-- Main Content -->
+          <iron-pages selected="[[selected]]">
+            <section>
+              <page-new></page-new>
+            </section>
+            <section>
+              <page-history></page-history>
+            </section>
+            <section>
+              <page-audit></page-audit>
+            </section>
+          </iron-pages>
+          <about-dialog></about-dialog>
+        </paper-header-panel>
+      </paper-drawer-panel>
+      <paper-toast id="toast"></paper-toast>
+      <loading-modal></loading-modal>
+    </template>
+    <script>require("./scripts/app.js")</script>
+  </body>
+</html>

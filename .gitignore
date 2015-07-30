@@ -1,7 +1,7 @@
 node_modules
-bin
+dist
+bower_components
 builds
 cache
-releases
-bower_components
-.idea
+.ac-poly.json
+.tmp

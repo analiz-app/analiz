@@ -15,10 +15,6 @@ var electronVersion = 'v0.30.0';
 // Set the platforms for builds
 var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 
-// Misc
-var sBuildFolder = 'builds/' + electronVersion + '/' + sCurrentPlatform;
-var sAppFolder =  sBuildFolder + '/resources/app';
-
 // Build the app
 // TODO : Add gulp-bump for automatic version name when the first usable app prototype is done
 gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {

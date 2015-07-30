@@ -14,6 +14,9 @@ var packageJson = require('./app/package.json');
 var electronVersion = 'v0.30.0';
 // Set the platforms for builds
 var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
+// Set the folder for dev (use the first element in aPlatforms)
+var sBuildFolder = 'builds/' + electronVersion + '/' + aPlatforms[0];
+var sAppFolder =  sBuildFolder + '/resources/app';
 
 // Build the app
 // TODO : Add gulp-bump for automatic version name when the first usable app prototype is done

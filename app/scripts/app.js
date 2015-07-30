@@ -141,9 +141,11 @@
     // Close the modal, reset the loader and show the audit page
     document.querySelector('loading-modal').close();
     document.querySelector('loading-modal').reset();
-
+    app.analyzeResults = [];
 
     document.querySelector('page-audit').set('data', results);
+
+    console.dir(results);
 
     app.isAudit = true;
     app.selected = 2;

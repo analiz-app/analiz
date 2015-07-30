@@ -59,6 +59,7 @@
   };
 
   app.analyzeResults = [];
+  app.currentPlugin = {};
 
   /**
    * The analyse function
@@ -75,7 +76,7 @@
     // Get all the files in the directory
     walk( data.path, function ( err, files ) {
       // Run the plugins one by one
-      data.plugins.forEach( function ( plugin ) {
+      data.plugins.forEach( function ( plugin, index ) {
         // Prepare the parameters
         var parameters = {
           files: [],
@@ -98,6 +99,9 @@
         app.loadingModal.push( 'data.name', plugin.config.name );
         app.loadingModal.set( 'data.fileTotal', parameters.files.length );
 
+        app.currentPlugin = plugin.config;
+        app.currentPlugin.id = index;
+
         // Run the plugin
         plugin.run( parameters.files, parameters.options, app.loadingResults );
       } );
@@ -106,7 +110,15 @@
 
   app.loadingResults = function ( error, results ) {
     // Store the analyze results
-    app.analyzeResults.push( results );
+    if ( !app.analyzeResults[app.currentPlugin.id] ) {
+      app.analyzeResults[app.currentPlugin.id] = {
+        name: app.currentPlugin.name,
+        category: app.currentPlugin.category,
+        options: app.currentPlugin.options,
+        data: []
+      };
+    }
+    app.analyzeResults[app.currentPlugin.id].data.push( results );
 
     // Set the file progress
     app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
@@ -130,10 +142,16 @@
     document.querySelector('loading-modal').close();
     document.querySelector('loading-modal').reset();
 
-    app.isAudit = true;
-    app.selected = 2;
+    results.forEach(function(elem) {
+      console.dir(elem);
+    });
 
     console.dir(results);
+
+    document.querySelector('page-audit').set('data', results);
+
+    app.isAudit = true;
+    app.selected = 2;
   };
 
   app.isAudit = false;
@@ -155,25 +173,6 @@
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'about-dialog paper-dialog' ).open();
   };
-
-  app.results = [
-    {
-      category: 'html',
-      name: 'Validation HTML'
-    },{
-      category: 'css',
-      name: 'Validation CSS'
-    },{
-      category: 'js',
-      name: 'JSHint'
-    },{
-      category: 'misc',
-      name: 'Contraste'
-    },{
-      category: 'html',
-      name: 'Analyse syntaxique'
-    },
-  ];
 
   var walk = function(dir, done) {
     var results = [];

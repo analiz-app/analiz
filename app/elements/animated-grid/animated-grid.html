@@ -15,9 +15,18 @@
 
     paper-material {
       width: 300px;
+      opacity: 1;
       margin: 1em;
       overflow: hidden;
       border-radius: 3px;
+
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hide-result-card {
+      width: 0;
+      opacity: 0;
+      transform: scale(0,0);
     }
 
     paper-material:hover {
@@ -34,8 +43,8 @@
     }
   </style>
   <template>
-    <template is="dom-repeat" items=[[data]]>
-      <paper-material data="{{_compututeData(item)}}" elevation="1" on-click="_onClick">
+    <template is="dom-repeat" items="[[data]]">
+      <paper-material data="{{_compututeData(item)}}" class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
         <div class$="[[_computeColorBoxClass(item.category)]]"></div>
         <div class="caption-box">[[item.name]]</div>
       </paper-material>
@@ -71,6 +80,7 @@
     },
 
     _onClick: function( e ) {
+      console.dir(this.data);
       var target = e.target;
       while ( target !== this && !target._templateInstance ) {
         target = target.parentNode;
@@ -100,6 +110,10 @@
 
     _computeColorBoxClass: function ( category ) {
       return 'color-box ' + app.categories[ category ].color.main + '-500';
+    },
+
+    _compututePaperClass: function ( category ) {
+      return 'result-card-' + category;
     }
   });
 </script>

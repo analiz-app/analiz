@@ -142,11 +142,6 @@
     document.querySelector('loading-modal').close();
     document.querySelector('loading-modal').reset();
 
-    results.forEach(function(elem) {
-      console.dir(elem);
-    });
-
-    console.dir(results);
 
     document.querySelector('page-audit').set('data', results);
 
@@ -172,6 +167,10 @@
   app.aboutOpen = function ( e ) {
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'about-dialog paper-dialog' ).open();
+  };
+
+  app.filterResults = function ( e ) {
+    document.querySelector( '.result-card-' + e.detail.name ).classList.toggle( 'hide-result-card' );
   };
 
   var walk = function(dir, done) {

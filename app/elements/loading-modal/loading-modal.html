@@ -12,8 +12,8 @@
   <template>
     <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
       <h2>Analyse en cours</h2>
-      <template is="dom-repeat" items="[[data.name]]" index-as="index">
-        <paper-icon-item id="[[_computeID(index)]]">
+      <template id="loader-plugins" is="dom-repeat" items="[[data.name]]" index-as="index">
+        <paper-icon-item>
           <div item-icon>
             <paper-spinner active></paper-spinner>
             <iron-icon icon="check" class="hide"></iron-icon>
@@ -43,10 +43,21 @@
           fileTotal: 0,
           fileValue: 0
         },
-        notify: true,
-        observer: '_dataChanged'
+        notify: true
       },
       isLast: true
+    },
+
+    ready: function ( ) {
+      var that = this;
+      this.$[ 'loader-plugins' ].addEventListener( 'dom-change', function( e ) {
+        e.target.items.forEach( function( pluginName, index ) {
+          if ( index < 0 ) {
+            e.target.items[ index - 1 ].querySelector( 'paper-icon-item paper-spinner' ).classList.add( 'hide' );
+            e.target.items[ index - 1 ].querySelector( 'paper-icon-item iron-icon' ).classList.remove( 'hide' );
+          }
+        });
+      });
     },
 
     open: function () {
@@ -58,24 +69,11 @@
     },
 
     reset: function () {
-      this.data.fileCount = 0;
-      this.data.pluginCount = 0;
-      this.data.fileValue = 0;
-      this.data.pluginValue = 0;
-      this.set('data.name', []);
-    },
-
-    // TODO Not fired
-    _dataChanged: function () {
-      if ( this.data.pluginValue == 100 ) {
-        console.dir(this.data);
-        this.$[ 'plugin-index-' + this.data.pluginCount - 1].querySelector( 'paper-spinner' ).classList.add( 'hide' );
-        this.$[ 'plugin-index-' + this.data.pluginCount - 1].querySelector( 'iron-icon' ).classList.remove( 'hide' );
-      }
-    },
-
-    _computeID:function ( index ) {
-      return 'plugin-index-' + index;
+      this.set( 'data.fileCount', 0);
+      this.set( 'data.pluginCount', 0);
+      this.set( 'data.fileValue', 0);
+      this.set( 'data.pluginValue', 0);
+      this.set( 'data.name', [] );
     }
 
   });

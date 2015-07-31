@@ -140,7 +140,10 @@
   app.isLoaded = function ( results ) {
     // Close the modal, reset the loader and show the audit page
     document.querySelector('loading-modal').close();
-    document.querySelector('loading-modal').reset();
+    setTimeout(function () {
+      document.querySelector('loading-modal').reset();
+    }, 500);
+
     app.analyzeResults = [];
 
     document.querySelector('page-audit').set('data', results);

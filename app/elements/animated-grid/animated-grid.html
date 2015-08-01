@@ -5,6 +5,9 @@
       display: block;
       margin: 1em 0;
 
+      min-width: 500px;
+      overflow-x: auto;
+
       position: relative;
       top: 0;
       left: 0;
@@ -13,12 +16,17 @@
       @apply(--layout-wrap);
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     paper-material {
-      width: 300px;
+      width: 400px;
       opacity: 1;
       margin: 1em;
       overflow: hidden;
       border-radius: 3px;
+      cursor: pointer;
 
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -35,6 +43,41 @@
 
     .color-box {
       height: 200px;
+      padding: 2.5px;
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      @apply(--layout-wrap);
+    }
+
+    .summary-info {
+      position: relative;
+      color: #fff;
+      height: 90px;
+      margin: 2.5px 5px;
+    }
+
+    .summary-info div {
+      @apply(--paper-font-headline);
+      @apply(--light-primary-color);
+    }
+
+    .summary-info div[secondary] {
+      @apply(--paper-font-body1);
+    }
+
+    .summary-info iron-icon {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      width: 20px;
+    }
+
+    .summary-info--small {
+      width: 121.33333px;
+    }
+
+    .summary-info--large {
+      width: 383px;
     }
 
     .caption-box {
@@ -51,12 +94,50 @@
     <template id="animated-grid-repeat" is="dom-repeat" items="[[data]]" index="index">
       <paper-material class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
         <div class$="[[_computeColorBoxClass(item.category)]]">
-          <!-- TODO Reste a afficher les résultats -->
-          <p><span>[[analyzeSummary[index].infoValue]]</span>% de info</p>
-          <p><span>[[analyzeSummary[index].warningValue]]</span>% de warning</p>
-          <p><span>[[analyzeSummary[index].errorValue]]</span>% de error</p>
-          <p><span>[[analyzeSummary[index].fileCount]]</span> fichiers</p>
-          <p>index = <span>[[index]]</span></p>
+          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+            <paper-item-body two-line>
+              <div>
+                <span>[[arrayItem(analyzeSummary.*, index, 'infoValue')]]</span> %
+              </div>
+              <div secondary>
+                Info
+              </div>
+            </paper-item-body>
+            <iron-icon icon="info"></iron-icon>
+          </paper-item>
+          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+            <paper-item-body two-line>
+              <div>
+                <span>[[arrayItem(analyzeSummary.*, index, 'warningValue')]]</span> %
+              </div>
+              <div secondary>
+                Warning
+              </div>
+            </paper-item-body>
+            <iron-icon icon="warning"></iron-icon>
+          </paper-item>
+          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+            <paper-item-body two-line>
+              <div>
+                <span>[[arrayItem(analyzeSummary.*, index, 'errorValue')]]</span> %
+              </div>
+              <div secondary>
+                Error
+              </div>
+            </paper-item-body>
+            <iron-icon icon="error"></iron-icon>
+          </paper-item>
+          <paper-item class$="[[_computeSummaryClass( 'large', item.category )]]">
+            <paper-item-body two-line>
+              <div>
+                <span>[[arrayItem(analyzeSummary.*, index, 'fileCount')]]</span>
+              </div>
+              <div secondary>
+                Fichiers
+              </div>
+            </paper-item-body>
+            <iron-icon icon="description"></iron-icon>
+          </paper-item>
         </div>
         <div class="caption-box">[[item.name]]</div>
       </paper-material>
@@ -98,45 +179,23 @@
     ready: function () {
       var that = this;
       this.$[ 'animated-grid-repeat' ].addEventListener( 'dom-change' , function( e ) {
-        console.dir(e);
-        e.target.items.forEach(function( result, index ) {
-          that._prepareData( result, index );
+        e.target.items.forEach( function( result, index ) {
+          // Get the current card
+          var card = that.querySelector( '.result-card-' + result.category );
+
+          // Set the data in the card for the binding in the fullsize card
+          result['color'] = app.categories[ result.category ].color.main
+          card.data = result;
+
+          that.set( 'analyzeSummary.' + index, that._getPieData( result, index ) );
 
           console.dir(that.analyzeSummary);
         });
       });
     },
 
-    _onClick: function( e ) {
-      var target = e.target;
-      while ( target !== this && !target._templateInstance ) {
-        target = target.parentNode;
-      }
-
-      // configure the page animation
-      this.sharedElements = {
-        'hero': target.querySelector('.color-box'),
-        'fade-in-title': target.querySelector('.caption-box'),
-        'ripple': target
-      };
-      this.animationConfig[ 'exit' ][ 0 ].gesture = {
-        x: event.x || event.pageX,
-        y: event.y || event.pageY
-      };
-
-      this.fire('tile-click', {
-        tile: target,
-        data: target.data
-      });
-    },
-
-    _prepareData:function ( results, index ) {
+    _getPieData:function ( results, index ) {
       var that = this;
-
-      // Get the category color for the fullsize card
-      results['color'] = app.categories[ results.category ].color.main;
-
-      this.querySelector( '.result-card-' + results.category ).data = results;
 
       // Set the init counters values
       var summary = {
@@ -174,7 +233,34 @@
         // no error
       }
 
-      this.set( 'analyzeSummary.' + index, summary );
+      return summary;
+    },
+
+    arrayItem: function(change, index, path) {
+      return this.get(path, change.base[index]);
+    },
+
+    _onClick: function( e ) {
+      var target = e.target;
+      while ( target !== this && !target._templateInstance ) {
+        target = target.parentNode;
+      }
+
+      // configure the page animation
+      this.sharedElements = {
+        'hero': target.querySelector('.color-box'),
+        'fade-in-title': target.querySelector('.caption-box'),
+        'ripple': target
+      };
+      this.animationConfig[ 'exit' ][ 0 ].gesture = {
+        x: event.x || event.pageX,
+        y: event.y || event.pageY
+      };
+
+      this.fire('tile-click', {
+        tile: target,
+        data: target.data
+      });
     },
 
     _computeColorBoxClass: function ( category ) {
@@ -183,6 +269,10 @@
 
     _compututePaperClass: function ( category ) {
       return 'result-card-' + category;
+    },
+
+    _computeSummaryClass:function ( size, category ) {
+      return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
     }
   });
 </script>

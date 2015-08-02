@@ -5,6 +5,10 @@
       display: block;
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     .container {
       position: fixed;
       top: 64px;
@@ -28,46 +32,36 @@
       z-index: 0;
     }
 
-    .card {
+    #card {
       position: absolute;
       top: 0;
-      height: 100px;
       width: 100%;
-
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    #caption-title {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 1.5em 1.5em 1.5em;
+      padding: 15px 1.5em;
       color: white;
-      @apply(--paper-font-title);
-
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .container-small .card {
-      height: 75px;
+    .content {
+      width: 80%;
+      margin: 0 auto;
     }
 
-    .container-small #caption-title {
-      padding-top: .8em;
+    paper-header-panel::shadow #mainPanel {
+      margin-top: 70px;
+      z-index: 0;
     }
   </style>
   <template>
     <div class="container">
       <div id="fixed" class$="[[_computeFixedBackgroundClass(data.color)]]"></div>
-      <div id="card" class$="[[_computeCardClass(data.color)]]">
-        <div id="caption-title">
-          <paper-icon-button icon="arrow-back" on-click="_backClicked"></paper-icon-button>
-          <span>[[data.name]]</span>
+      <paper-header-panel id="paper-header-panel" mode="waterfall">
+        <div id="card" class$="[[_computeCardClass(data.color)]]">
+          <div id="caption-title">
+            <paper-icon-button icon="arrow-back" on-click="_backClicked"></paper-icon-button>
+            <span>[[data.name]]</span>
+          </div>
         </div>
-      </div>
+        <div class="content"></div>
+      </paper-header-panel>
     </div>
   </template>
 </dom-module>
@@ -119,7 +113,7 @@
               name: 'transform-animation',
               transformFrom: 'none',
               transformTo: 'translate(0px,-200vh) scale(0.9,1)',
-              node: this.$.card
+              node: this.$['paper-header-panel']
             }]
           }
         }
@@ -127,7 +121,7 @@
     },
 
     _computeCardClass: function( color ) {
-      var cls = 'card';
+      var cls = 'paper-header tall';
       if ( color ) {
         cls += ' ' + color + '-500';
       }
@@ -139,8 +133,10 @@
 
       window.addEventListener( 'WebComponentsReady', function() {
         if (app.isNarrow) {
-          that.querySelector('.container').classList.add( 'container-small' );
+          that.querySelector('.container').classListadd.add( 'container-small' );
         }
+        that.$[ 'paper-header-panel' ].style.height = document.getElementById( 'mainContainer' ).offsetHeight + 'px';
+        that.$[ 'paper-header-panel' ].style.width = document.getElementById( 'mainContainer' ).offsetWidth + 'px';
       });
 
       window.addEventListener( 'paper-responsive-change', function( e ) {
@@ -150,6 +146,11 @@
           that.querySelector('.container').classList.remove( 'container-small' );
         }
       });
+
+      window.addEventListener( 'resize', function ( e ) {
+        that.$[ 'paper-header-panel' ].style.height = document.getElementById( 'mainContainer' ).offsetHeight + 'px';
+        that.$[ 'paper-header-panel' ].style.width = document.getElementById( 'mainContainer' ).offsetWidth + 'px';
+      } );
     },
 
     _computeFixedBackgroundClass: function( color ) {
@@ -161,6 +162,7 @@
     },
 
     _backClicked:function ( e ) {
+      this.$['paper-header-panel'].scroller.scrollTop = 0;
       this.fire( 'back-click' );
     }
   });

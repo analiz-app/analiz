@@ -56,13 +56,14 @@
       margin: 2.5px 5px;
     }
 
-    .summary-info div {
-      @apply(--paper-font-headline);
-      @apply(--light-primary-color);
-    }
-
-    .summary-info div[secondary] {
-      @apply(--paper-font-body1);
+    .summary-info {
+      --paper-item: {
+        @apply(--paper-font-title);
+      };
+      --paper-item-body-secondary: {
+        @apply(--paper-font-body1);
+        color: var(--light-primary-color);
+      };
     }
 
     .summary-info iron-icon {
@@ -83,11 +84,6 @@
     .caption-box {
       padding: 1em 1.5em;
       width: 100%;
-    }
-
-    google-chart {
-      width: 100%;
-      height: 100%;
     }
   </style>
   <template>
@@ -188,8 +184,6 @@
           card.data = result;
 
           that.set( 'analyzeSummary.' + index, that._getPieData( result, index ) );
-
-          console.dir(that.analyzeSummary);
         });
       });
     },
@@ -211,7 +205,6 @@
       // Get the analyze synthese
       results.data.forEach( function( file ) {
         if ( file.errors.length > 0 ) {
-          summary.fileCount++;
           file.errors.forEach( function( error ) {
             if ( Array.isArray( error[ 0 ] ) ) {
               error.forEach( function( subError ) {
@@ -223,6 +216,8 @@
           });
         }
       });
+
+      summary.fileCount = results.data.length;
 
       var total = summary.infoCount + summary.warningCount + summary.errorCount;
       if ( total ) {

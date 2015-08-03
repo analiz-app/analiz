@@ -148,13 +148,15 @@
 
     document.querySelector('page-audit').set('data', results);
 
-    console.dir(results);
-
     app.isAudit = true;
     app.selected = 2;
   };
 
   app.isAudit = false;
+
+  app.changeTab = function ( e ) {
+    document.querySelector( 'page-audit #pages' ).selected = 0;
+  };
 
   // Default page
   app.selected = 0;
@@ -175,6 +177,7 @@
   };
 
   app.filterResults = function ( e ) {
+    app.changeTab();
     document.querySelector( '.result-card-' + e.detail.name ).classList.toggle( 'hide-result-card' );
   };
 

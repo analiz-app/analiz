@@ -38,8 +38,8 @@
           <paper-toolbar>
             <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
             <paper-tabs selected="{{selected}}" class="paper-tabs" noink="true">
-              <paper-tab>Nouvelle analyse</paper-tab>
-              <paper-tab>Historique</paper-tab>
+              <paper-tab on-click="changeTab">Nouvelle analyse</paper-tab>
+              <paper-tab on-click="changeTab">Historique</paper-tab>
               <template is="dom-if" if=[[isAudit]]>
                 <paper-tab>Audit</paper-tab>
               </template>

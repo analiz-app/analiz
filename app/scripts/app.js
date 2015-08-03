@@ -69,7 +69,6 @@
     var files;
 
     app.loadingModal.set( 'data.pluginTotal', data.plugins.length);
-    app.toast( 'Lancement de l\'analyse...');
     // Open the loader modal
     app.loadingModal.open();
 
@@ -143,6 +142,7 @@
     setTimeout(function () {
       document.querySelector('loading-modal').reset();
     }, 500);
+    app.toast( 'Analyse terminée !');
 
     app.analyzeResults = [];
 

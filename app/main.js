@@ -1,6 +1,8 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
+var path = require('path');
 require('electron-debug')();  // Module for useful debug features inside the app
+
 
 // Report crashes to our server.
 require('crash-reporter').start();
@@ -19,7 +21,12 @@ app.on('window-all-closed', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1280, height: 800});
+  var iconPath = path.resolve( __dirname, 'analiz.png' );
+  mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 800,
+    icon: iconPath
+  });
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');

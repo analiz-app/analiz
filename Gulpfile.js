@@ -19,7 +19,6 @@ var sBuildFolder = 'builds/' + electronVersion + '/' + aPlatforms[0];
 var sAppFolder =  sBuildFolder + '/resources/app';
 
 // Build the app
-// TODO : Add gulp-bump for automatic version name when the first usable app prototype is done
 gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({

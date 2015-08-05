@@ -3,6 +3,7 @@ var electron = require('gulp-electron');
 var gulp = require('gulp');
 var install = require('gulp-install');
 var merge = require('merge-stream');
+var path = require('path');
 
 var packageJson = require('./app/package.json');
 
@@ -11,8 +12,7 @@ var electronVersion = 'v0.30.0';
 // Set the platforms for builds
 var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 // Set the folder for dev (use the first element in aPlatforms)
-var sBuildFolder = 'builds/' + electronVersion + '/' + aPlatforms[0];
-var sAppFolder =  sBuildFolder + '/resources/app';
+var sAppFolder = path.resolve( 'builds' + electronVersion + aPlatforms[0] + 'resources' + 'app' );
 
 // Build the app
 gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
@@ -24,6 +24,37 @@ gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
       cache: './cache',
       version: electronVersion,
       platforms: aPlatforms,
+      packaging: true,
+      asar: false,
+      platformResources: {
+        darwin: {
+          CFBundleDisplayName: packageJson.name,
+          CFBundleIdentifier: packageJson.name,
+          CFBundleName: packageJson.name,
+          CFBundleVersion: packageJson.version,
+          icon: 'analiz.icns'
+        },
+        win: {
+          "version-string": packageJson.version,
+          "file-version": packageJson.version,
+          "product-version": packageJson.version,
+          "icon": 'analiz.ico'
+        }
+      }
+    }))
+    .pipe(gulp.dest(""));
+});
+
+// Build the app for dev
+gulp.task('electron-dev', ['copy', 'install', 'cleanBuilds'], function() {
+  return gulp.src("")
+    .pipe(electron({
+      src: './dist',
+      packageJson: packageJson,
+      release: './builds',
+      cache: './cache',
+      version: electronVersion,
+      platforms: aPlatforms[0],
       packaging: false,
       platformResources: {
         darwin: {
@@ -66,7 +97,7 @@ gulp.task('cleanBuilds', del.bind(null, ['builds']));
 
 gulp.task('default', ['electron']);
 
-gulp.task('dev', ['default'], function () {
+gulp.task('dev', ['electron-dev'], function () {
   gulp.watch(['app/**/*'], ['update']);
 });
 

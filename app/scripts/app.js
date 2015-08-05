@@ -195,7 +195,7 @@
 
   app.changeLanguage = function ( e ) {
     app.settings.language = (app.settings.language == 'fr') ? 'en' : 'fr';
-    app.directory.fs.writeFileSync( settingsFile, JSON.stringify(app.settings));
+    app.directory.fs.writeFileSync( settingsFile, JSON.stringify(app.settings) );
 
     app.remote.getCurrentWindow().reload();
   };

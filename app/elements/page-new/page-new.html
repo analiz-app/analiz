@@ -138,9 +138,9 @@
       </div>
       <div main class="file-list">
         <aha-table id="directoryContent">
-          <aha-column name="name" label="Nom" type="string" sortable></aha-column>
-          <aha-column name="size" label="Taille" type="string" sortable></aha-column>
-          <aha-column name="modified" label="Modification" type="datetime" sortable></aha-column>
+          <aha-column name="name" label="{{__('Name')}}" type="string" sortable></aha-column>
+          <aha-column name="size" label="{{__('Size')}}" type="string" sortable></aha-column>
+          <aha-column name="modified" label="{{__('Edited')}}" type="datetime" sortable></aha-column>
         </aha-table>
         <paper-fab mini icon="folder-open" class="fab--bottom-left" paper-drawer-toggle></paper-fab>
 
@@ -203,6 +203,7 @@
 
     ready: function () {
       var that = this;
+
 
       this.$.holder.ondragover = function () {
         this.classList.add( 'add-button--drag-hover' );

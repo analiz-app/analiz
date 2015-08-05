@@ -23,5 +23,8 @@
 	"Audit": "Audit",
 	"Line": "Ligne",
 	"fr": "en",
-	"Plugins are loaded !": "Les plugins sont chargés !"
+	"Plugins are loaded !": "Les plugins sont chargés !",
+	"Name": "Nom",
+	"Size": "Taille",
+	"Edited": "Modification"
 }

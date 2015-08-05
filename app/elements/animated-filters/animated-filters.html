@@ -6,7 +6,7 @@
   </style>
   <template>
     <template is="dom-repeat" items="[[filters]]">
-      <drawer-box data="[[item]]" color=[[item.category.color]] on-click="_onClick">{{item.config.name}}</drawer-box>
+      <drawer-box data="[[item]]" color=[[item.category.color]] on-click="_onClick">{{_computeDrawerBoxName(item)}}</drawer-box>
     </template>
   </template>
 </dom-module>
@@ -45,6 +45,10 @@
           filter: target.data
         });
       }
+    },
+
+    _computeDrawerBoxName:function ( item ) {
+      return item.config.name[app.settings.language];
     }
   });
 </script>

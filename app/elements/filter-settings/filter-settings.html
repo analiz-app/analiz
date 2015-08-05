@@ -30,14 +30,14 @@
     <div class$="{{_computeContainerClass(filter.category.color.main, 100)}}">
       <paper-toolbar class$="{{_computeTitleClass(filter.category.color.main, 500)}}">
         <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
-        <div title>{{filter.config.name}}</div>
+        <div title>{{_computeItemLanguage(filter.config.name)}}</div>
         <div class="bottom">
           <paper-fab mini class$="{{_computeFabClass(filter.category.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
         </div>
       </paper-toolbar>
       <div class="content layout vertical">
         <template is="dom-repeat" items="{{filter.config.options}}">
-          <p>[[item.label]]</p>
+          <p>[[_computeItemLanguage(item.label)]]</p>
           <template is="dom-if" if="[[_isType('list', item)]]">
             <paper-select data="[[item.data]]" name="[[item.name]]" on-select-changed="_onSelectChanged"></paper-select>
           </template>
@@ -95,6 +95,10 @@
 
     _computeFabClass: function ( color, tint ) {
       return color + '-' + tint + ' mini-fab--half-bottom';
+    },
+
+    _computeItemLanguage: function ( item ) {
+      return item[app.settings.language];
     },
 
     _changeFabIcon: function () {

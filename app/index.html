@@ -16,9 +16,9 @@
           <!-- Drawer Toolbar -->
           <paper-toolbar id="drawerToolbar">
             <iron-pages selected="[[selected]]">
-              <span>Liste des filtres</span>
+              <span>{{__( 'List of analysis' )}}</span>
               <span></span>
-              <span>Filtrer les résultats</span>
+              <span>{{__( 'Filter results' )}}</span>
             </iron-pages>
           </paper-toolbar>
 
@@ -38,10 +38,10 @@
           <paper-toolbar>
             <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
             <paper-tabs selected="{{selected}}" class="paper-tabs" noink="true">
-              <paper-tab on-click="changeTab">Nouvelle analyse</paper-tab>
-              <paper-tab on-click="changeTab">Historique</paper-tab>
+              <paper-tab on-click="changeTab">{{__('New analysis')}}</paper-tab>
+              <paper-tab on-click="changeTab">{{__('Historic')}}</paper-tab>
               <template is="dom-if" if=[[isAudit]]>
-                <paper-tab>Audit</paper-tab>
+                <paper-tab>{{__('Audit')}}</paper-tab>
               </template>
             </paper-tabs>
             <!-- Toolbar icons -->
@@ -49,21 +49,19 @@
               <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content">
                 <paper-item on-click="pluginOpen">
-                  <paper-item-body>
-                    Plugins
-                  </paper-item-body>
+                  <paper-item-body>{{__('Plugins')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
                 </paper-item>
                 <paper-item on-click="settingsOpen">
-                  <paper-item-body>
-                    Paramètres
-                  </paper-item-body>
+                  <paper-item-body>{{__('Parameters')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
                 </paper-item>
                 <paper-item on-click="aboutOpen">
-                  <paper-item-body>
-                    A propos
-                  </paper-item-body>
+                  <paper-item-body>{{__('About')}}</paper-item-body>
+                  <paper-ripple></paper-ripple>
+                </paper-item>
+                <paper-item on-click="changeLanguage">
+                  <paper-item-body>{{__('fr')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
                 </paper-item>
               </paper-menu>

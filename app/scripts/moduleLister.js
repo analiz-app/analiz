@@ -34,7 +34,7 @@ module.exports = function () {
       } );
 
       document.getElementById('filter-list-loader').classList.add('hide');
-      app.toast( 'Les plugins sont chargés' );
+      app.toast( app.__( 'Plugins are loaded !' ) );
       that.filters = plugins;
     }
   ]);

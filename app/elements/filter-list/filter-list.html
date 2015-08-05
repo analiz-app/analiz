@@ -30,11 +30,11 @@
       <section>
         <template is="dom-if" if="{{isActivatedFilters}}">
           <div>
-            <p class="filter-status">Filtres activés</p>
+            <p class="filter-status">{{__('Activated analysis')}}</p>
             <template is="dom-repeat" items="{{activatedFilters}}">
               <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{item.config.name}}</drawer-box>
             </template>
-            <p class="filter-status">Filtres désactivés</p>
+            <p class="filter-status">{{__('Desactivated analysis')}}</p>
           </div>
         </template>
 
@@ -139,6 +139,10 @@
       app.toast( 'Filtre “' + e.detail.config.name + '” supprimé.' );
 
       this._changeActivatedFilter();
+    },
+    
+    __:function ( string ) {
+      return app.__(string)
     }
   });
 </script>

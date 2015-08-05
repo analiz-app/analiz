@@ -17,6 +17,24 @@
   app.directory.fs = require( 'fs' );
   app.directory.path = require( 'path' );
   app.dateFormat = require( 'dateformat' );
+  app.i18n = require("i18n");
+  var settingsFile = app.directory.path.resolve( __dirname, '..', 'settings.json' );
+  app.settings = require( settingsFile );
+
+  app.npmPrefix = app.directory.path.resolve( 'resources', 'app' );
+
+  /**
+   * Configure i18n
+   */
+  app.i18n.configure({
+    locales:['en', 'fr'],
+    defaultLocale: app.settings.language,
+    directory: app.directory.path.resolve(app.npmPrefix, 'locales')
+  });
+
+  app.__ = function ( string ) {
+    return app.i18n.__( string );
+  };
 
   /**
    * Get the categories list with the correct structure
@@ -40,7 +58,6 @@
   /**
    * Get the filters from the external plugins
    */
-  app.npmPrefix = 'resources/app';
   app.filters = [];
   app.getFilters();
 
@@ -142,7 +159,7 @@
     setTimeout(function () {
       document.querySelector('loading-modal').reset();
     }, 500);
-    app.toast( 'Analyse terminée !');
+    app.toast( app.__( 'Scan completed!' ) );
 
     app.analyzeResults = [];
 
@@ -174,6 +191,13 @@
   app.aboutOpen = function ( e ) {
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'about-dialog paper-dialog' ).open();
+  };
+
+  app.changeLanguage = function ( e ) {
+    app.settings.language = (app.settings.language == 'fr') ? 'en' : 'fr';
+    app.directory.fs.writeFileSync( settingsFile, JSON.stringify(app.settings));
+
+    app.remote.getCurrentWindow().reload();
   };
 
   app.filterResults = function ( e ) {

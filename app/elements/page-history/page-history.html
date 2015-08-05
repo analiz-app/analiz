@@ -6,7 +6,7 @@
     }
   </style>
   <template>
-    <h1>En cours de développement</h1>
+    <h1>{{__('WIP')}}</h1>
   </template>
 </dom-module>
 
@@ -32,6 +32,10 @@
           };
         }
       }
+    },
+
+    __:function ( string ) {
+      return app.__(string)
     }
   });
 </script>

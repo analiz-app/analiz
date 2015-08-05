@@ -95,9 +95,7 @@
               <div>
                 <span>[[arrayItem(analyzeSummary.*, index, 'infoValue')]]</span> %
               </div>
-              <div secondary>
-                Info
-              </div>
+              <div secondary>{{__('Info')}}</div>
             </paper-item-body>
             <iron-icon icon="info"></iron-icon>
           </paper-item>
@@ -106,9 +104,7 @@
               <div>
                 <span>[[arrayItem(analyzeSummary.*, index, 'warningValue')]]</span> %
               </div>
-              <div secondary>
-                Warning
-              </div>
+              <div secondary>{{__('Warning')}}</div>
             </paper-item-body>
             <iron-icon icon="warning"></iron-icon>
           </paper-item>
@@ -117,9 +113,7 @@
               <div>
                 <span>[[arrayItem(analyzeSummary.*, index, 'errorValue')]]</span> %
               </div>
-              <div secondary>
-                Error
-              </div>
+              <div secondary>{{__('Error')}}</div>
             </paper-item-body>
             <iron-icon icon="error"></iron-icon>
           </paper-item>
@@ -128,9 +122,7 @@
               <div>
                 <span>[[arrayItem(analyzeSummary.*, index, 'fileCount')]]</span>
               </div>
-              <div secondary>
-                Fichiers
-              </div>
+              <div secondary>{{__('Files')}}</div>
             </paper-item-body>
             <iron-icon icon="description"></iron-icon>
           </paper-item>
@@ -268,6 +260,10 @@
 
     _computeSummaryClass:function ( size, category ) {
       return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
+    },
+
+    __:function ( string ) {
+      return app.__(string)
     }
   });
 </script>

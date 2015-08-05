@@ -11,7 +11,7 @@
   </style>
   <template>
     <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
-      <h2>Analyse en cours</h2>
+      <h2>{{__('Analysis in progress')}}</h2>
       <template id="loader-plugins" is="dom-repeat" items="[[data.name]]" index-as="index">
         <paper-icon-item>
           <div item-icon>
@@ -74,6 +74,10 @@
       this.set( 'data.fileValue', 0);
       this.set( 'data.pluginValue', 0);
       this.set( 'data.name', [] );
+    },
+
+    __:function ( string ) {
+      return app.__(string)
     }
 
   });

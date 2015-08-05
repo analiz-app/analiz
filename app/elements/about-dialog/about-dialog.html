@@ -10,10 +10,10 @@
   </style>
   <template>
     <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
-      <h2>A propos</h2>
-        <p>Cette application a été entièrement réalisée sous Polymer 1.0 et Electron</p>
+      <h2>{{__('About')}}</h2>
+        <p>{{__('aboutContent')}}</p>
       <div>
-        <paper-button dialog-confirm>Fermer</paper-button>
+        <paper-button dialog-confirm>{{__('Close')}}</paper-button>
       </div>
     </paper-dialog>
   </template>
@@ -22,6 +22,9 @@
 <script>
   Polymer({
     is: 'about-dialog',
+    __:function ( string ) {
+      return app.__(string)
+    }
 
   });
 </script>

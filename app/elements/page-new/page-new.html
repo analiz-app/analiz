@@ -127,9 +127,9 @@
         <div class="add-button" id="holder">
           <paper-button raised on-click="_openFolder">
             <iron-icon icon="folder"></iron-icon>
-            Ajouter un dossier
+            <span>{{__('Add a folder')}}</span>
           </paper-button>
-          <p>ou glisser-déposer le dossier à analyser</p>
+          <p>{{__('or drag and drop the folder to scan')}}</p>
         </div>
         <div class="file-tree__content">
           <folder-tree id="folderTree" on-folder-click="_getFolderContent"></folder-tree>
@@ -231,7 +231,7 @@
       if ( response = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}) ) {
         this.directoryPath = response.toString();
         this._getFolderContent();
-        app.toast( 'Contenu du dossier chargé !' );
+        app.toast( this.__('Folder contents loaded !') );
       }
     },
 
@@ -241,7 +241,7 @@
       this.$.directoryContent.data = this.directoryContent;
       // Set the analyze object informations
       app.analyzeConfig.set( 'path', '' );
-      app.toast( 'Dossier supprimé' );
+      app.toast( this.__('Folder deleted') );
     },
 
     _listFolderContent: function () {
@@ -319,6 +319,10 @@
 
     _launchAnalyze: function () {
       app.analiz (app.analyzeConfig);
+    },
+
+    __:function ( string ) {
+      return app.__(string)
     }
   });
 </script>

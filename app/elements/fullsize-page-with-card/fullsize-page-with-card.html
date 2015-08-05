@@ -114,7 +114,7 @@
                       <iron-icon icon="[[error.type]]" class$="[[_computeCircleColor(error.type)]]" item-icon></iron-icon>
                       <paper-item-body two-line>
                         <div>[[error.message]]</div>
-                        <div secondary>Ligne <span>[[error.line]]</span><div>
+                        <div secondary>{{__('Line')}} <span>[[error.line]]</span><div>
                       </paper-item-body>
                     </paper-icon-item>
                   </template>
@@ -278,6 +278,10 @@
       }
 
       return className;
+    },
+    
+    __:function ( string ) {
+      return app.__(string)
     }
   });
 </script>

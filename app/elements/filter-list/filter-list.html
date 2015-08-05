@@ -32,7 +32,7 @@
           <div>
             <p class="filter-status">{{__('Activated analysis')}}</p>
             <template is="dom-repeat" items="{{activatedFilters}}">
-              <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{item.config.name}}</drawer-box>
+              <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{computeItemLanguage(item.config.name)}}</drawer-box>
             </template>
             <p class="filter-status">{{__('Desactivated analysis')}}</p>
           </div>
@@ -122,7 +122,7 @@
       this.push( 'activatedFilters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
 
-      app.toast( 'Filtre “' + e.detail.config.name + '” ajouté.' );
+      app.toast( this.__( 'Analyze' ) + ' “' + this.computeItemLanguage( e.detail.config.name ) + '” ' + this.__('added') + '.' );
 
       this._changeActivatedFilter();
     },
@@ -136,11 +136,15 @@
       this.push( 'filters', e.detail );
       this.isActivatedFilters = ( this.activatedFilters.length > 0 );
 
-      app.toast( 'Filtre “' + e.detail.config.name + '” supprimé.' );
+      app.toast( this.__( 'Analyze' ) + ' “' + this.computeItemLanguage( e.detail.config.name ) + '” ' + this.__('deleted') + '.' );
 
       this._changeActivatedFilter();
     },
-    
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    },
+
     __:function ( string ) {
       return app.__(string)
     }

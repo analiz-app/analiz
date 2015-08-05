@@ -127,7 +127,7 @@
             <iron-icon icon="description"></iron-icon>
           </paper-item>
         </div>
-        <div class="caption-box">[[item.name]]</div>
+        <div class="caption-box">[[computeItemLanguage(item.name)]]</div>
       </paper-material>
     </template>
   </template>
@@ -260,6 +260,10 @@
 
     _computeSummaryClass:function ( size, category ) {
       return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
     },
 
     __:function ( string ) {

@@ -21,7 +21,7 @@
   var settingsFile = app.directory.path.resolve( __dirname, '..', 'settings.json' );
   app.settings = require( settingsFile );
 
-  app.npmPrefix = app.directory.path.resolve( 'resources', 'app' );
+  app.npmPrefix = app.directory.path.resolve( __dirname, '..' );
 
   /**
    * Configure i18n
@@ -203,6 +203,10 @@
   app.filterResults = function ( e ) {
     app.changeTab();
     document.querySelector( '.result-card-' + e.detail.name ).classList.toggle( 'hide-result-card' );
+  };
+
+  app.computeItemLanguage = function ( item ) {
+    return item[app.settings.language];
   };
 
   var walk = function(dir, done) {

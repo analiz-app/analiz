@@ -12,7 +12,7 @@ var electronVersion = 'v0.30.0';
 // Set the platforms for builds
 var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 // Set the folder for dev (use the first element in aPlatforms)
-var sAppFolder = path.resolve( 'builds' + electronVersion + aPlatforms[0] + 'resources' + 'app' );
+var sAppFolder = path.resolve( 'builds', electronVersion, aPlatforms[0], 'resources', 'app' );
 
 // Build the app
 gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {

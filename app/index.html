@@ -28,7 +28,7 @@
             <section></section>
             <section>
               <template is="dom-repeat" items="[[categoriesList]]">
-                <drawer-box data="[[item]]" color="[[item.color]]" on-box-clicked="filterResults" toggleable is-toggle>[[item.label]]</drawer-box>
+                <drawer-box data="[[item]]" color="[[item.color]]" on-box-clicked="filterResults" toggleable is-toggle>[[computeItemLanguage(item.label)]]</drawer-box>
               </template>
             </section>
           </iron-pages>

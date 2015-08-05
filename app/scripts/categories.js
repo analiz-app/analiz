@@ -1,34 +1,49 @@
 module.exports = {
   html: {
-    label: 'HTML',
+    label: {
+      'en': 'HTML',
+      'fr': 'HTML'
+    },
     color: {
       main: 'red',
       accent: 'green'
     }
   },
   css: {
-    label: 'CSS',
+    label: {
+      'fr': 'CSS',
+      'en': 'CSS'
+    },
     color: {
       main: 'pink',
       accent: 'light-green'
     }
   },
   medias: {
-    label: 'Médias',
+    label: {
+      'fr': 'Médias',
+      'en': 'Medias'
+    },
     color: {
       main: 'purple',
       accent: 'lime'
     }
   },
   js: {
-    label: 'Javascript',
+    label: {
+      'fr': 'Javascript',
+      'en': 'Javascript'
+    },
     color: {
       main: 'teal',
       accent: 'red'
     }
   },
   misc: {
-    label: 'Divers',
+    label: {
+      'fr': 'Divers',
+      'en': 'Miscs'
+    },
     color: {
       main: 'grey',
       accent: 'blue-grey'

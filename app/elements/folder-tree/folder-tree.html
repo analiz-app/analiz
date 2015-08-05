@@ -2,11 +2,16 @@
   <style>
     :host {
       display: block;
+      position: relative;
+      z-index: 0;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     .children {
-      box-sizing: border-box;
-      padding-left: .5em;
+      padding-left: 10px;
       overflow: hidden;
       height: auto;
     }
@@ -14,10 +19,22 @@
     .children.close { height: 0; }
 
     paper-icon-item {
+      position: relative;
+      z-index: 1;
       cursor: pointer;
       color: var(--secondary-text-color);
       font-size: .9em;
-      min-height: 40px;
+      height: 40px;
+
+      --paper-item-icon-width: auto;
+    }
+
+    paper-icon-item::shadow .content-icon {
+      margin-right: 10px;
+    }
+
+    paper-icon-item paper-ripple {
+      z-index: -1
     }
 
     paper-icon-item:hover {
@@ -82,16 +99,14 @@
 
         var html = '<paper-icon-item data-path="' +  data.path + '" class="';
         html += (isFirst) ? 'folder-selected' : '';
+        html += '">';
 
         if ( data.children.length > 0 && this.isParent(data.children) ) {
-          html += ' togglable'
-          html += '">';
-          html += '<iron-icon id="' + data.name + '-icon" icon="' + icon + '" item-icon></iron-icon>';
-        } else {
-          html += '>';
-          html += '<iron-icon icon="folder" item-icon></iron-icon>';
+          html += '<iron-icon class="open-folder" icon="' + icon + '" item-icon></iron-icon>';
         }
+        html += '<iron-icon icon="folder" item-icon></iron-icon> ';
         html += data.name;
+        html += '<paper-ripple></paper-ripple>';
         html +='</paper-icon-item>';
 
         html += '<div id="' + data.name + '-tree" class="children ' + openClass + '">';
@@ -107,25 +122,29 @@
     },
 
     _toggleItem: function ( e ) {
-      if (e.target.icon) {
-        var target = e.target.parentNode.parentNode;
+      var target = e.target;
+
+      if ( target.classList.contains( 'open-folder' ) ) {
+        // Toggle the clicked folder
+        var childrens = target.parentNode.parentNode.nextElementSibling;
+        childrens.classList.toggle('close');
+        // Change the icon
+        if ( childrens.classList.contains( 'close' ) ) {
+          target.setAttribute('icon', 'chevron-right');
+        } else {
+          target.setAttribute('icon', 'expand-more');
+        }
       } else {
-        var target = e.target;
-      }
-      if ( !e.target.classList.contains('children') ) {
-        var oldSelected = document.querySelector( '.folder-selected' );
-        oldSelected.classList.remove( 'folder-selected' );
-        if ( !target.classList.contains( 'folder-selected' ) ) {
-          target.classList.toggle( 'folder-selected' );
+        // Get the paper-icon-item element
+        while ( !target.classList.contains( 'paper-icon-item-0' ) ) {
+          target = target.parentNode;
         }
-        if (target.classList.contains('togglable')) {
-          Polymer.dom(document.getElementById(target.outerText + '-tree')).classList.toggle('close');
-          if (document.getElementById(target.outerText + '-tree').classList.contains('close')) {
-            Polymer.dom(document.getElementById(target.outerText + '-icon')).setAttribute('icon', 'chevron-right');
-          } else {
-            Polymer.dom(document.getElementById(target.outerText + '-icon')).setAttribute('icon', 'expand-more');
-          }
-        }
+
+        // Change the selected folder
+        document.querySelector( '.folder-selected' ).classList.remove( 'folder-selected' );
+        target.classList.add( 'folder-selected' );
+
+        // Fire the clicked folder event
         this.fire( 'folder-click', target );
       }
     },

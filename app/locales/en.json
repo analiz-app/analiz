@@ -26,5 +26,8 @@
 	"Plugins are loaded !": "Plugins are loaded !",
 	"Name": "Name",
 	"Size": "Size",
-	"Edited": "Edited"
+	"Edited": "Edited",
+	"Analyze": "Analyze",
+	"added": "added",
+	"Analized files": "Analized files"
 }

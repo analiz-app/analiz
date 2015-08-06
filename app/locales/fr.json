@@ -19,12 +19,12 @@
 	"Info": "Info",
 	"Warning": "Avertissement",
 	"Error": "Erreur",
-	"Files": "Fichiers",
 	"Audit": "Audit",
 	"Line": "Ligne",
 	"fr": "en",
 	"Plugins are loaded !": "Les plugins sont chargés !",
 	"Name": "Nom",
 	"Size": "Taille",
-	"Edited": "Modification"
+	"Edited": "Modification",
+	"Analized files": "Fichiers analysés"
 }

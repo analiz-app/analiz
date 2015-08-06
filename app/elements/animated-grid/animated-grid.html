@@ -122,7 +122,7 @@
               <div>
                 <span>[[arrayItem(analyzeSummary.*, index, 'fileCount')]]</span>
               </div>
-              <div secondary>{{__('Files')}}</div>
+              <div secondary>{{__('Analized files')}}</div>
             </paper-item-body>
             <iron-icon icon="description"></iron-icon>
           </paper-item>
@@ -209,7 +209,7 @@
         }
       });
 
-      summary.fileCount = results.data.length;
+      summary.fileCount = app.currentPlugin[ results.name.en ].fileCount;
 
       var total = summary.infoCount + summary.warningCount + summary.errorCount;
       if ( total ) {

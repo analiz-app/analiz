@@ -76,7 +76,7 @@
   };
 
   app.analyzeResults = [];
-  app.currentPlugin = {};
+  app.currentPlugin = [];
 
   /**
    * The analyse function
@@ -115,8 +115,11 @@
         app.loadingModal.push( 'data.name', plugin.config.name );
         app.loadingModal.set( 'data.fileTotal', parameters.files.length );
 
-        app.currentPlugin = plugin.config;
-        app.currentPlugin.id = index;
+        app.currentPlugin[ plugin.config.name.en ] = {
+          id: index,
+          config: plugin.config,
+          fileCount: parameters.files.length
+        };
 
         // Run the plugin
         plugin.run( parameters.files, parameters.options, app.loadingResults );
@@ -125,20 +128,21 @@
   };
 
   app.loadingResults = function ( error, results ) {
+    var pluginId = app.currentPlugin[ results.name.en ].id;
     // Store the analyze results
-    if ( !app.analyzeResults[app.currentPlugin.id] ) {
-      app.analyzeResults[app.currentPlugin.id] = {
-        name: app.currentPlugin.name,
-        category: app.currentPlugin.category,
-        options: app.currentPlugin.options,
+    if ( !app.analyzeResults[ pluginId ] ) {
+      app.analyzeResults[ pluginId ] = {
+        name: app.currentPlugin[ results.name.en ].config.name,
+        category: app.currentPlugin[ results.name.en ].config.category,
+        options: app.currentPlugin[ results.name.en ].config.options,
         data: []
       };
     }
-    app.analyzeResults[app.currentPlugin.id].data.push( results );
+    app.analyzeResults[ pluginId ].data.push( results );
 
     // Set the file progress
     app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
-    app.loadingModal.set( 'data.fileValue', Math.round( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ));
+    app.loadingModal.set( 'data.fileValue', Math.round( ( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ) / app.loadingModal.data.pluginTotal ) );
     // Verify if all the files for the current plugin has been analyzed
     if ( app.loadingModal.data.fileCount == app.loadingModal.data.fileTotal ) {
       // Set the plugin progress

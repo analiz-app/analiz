@@ -9,8 +9,12 @@
     }
 
     .container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       min-height: 100%;
-      height: auto;
     }
 
     .content {
@@ -19,6 +23,7 @@
 
     paper-checkbox {
       margin: .5em 0;
+      cursor: default
     }
 
     paper-select {
@@ -28,22 +33,17 @@
   </style>
   <template>
     <div class$="{{_computeContainerClass(filter.category.color.main, 100)}}">
+    </div>
+    <paper-header-panel class="flex">
       <paper-toolbar class$="{{_computeTitleClass(filter.category.color.main, 500)}}">
         <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
-        <div title>{{computeItemLanguage(filter.config.name)}}</div>
+        <div title>[[computeItemLanguage(filter.config.name)]]</div>
         <div class="bottom">
           <paper-fab mini class$="{{_computeFabClass(filter.category.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
         </div>
       </paper-toolbar>
-      <div class="content layout vertical">
-        <template is="dom-repeat" items="{{filter.config.options}}">
-          <p>[[computeItemLanguage(item.label)]]</p>
-          <template is="dom-if" if="[[_isType('list', item)]]">
-            <paper-select data="[[item.data]]" name="[[item.name]]" on-select-changed="_onSelectChanged"></paper-select>
-          </template>
-        </template>
-      </div>
-    </div>
+      <div class="content layout vertical" id="settings"></div>
+    </paper-header-panel>
   </template>
 </dom-module>
 
@@ -81,8 +81,46 @@
       }
     },
 
-    _isType: function ( type, item ) {
-      return ( item.type == type );
+    listeners: {
+      'select-changed': '_onSelectChanged',
+    },
+
+    renderOptions: function () {
+      var that = this;
+      this.$.settings.innerHTML = '';
+
+      this.filter.config.options.forEach(function( option ) {
+        var el, label, content;
+        switch ( option.type ) {
+
+          case 'separator':
+            el = document.createElement('h2');
+            el.appendChild( document.createTextNode(option.data) );
+            break;
+
+          case 'boolean':
+            el = document.createElement('paper-checkbox');
+            el.appendChild( document.createTextNode( option.name) );
+            el.checked = option.data;
+            break;
+
+          case 'list':
+            el = document.createElement('div');
+
+            label = document.createElement('p');
+            label.appendChild( document.createTextNode( option.name) )
+
+            content = document.createElement('paper-select');
+            content.data = option.data;
+            content.name = option.name;
+
+            el.appendChild(label);
+            el.appendChild(content);
+            break;
+        }
+
+        Polymer.dom(that.$.settings).appendChild( el );
+      });
     },
 
     _computeContainerClass: function ( color, tint ) {
@@ -99,6 +137,10 @@
 
     computeItemLanguage: function ( item ) {
       return app.computeItemLanguage( item );
+    },
+
+    _computeItemName: function ( item ) {
+      return item.charAt(0).toUpperCase() + item.substr(1);
     },
 
     _changeFabIcon: function () {

@@ -86,7 +86,6 @@
     },
 
     _selectValueChanged: function ( e ) {
-      // Fix because when try to set false after setting a string, false is a string
       this.filtersOption[ e.detail.name ] = (e.detail.value === 'false') ? false : e.detail.value;
 
       if ( e.detail.isActivated ) {
@@ -96,6 +95,7 @@
 
     _onFilterClick: function ( e ) {
       this.$['filter-settings'].filter = e.detail.filter;
+      this.$['filter-settings'].renderOptions();
       this.$.filters.selected = 1;
 
       this.$['filter-settings'].isActivated = false;

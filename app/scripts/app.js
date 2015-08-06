@@ -108,7 +108,7 @@
 
         // Get the options the plugin need
         plugin.config.options.forEach( function( option ) {
-          parameters.options[option.name] = option;
+          parameters.options[option.name] = option.data;
         } );
 
         // Set the loading data for the current plugin

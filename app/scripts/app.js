@@ -84,17 +84,15 @@
    * @param  {Object} data Data configuration object
    */
   app.analiz = function ( data ) {
-    var files;
-
     app.loadingModal.set( 'data.pluginTotal', data.plugins.length );
     // Open the loader modal
     app.loadingModal.open();
 
     // Get all the files in the directory
     walk( data.path, function ( err, files ) {
+
       // Run the plugins one by one
-      data.plugins.forEach( function ( plugin, index ) {
-        // Prepare the parameters
+      app.async.forEachOfSeries( data.plugins, function ( plugin, index, callback ) {
         var parameters = {
           files: [],
           options: {}
@@ -117,72 +115,80 @@
               optionData = option.data;
             }
 
-            parameters.options[option.name] = optionData;
+            parameters.options[ option.name ] = optionData;
           }
         } );
 
         // Set the loading data for the current plugin
-        app.loadingModal.push( 'data.name', plugin.config.name );
+        app.loadingModal.set( 'data.name', plugin.config.name );
         app.loadingModal.set( 'data.fileTotal', parameters.files.length );
 
-        app.currentPlugin[ plugin.config.id ] = {
+        app.currentPlugin = {
           id: index,
           config: plugin.config,
           fileCount: parameters.files.length
         };
 
-        // Run the plugin
-        plugin.run( parameters.files, parameters.options, app.loadingResults );
-      } );
+        ////////////////////
+        // Run the plugin //
+        ////////////////////
+        plugin.run( parameters.files, parameters.options, function ( error, results ) {
+
+          // Store the analyze results
+          if ( !app.analyzeResults[ app.currentPlugin.id ] ) {
+            app.analyzeResults[ app.currentPlugin.id ] = {
+              name: app.currentPlugin.config.name,
+              category: app.currentPlugin.config.category,
+              options: app.currentPlugin.config.options,
+              fileCount: app.currentPlugin.fileCount,
+              data: []
+            };
+          }
+          app.analyzeResults[ app.currentPlugin.id ].data.push( results );
+
+          // Set the file progress
+          app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
+          app.loadingModal.set( 'data.fileValue', Math.round( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ) );
+
+          // Verify if all the files for the current plugin has been analyzed
+          if ( app.loadingModal.data.fileCount == app.loadingModal.data.fileTotal ) {
+
+            // Set the plugin progress
+            app.loadingModal.set( 'data.pluginCount', app.loadingModal.data.pluginCount + 1 );
+            app.loadingModal.set( 'data.pluginValue', Math.round( ( 100 * app.loadingModal.data.pluginCount ) / app.loadingModal.data.pluginTotal ) );
+
+            // Add delay for visual feedback
+            setTimeout(function () {
+              // Verify if the analyze is over
+              if ( app.loadingModal.data.pluginCount == app.loadingModal.data.pluginTotal ) {
+                // All the analysis are done
+                // Close the modal, reset the loader and show the audit page
+                document.querySelector('loading-modal').close();
+
+                // Wait till the modal is hidden to not show the reset to the user
+                setTimeout(function () {
+                  document.querySelector( 'loading-modal' ).reset();
+                }, 500);
+                app.toast( app.__( 'Scan completed!' ) );
+
+                // Send the data to the audit page
+                document.querySelector( 'page-audit' ).set( 'data', app.analyzeResults );
+
+                // Reset the results variable
+                app.analyzeResults = [];
+
+                app.isAudit = true;
+                app.selected = 2;
+              } else {
+                  app.loadingModal.set( 'data.fileValue', 0 );
+                  app.loadingModal.set( 'data.fileCount', 0 );
+              }
+              callback();
+            }, 500);
+          }
+        } );
+      } ) ;
     } );
-  };
-
-  app.loadingResults = function ( error, results ) {
-    var pluginId = app.currentPlugin[ results.name ].id;
-    // Store the analyze results
-    if ( !app.analyzeResults[ pluginId ] ) {
-      app.analyzeResults[ pluginId ] = {
-        id: app.currentPlugin[ results.name ].config.id,
-        name: app.currentPlugin[ results.name ].config.name,
-        category: app.currentPlugin[ results.name ].config.category,
-        options: app.currentPlugin[ results.name ].config.options,
-        data: []
-      };
-    }
-    app.analyzeResults[ pluginId ].data.push( results );
-
-    // Set the file progress
-    app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
-    app.loadingModal.set( 'data.fileValue', Math.round( ( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ) / app.loadingModal.data.pluginTotal ) );
-
-    // Verify if all the files for the current plugin has been analyzed
-    if ( app.loadingModal.data.fileCount == app.loadingModal.data.fileTotal ) {
-      // Set the plugin progress
-      app.loadingModal.set( 'data.pluginCount', app.loadingModal.data.pluginCount + 1 );
-      app.loadingModal.set( 'data.pluginValue', Math.round( ( 100 * app.loadingModal.data.pluginCount ) / app.loadingModal.data.pluginTotal ));
-      // Verify if the analyze is over
-      if ( app.loadingModal.data.pluginCount == app.loadingModal.data.pluginTotal ) {
-        app.isLoaded( app.analyzeResults );
-      } else {
-        app.loadingModal.set( 'data.fileCount', 0);
-      }
-    }
-  };
-
-  app.isLoaded = function ( results ) {
-    // Close the modal, reset the loader and show the audit page
-    document.querySelector('loading-modal').close();
-    setTimeout(function () {
-      document.querySelector('loading-modal').reset();
-    }, 500);
-    app.toast( app.__( 'Scan completed!' ) );
-
-    app.analyzeResults = [];
-
-    document.querySelector('page-audit').set('data', results);
-
-    app.isAudit = true;
-    app.selected = 2;
   };
 
   app.isAudit = false;

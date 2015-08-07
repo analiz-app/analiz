@@ -175,12 +175,12 @@
           result['color'] = app.categories[ result.category ].color.main
           card.data = result;
 
-          that.set( 'analyzeSummary.' + index, that._getPieData( result, index ) );
+          that.set( 'analyzeSummary.' + index, that._getSummaryData( result, index ) );
         });
       });
     },
 
-    _getPieData:function ( results, index ) {
+    _getSummaryData:function ( results, index ) {
       var that = this;
 
       // Set the init counters values
@@ -209,7 +209,7 @@
         }
       });
 
-      summary.fileCount = app.currentPlugin[ results.id ].fileCount;
+      summary.fileCount = results.fileCount;
 
       var total = summary.infoCount + summary.warningCount + summary.errorCount;
       if ( total ) {

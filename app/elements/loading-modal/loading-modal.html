@@ -12,17 +12,23 @@
   <template>
     <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
       <h2>{{__('Analysis in progress')}}</h2>
-      <template id="loader-plugins" is="dom-repeat" items="[[data.name]]" index-as="index">
-        <paper-icon-item>
-          <div item-icon>
-            <paper-spinner active></paper-spinner>
-            <iron-icon icon="check" class="hide"></iron-icon>
-          </div>
-          <div>[[computeItemLanguage(item)]]</div>
-        </paper-icon-item>
-      </template>
-      <paper-progress id="loadingBar" value="[[data.pluginValue]]" secondary-progress="[[data.fileValue]]" class="transiting"></paper-progress>
-      <div class="loadingProgress"><span>[[data.fileValue]]</span>/100%</div>
+      <paper-icon-item>
+        <div item-icon>
+          <paper-spinner active></paper-spinner>
+          <iron-icon icon="check" class="hide"></iron-icon>
+        </div>
+        <div>[[computeItemLanguage(data.name)]]</div>
+      </paper-icon-item>
+      <paper-progress id="fileLoadingBar" value="[[data.fileValue]]" class="transiting"></paper-progress>
+      <div class="loadingProgress">
+        <span>[[data.fileValue]]</span>/100%
+      </div>
+      <paper-progress id="pluginLoadingBar" value="[[data.pluginValue]]" class="transiting"></paper-progress>
+      <div class="loadingProgress">
+        <span>[[data.pluginCount]]</span>
+        /<span>[[data.pluginTotal]]</span>
+        plugin
+      </div>
     </paper-dialog>
   </template>
 </dom-module>
@@ -35,7 +41,7 @@
       data: {
         type: Object,
         value: {
-          name: [],
+          name: '',
           pluginCount: 0,
           pluginTotal: 0,
           pluginValue: 0,
@@ -46,18 +52,6 @@
         notify: true
       },
       isLast: true
-    },
-
-    ready: function ( ) {
-      var that = this;
-      this.$[ 'loader-plugins' ].addEventListener( 'dom-change', function( e ) {
-        e.target.items.forEach( function( pluginName, index ) {
-          if ( index < 0 ) {
-            e.target.items[ index - 1 ].querySelector( 'paper-icon-item paper-spinner' ).classList.add( 'hide' );
-            e.target.items[ index - 1 ].querySelector( 'paper-icon-item iron-icon' ).classList.remove( 'hide' );
-          }
-        });
-      });
     },
 
     open: function () {
@@ -73,7 +67,7 @@
       this.set( 'data.pluginCount', 0);
       this.set( 'data.fileValue', 0);
       this.set( 'data.pluginValue', 0);
-      this.set( 'data.name', [] );
+      this.set( 'data.name', '' );
     },
 
     computeItemLanguage: function ( item ) {

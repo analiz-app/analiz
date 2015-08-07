@@ -83,36 +83,40 @@
 
     listeners: {
       'select-changed': '_onSelectChanged',
+      'change': '_onChanged',
     },
 
     renderOptions: function () {
       var that = this;
       this.$.settings.innerHTML = '';
 
-      this.filter.config.options.forEach(function( option ) {
+      this.filter.config.options.forEach( function( option, index ) {
         var el, label, content;
         switch ( option.type ) {
 
           case 'separator':
-            el = document.createElement('h2');
-            el.appendChild( document.createTextNode(option.data) );
+            el = document.createElement( 'h2' );
+            el.appendChild( document.createTextNode( option.data ) );
             break;
 
           case 'boolean':
-            el = document.createElement('paper-checkbox');
-            el.appendChild( document.createTextNode( option.name) );
+            el = document.createElement( 'paper-checkbox');
+            el.appendChild( document.createTextNode( option.name ) );
             el.checked = option.data;
+            el[ 'data-index' ] = index;
             break;
 
           case 'list':
-            el = document.createElement('div');
+            el = document.createElement( 'div' );
 
-            label = document.createElement('p');
-            label.appendChild( document.createTextNode( option.name) )
+            label = document.createElement( 'p' );
+            label.appendChild( document.createTextNode( option.name ) )
 
-            content = document.createElement('paper-select');
+            content = document.createElement( 'paper-select' );
             content.data = option.data;
             content.name = option.name;
+            content[ 'data-index' ] = index;
+            content.selectedName = ( option.value ) ? option.value : null;
 
             el.appendChild(label);
             el.appendChild(content);
@@ -148,9 +152,21 @@
     },
 
     _onSelectChanged: function ( e ) {
-      this.fire( 'select-value-changed', {
+      this.fire( 'option-value-changed', {
         name: e.target.name,
         value: e.detail,
+        plugin: this.filter.config.id,
+        index: e.target[ 'data-index' ],
+        isActivated: this.isActivated
+      } );
+    },
+
+    _onChanged :function ( e ) {
+      this.fire( 'option-value-changed', {
+        name: e.target.innerText.trim(),
+        value: e.target.checked,
+        plugin: this.filter.config.id,
+        index: e.target[ 'data-index' ],
         isActivated: this.isActivated
       } );
     },

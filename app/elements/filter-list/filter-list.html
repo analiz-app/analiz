@@ -28,7 +28,7 @@
     <paper-spinner id="filter-list-loader" alt="Loading filters list" active></paper-spinner>
     <neon-animated-pages id="filters" selected="0" >
       <section>
-        <template is="dom-if" if="{{isActivatedFilters}}">
+        <template is="dom-if" if="{{isActivatedFilters}}" restamp>
           <div>
             <p class="filter-status">{{__('Activated analysis')}}</p>
             <template is="dom-repeat" items="{{activatedFilters}}">
@@ -41,7 +41,7 @@
         <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
       </section>
 
-      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick" on-select-value-changed="_selectValueChanged"></filter-settings>
+      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick" on-option-value-changed="_optionValueChanged"></filter-settings>
     </neon-animated-pages>
   </template>
 </dom-module>
@@ -67,29 +67,49 @@
       filtersOption: {
         type: Array,
         value: function () {
-          return []
+          return {}
         }
       }
     },
 
     _changeActivatedFilter: function () {
-      var config = this.activatedFilters;
-      var that = this;
-      // Retrieve all the config info and transform them to fit the analyze function
-      config.forEach( function ( element, index, array ) {
-        element.config.options.forEach( function ( optionElement, optionIndex, optionArray ) {
-          optionElement.data = that.filtersOption[ optionElement.name ];
-        } );
-      } );
-
-      app.analyzeConfig.set( 'plugins', config );
+      app.analyzeConfig.set( 'plugins', this.activatedFilters );
     },
 
-    _selectValueChanged: function ( e ) {
-      this.filtersOption[ e.detail.name ] = (e.detail.value === 'false') ? false : e.detail.value;
+    _optionValueChanged: function ( e ) {
+      if ( e.detail.index !== undefined ) {
+        if ( e.detail.value === 'false' ) {
+          e.detail.value = false;
+        } else if ( e.detail.value === 'true' ) {
+          e.detail.value = false;
+        }
 
-      if ( e.detail.isActivated ) {
-        this._changeActivatedFilter();
+        var updatedFilter = this.$['filter-settings'].filter;
+
+        switch ( updatedFilter.config.options[ e.detail.index ].type ) {
+          case 'list':
+            updatedFilter.config.options[ e.detail.index ].value = e.detail.value;
+            break;
+          case 'boolean':
+            updatedFilter.config.options[ e.detail.index ].data = e.detail.value;
+            break;
+        }
+
+        if ( e.detail.isActivated ) {
+          this.activatedFilters.forEach(function( filter, index ) {
+          if ( filter.config.id == e.target.plugin ) {
+            this.activatedFilters[ index ] = updatedFilter;
+          }
+        }, this);
+
+          this._changeActivatedFilter();
+        } else {
+          this.filters.forEach( function( filter, index ) {
+            if ( filter.config.id == e.target.plugin ) {
+              this.filters[ index ] = updatedFilter;
+            }
+          }, this);
+        }
       }
     },
 
@@ -99,14 +119,14 @@
       this.$.filters.selected = 1;
 
       this.$['filter-settings'].isActivated = false;
-
     },
 
     _onFilterActivatedClick: function ( e ) {
-      this.$['filter-settings'].isActivated = true;
-
       this.$['filter-settings'].filter = e.detail;
+      this.$['filter-settings'].renderOptions();
       this.$.filters.selected = 1;
+
+      this.$['filter-settings'].isActivated = true;
     },
 
     _onBackClick: function () {
@@ -115,7 +135,7 @@
 
     _onAddFilterClick:function ( e ) {
       this.filters.forEach(function ( element, index, array ) {
-        if ( element.id == e.detail.id ) {
+        if ( element.config.id == e.detail.config.id ) {
           this.splice( 'filters', index, 1 );
         }
       }, this);
@@ -129,7 +149,7 @@
 
     _onRemoveFilterClick:function ( e ) {
       this.activatedFilters.forEach(function ( element, index, array ) {
-        if ( element.id == e.detail.id ) {
+        if ( element.config.id == e.detail.config.id ) {
           this.splice( 'activatedFilters', index, 1 );
         }
       }, this);

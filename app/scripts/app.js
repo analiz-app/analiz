@@ -70,6 +70,7 @@
 
     set: function ( property, value ) {
       this[property] = value;
+
       // If the path and the config are set show the 'Analiz !' button
       document.getElementById( 'analyzeButton' ).disabled = ( this.path && this.plugins.length === 0 );
     }
@@ -85,7 +86,7 @@
   app.analiz = function ( data ) {
     var files;
 
-    app.loadingModal.set( 'data.pluginTotal', data.plugins.length);
+    app.loadingModal.set( 'data.pluginTotal', data.plugins.length );
     // Open the loader modal
     app.loadingModal.open();
 
@@ -108,14 +109,23 @@
 
         // Get the options the plugin need
         plugin.config.options.forEach( function( option ) {
-          parameters.options[option.name] = option.data;
+          var optionData;
+          if ( option.type != 'separator' ) {
+            if ( Array.isArray( option.data ) ) {
+              optionData = ( option.value !== undefined ) ? option.value : option.data[ 0 ].value;
+            } else {
+              optionData = option.data;
+            }
+
+            parameters.options[option.name] = optionData;
+          }
         } );
 
         // Set the loading data for the current plugin
         app.loadingModal.push( 'data.name', plugin.config.name );
         app.loadingModal.set( 'data.fileTotal', parameters.files.length );
 
-        app.currentPlugin[ plugin.config.name.en ] = {
+        app.currentPlugin[ plugin.config.id ] = {
           id: index,
           config: plugin.config,
           fileCount: parameters.files.length
@@ -128,13 +138,14 @@
   };
 
   app.loadingResults = function ( error, results ) {
-    var pluginId = app.currentPlugin[ results.name.en ].id;
+    var pluginId = app.currentPlugin[ results.name ].id;
     // Store the analyze results
     if ( !app.analyzeResults[ pluginId ] ) {
       app.analyzeResults[ pluginId ] = {
-        name: app.currentPlugin[ results.name.en ].config.name,
-        category: app.currentPlugin[ results.name.en ].config.category,
-        options: app.currentPlugin[ results.name.en ].config.options,
+        id: app.currentPlugin[ results.name ].config.id,
+        name: app.currentPlugin[ results.name ].config.name,
+        category: app.currentPlugin[ results.name ].config.category,
+        options: app.currentPlugin[ results.name ].config.options,
         data: []
       };
     }
@@ -143,6 +154,7 @@
     // Set the file progress
     app.loadingModal.set( 'data.fileCount', app.loadingModal.data.fileCount + 1 );
     app.loadingModal.set( 'data.fileValue', Math.round( ( ( 100 * app.loadingModal.data.fileCount ) / app.loadingModal.data.fileTotal ) / app.loadingModal.data.pluginTotal ) );
+
     // Verify if all the files for the current plugin has been analyzed
     if ( app.loadingModal.data.fileCount == app.loadingModal.data.fileTotal ) {
       // Set the plugin progress

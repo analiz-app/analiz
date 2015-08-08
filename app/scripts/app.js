@@ -139,7 +139,7 @@
         ////////////////////
         plugin.run( parameters.files, parameters.options, function ( error, results ) {
 
-          if ( error ) {
+          if ( error !== null ) {
             callback( error );
           }
 
@@ -197,7 +197,9 @@
           }
         } );
       }, function ( err ) {
-        app.error( app.__( 'Analysis error' ), err );
+        if ( err ) {
+          app.error( app.__( 'Analysis error' ), err );
+        }
       } ) ;
     } );
   };

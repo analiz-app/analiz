@@ -30,5 +30,9 @@
 	"errorAdvice": "Si l'erreur provient d'Analiz, vous pouvez reporter le problème sur la page Github ci dessous.",
 	"Restart": "Redémarrer",
 	"No files": "Aucun fichier ne correspond à la configuration de l'analyse.",
-	"Analysis error": "Erreur d'analyse"
+	"Analysis error": "Erreur d'analyse",
+	"Main settings": "Préférences",
+	"Language selection": "Séléction de la langue",
+	"English": "Anglais",
+	"French": "Français"
 }

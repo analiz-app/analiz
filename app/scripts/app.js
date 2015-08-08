@@ -18,8 +18,8 @@
   app.directory.path = require( 'path' );
   app.dateFormat = require( 'dateformat' );
   app.i18n = require("i18n");
-  var settingsFile = app.directory.path.resolve( __dirname, '..', 'settings.json' );
-  app.settings = require( settingsFile );
+  app.settingsFile = app.directory.path.resolve( __dirname, '..', 'settings.json' );
+  app.settings = require( app.settingsFile );
 
   app.npmPrefix = app.directory.path.resolve( __dirname, '..' );
 
@@ -240,11 +240,12 @@
     document.querySelector( 'about-dialog paper-dialog' ).open();
   };
 
-  app.changeLanguage = function ( e ) {
-    app.settings.language = (app.settings.language == 'fr') ? 'en' : 'fr';
-    app.directory.fs.writeFileSync( settingsFile, JSON.stringify(app.settings) );
-
-    app.remote.getCurrentWindow().reload();
+  // Settings dialog
+  app.settingsOpen = function ( e ) {
+    document.querySelector( 'settings-modal' ).settings = app.settings;
+    
+    document.querySelector( '.settings-dropdown' ).close();
+    document.querySelector( 'settings-modal' ).open();
   };
 
   app.filterResults = function ( e ) {

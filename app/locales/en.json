@@ -33,5 +33,9 @@
 	"errorAdvice": "If the error come from Analiz, you can report the issue on the Github page below",
 	"Restart": "Restart",
 	"No files": "No files correspond to the analyze configuration.",
-	"Analysis error": "Analysis error"
+	"Analysis error": "Analysis error",
+	"Main settings": "Main settings",
+	"Language selection": "Language selection",
+	"English": "English",
+	"French": "French"
 }

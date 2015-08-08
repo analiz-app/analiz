@@ -60,10 +60,6 @@
                   <paper-item-body>{{__('About')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
                 </paper-item>
-                <paper-item on-click="changeLanguage">
-                  <paper-item-body>{{__('fr')}}</paper-item-body>
-                  <paper-ripple></paper-ripple>
-                </paper-item>
               </paper-menu>
             </paper-menu-button>
           </paper-toolbar>
@@ -85,6 +81,7 @@
       <paper-toast id="toast"></paper-toast>
       <loading-modal></loading-modal>
       <error-modal></error-modal>
+      <settings-modal></settings-modal>
     </template>
     <script>require("./scripts/app.js")</script>
   </body>

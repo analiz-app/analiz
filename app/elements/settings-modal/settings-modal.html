@@ -1,0 +1,115 @@
+<dom-module id="settings-modal">
+  <style>
+    :host {
+      display: block;
+      overflow: hidden;
+    }
+
+    paper-dialog {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      @apply(--shadow-elevation-6dp);
+    }
+
+    paper-toolbar {
+      margin: 0;
+    }
+
+    paper-select {
+      width: 300px;
+    }
+  </style>
+  <template>
+    <paper-dialog entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+      <paper-toolbar>
+        <paper-icon-button icon="close" dialog-dismiss></paper-icon-button>
+        <div class="title">[[__('Parameters')]]</div>
+        <paper-icon-button icon="check" on-click="_saveSettings"></paper-icon-button>
+      </paper-toolbar>
+      <section>
+        <h1><iron-icon icon="settings"></iron-icon><span>[[__('Main settings')]]</span></h1>
+        <div>
+          <p>[[__('Language selection')]]</p>
+          <paper-select id="languageSelector" name="language" on-select-changed="_updateLanguage"></paper-select>
+        </div>
+      </section>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'settings-modal',
+
+    properties: {
+      settings: {
+        type: Object,
+        value: {}
+      },
+      languages: Array
+    },
+
+    ready: function () {
+      this.languages = [{
+        'name': this.__('English'),
+        'value': 'en'
+      },{
+        'name': this.__('French'),
+        'value': 'fr'
+      }];
+    },
+
+    open: function () {
+      var selected;
+      for ( var index in this.languages ) {
+        if ( this.languages.hasOwnProperty( index ) ) {
+          if ( this.languages[ index ].value == app.settings.language ) {
+            selected = this.languages[index].name;
+            break;
+          }
+        }
+      }
+
+      this.$.languageSelector.data = this.languages;
+      this.$.languageSelector.selectedName = selected;
+
+      this.querySelector( 'paper-dialog' ).open();
+    },
+
+    _updateLanguage: function ( e ) {
+      this.settings.language = e.detail;
+    },
+
+    _saveSettings: function () {
+      app.directory.fs.writeFile( app.settingsFile, JSON.stringify( this.settings ), function ( err ) {
+        app.remote.getCurrentWindow().reload();
+      } );
+
+    },
+
+    close: function () {
+      this.querySelector( 'paper-dialog' ).close();
+    },
+
+    _restartApp:function () {
+      app.remote.getCurrentWindow().reload();
+    },
+
+    _openBrowser:function ( e ) {
+      e.preventDefault();
+      require( 'shell' ).openExternal( e.target.href );
+    },
+
+    __:function ( string ) {
+      return app.__(string)
+    }
+
+  });
+</script>

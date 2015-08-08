@@ -97,7 +97,7 @@
 
         if ( e.detail.isActivated ) {
           this.activatedFilters.forEach(function( filter, index ) {
-          if ( filter.config.id == e.target.plugin ) {
+          if ( filter.config.name.en == e.target.plugin.en ) {
             this.activatedFilters[ index ] = updatedFilter;
           }
         }, this);
@@ -105,7 +105,7 @@
           this._changeActivatedFilter();
         } else {
           this.filters.forEach( function( filter, index ) {
-            if ( filter.config.id == e.target.plugin ) {
+            if ( filter.config.name.en == e.target.plugin.en ) {
               this.filters[ index ] = updatedFilter;
             }
           }, this);
@@ -135,7 +135,7 @@
 
     _onAddFilterClick:function ( e ) {
       this.filters.forEach(function ( element, index, array ) {
-        if ( element.config.id == e.detail.config.id ) {
+        if ( element.config.name.en == e.detail.config.name.en ) {
           this.splice( 'filters', index, 1 );
         }
       }, this);
@@ -149,7 +149,7 @@
 
     _onRemoveFilterClick:function ( e ) {
       this.activatedFilters.forEach(function ( element, index, array ) {
-        if ( element.config.id == e.detail.config.id ) {
+        if ( element.config.name.en == e.detail.config.name.en ) {
           this.splice( 'activatedFilters', index, 1 );
         }
       }, this);

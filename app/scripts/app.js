@@ -105,6 +105,11 @@
           }
         } );
 
+        // Check if files for the analyze
+        if ( parameters.files.length === 0 ) {
+          callback( app.__( 'No files' ) );
+        }
+
         // Get the options the plugin need
         plugin.config.options.forEach( function( option ) {
           var optionData;
@@ -133,6 +138,10 @@
         // Run the plugin //
         ////////////////////
         plugin.run( parameters.files, parameters.options, function ( error, results ) {
+
+          if ( error ) {
+            callback( error );
+          }
 
           // Store the analyze results
           if ( !app.analyzeResults[ app.currentPlugin.id ] ) {
@@ -187,6 +196,8 @@
             }, 500);
           }
         } );
+      }, function ( err ) {
+        app.error( app.__( 'Analysis error' ), err );
       } ) ;
     } );
   };
@@ -195,6 +206,18 @@
 
   app.changeTab = function ( e ) {
     document.querySelector( 'page-audit #pages' ).selected = 0;
+  };
+
+  app.error = function ( title, message ) {
+    var errorModal = document.querySelector( 'error-modal' );
+
+    errorModal.data = {
+      title: title,
+      content: message
+    };
+
+    errorModal.open();
+
   };
 
   // Default page

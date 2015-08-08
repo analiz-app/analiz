@@ -1,0 +1,56 @@
+<dom-module id="error-modal">
+  <style>
+    :host {
+      display: block;
+    }
+
+    .advice {
+      @apply('paper-font-caption');
+      font-style: italic;
+    }
+  </style>
+  <template>
+    <paper-dialog entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+      <h2>[[data.title]]</h2>
+      <p>[[data.content]]</p>
+      <p class="advice">[[__('errorAdvice')]]</p>
+      <p><a href="https://github.com/hepl-ria/analiz/issues" on-click="_openBrowser">https://github.com/hepl-ria/analiz/issues</a></p>
+      <div class="buttons">
+        <paper-button></paper-button>
+        <paper-button on-click="_restartApp">[[__('Restart')]]</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'error-modal',
+
+    properties: {
+
+    },
+
+    open: function () {
+      this.querySelector( 'paper-dialog' ).open();
+    },
+
+    close: function () {
+      this.querySelector( 'paper-dialog' ).close();
+    },
+
+    _restartApp:function () {
+      app.remote.getCurrentWindow().reload();
+    },
+
+    _openBrowser:function ( e ) {
+      e.preventDefault();
+      require( 'shell' ).openExternal( e.target.href );
+    },
+
+    __:function ( string ) {
+      return app.__(string)
+    }
+
+  });
+</script>

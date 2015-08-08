@@ -97,7 +97,7 @@
         var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
         var openClass = (!isFirst) ? 'close' : 'open';
 
-        var html = '<paper-icon-item data-path="' +  data.path + '" class="';
+        var html = '<paper-icon-item data-path="' +  data.path + '" class="item ';
         html += (isFirst) ? 'folder-selected' : '';
         html += '">';
 
@@ -123,7 +123,6 @@
 
     _toggleItem: function ( e ) {
       var target = e.target;
-
       if ( target.classList.contains( 'open-folder' ) ) {
         // Toggle the clicked folder
         var childrens = target.parentNode.parentNode.nextElementSibling;
@@ -136,7 +135,7 @@
         }
       } else {
         // Get the paper-icon-item element
-        while ( !target.classList.contains( 'paper-icon-item-0' ) ) {
+        while ( !target.classList.contains( 'item' ) ) {
           target = target.parentNode;
         }
 

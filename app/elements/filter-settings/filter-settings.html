@@ -84,6 +84,7 @@
     listeners: {
       'select-changed': '_onSelectChanged',
       'change': '_onChanged',
+      'click': '_clicked'
     },
 
     renderOptions: function () {
@@ -97,6 +98,15 @@
           case 'separator':
             el = document.createElement( 'h2' );
             el.appendChild( document.createTextNode( option.data ) );
+            break;
+
+          case 'documentation-link':
+            el = document.createElement( 'p' );
+            content = document.createElement( 'a' );
+            content.href = option.data;
+            content.classList.add('external-link');
+            content.appendChild( document.createTextNode( option.name ) );
+            el.appendChild(content);
             break;
 
           case 'boolean':
@@ -182,6 +192,13 @@
         this.fire( 'add-filter-click', this['__data__'].filter );
       }
       this.fire( 'back-click' );
+    },
+
+    _clicked:function ( e ) {
+      if ( e.target.classList && e.target.classList.contains( 'external-link' ) ) {
+        e.preventDefault();
+        require( 'shell' ).openExternal( e.target.href );
+      }
     }
   });
 </script>

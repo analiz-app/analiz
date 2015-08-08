@@ -113,7 +113,7 @@
         // Get the options the plugin need
         plugin.config.options.forEach( function( option ) {
           var optionData;
-          if ( option.type != 'separator' ) {
+          if ( option.type != 'separator' && option.type != 'documentation-link' ) {
             if ( Array.isArray( option.data ) ) {
               optionData = ( option.value !== undefined ) ? option.value : option.data[ 0 ].value;
             } else {

@@ -105,7 +105,7 @@
           this._changeActivatedFilter();
         } else {
           this.filters.forEach( function( filter, index ) {
-            if ( filter.config.name.en == e.target.plugin.en ) {
+            if ( filter.config.name.en == e.detail.plugin.en ) {
               this.filters[ index ] = updatedFilter;
             }
           }, this);

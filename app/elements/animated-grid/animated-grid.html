@@ -44,19 +44,14 @@
     .color-box {
       height: 200px;
       padding: 2.5px;
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-      @apply(--layout-wrap);
     }
 
     .summary-info {
-      position: relative;
+      position: absolute;
       color: #fff;
       height: 90px;
       margin: 2.5px 5px;
-    }
 
-    .summary-info {
       --paper-item: {
         @apply(--paper-font-title);
       };
@@ -77,8 +72,17 @@
       width: 121.33333px;
     }
 
+    .summary-info--small + .summary-info--small {
+      left: 133.333333px;
+    }
+
+    .summary-info--small + .summary-info--small + .summary-info--small {
+      left: 264.666666px;
+    }
+
     .summary-info--large {
       width: 383px;
+      top: 100px;
     }
 
     .caption-box {

@@ -90,6 +90,22 @@
 
     // Get all the files in the directory
     walk( data.path, function ( err, files ) {
+      var appDir = app.directory.path.basename(data.path);
+      // Delete the ignored files
+      files.forEach(function( file, index ) {
+        // Get an array of the parents folders from the base directory
+        var parentFolders = app.directory.path.parse(
+            file.replace( data.path , app.directory.path.sep )
+          ).dir.split( app.directory.path.sep );
+
+        // Verify if the file is in an ignored folder and delete it
+        for (var i = 0; i < parentFolders.length; i++) {
+          if ( document.querySelector( 'folder-tree' ).ignoredFiles.inArray( parentFolders[ i ] ) ) {
+            delete files[ index ];
+            break;
+          }
+        }
+      });
 
       // Run the plugins one by one
       app.async.forEachOfSeries( data.plugins, function ( plugin, index, callback ) {
@@ -289,6 +305,18 @@
         });
       });
     });
+  };
+
+  Array.prototype.inArray = function (value) {
+    // Returns true if the passed value is found in the
+    // array. Returns false if it is not.
+    var i;
+    for (i=0; i < this.length; i++) {
+      if (this[i] == value) {
+        return true;
+      }
+    }
+    return false;
   };
 
 })(document);

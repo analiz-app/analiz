@@ -93,7 +93,7 @@
     },
 
     createNode: function (data, isFirst) {
-      if ( data.type == 'directory' && this.ignoredFiles.indexOf( data.name ) < 0 ) {
+      if ( data.type == 'directory' && ( this.ignoredFiles.indexOf( data.name ) < 0 || isFirst ) ) {
         var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
         var openClass = (!isFirst) ? 'close' : 'open';
 

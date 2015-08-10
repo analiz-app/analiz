@@ -28,15 +28,13 @@
     <paper-spinner id="filter-list-loader" alt="Loading filters list" active></paper-spinner>
     <neon-animated-pages id="filters" selected="0" >
       <section>
-        <template is="dom-if" if="{{isActivatedFilters}}" restamp>
           <div>
-            <p class="filter-status">{{__('Activated analysis')}}</p>
-            <template is="dom-repeat" items="{{activatedFilters}}">
-              <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{computeItemLanguage(item.config.name)}}</drawer-box>
-            </template>
-            <p class="filter-status">{{__('Desactivated analysis')}}</p>
-          </div>
-        </template>
+          <p class="filter-status">{{__('Activated analysis')}}</p>
+          <template is="dom-repeat" items="{{activatedFilters}}">
+            <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{computeItemLanguage(item.config.name)}}</drawer-box>
+          </template>
+          <p class="filter-status">{{__('Desactivated analysis')}}</p>
+        </div>
 
         <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
       </section>

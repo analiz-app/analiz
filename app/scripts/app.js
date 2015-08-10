@@ -124,6 +124,8 @@
           }
         } );
 
+        parameters.options.language = app.settings.language;
+
         // Set the loading data for the current plugin
         app.loadingModal.set( 'data.name', plugin.config.name );
         app.loadingModal.set( 'data.fileTotal', parameters.files.length );
@@ -243,7 +245,7 @@
   // Settings dialog
   app.settingsOpen = function ( e ) {
     document.querySelector( 'settings-modal' ).settings = app.settings;
-    
+
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'settings-modal' ).open();
   };

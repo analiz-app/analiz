@@ -107,7 +107,10 @@
 
         // Check if files for the analyze
         if ( parameters.files.length === 0 ) {
-          callback( app.__( 'No files' ) );
+          callback( {
+            title: app.__( 'Analysis error' ),
+            content: app.__( 'No files' )
+          } );
         }
 
         // Get the options the plugin need
@@ -200,7 +203,13 @@
         } );
       }, function ( err ) {
         if ( err ) {
-          app.error( app.__( 'Analysis error' ), err );
+          if ( typeof err == 'string' ) {
+            err = {
+              title: 'ERROR',
+              content: err
+            };
+          }
+          app.error( err.title, err.content );
         }
       } ) ;
     } );

@@ -94,8 +94,8 @@
         }
 
         if ( e.detail.isActivated ) {
-          this.activatedFilters.forEach(function( filter, index ) {
-          if ( filter.config.name.en == e.target.plugin.en ) {
+          this.activatedFilters.forEach( function( filter, index ) {
+          if ( filter.config.name.en == e.detail.plugin.en ) {
             this.activatedFilters[ index ] = updatedFilter;
           }
         }, this);

@@ -126,7 +126,7 @@
             content.data = option.data;
             content.name = option.name;
             content[ 'data-index' ] = index;
-            content.selectedName = ( option.value ) ? option.value : null;
+            content.selectedName = ( option.value ) ? that._getValueName( option.data, option.value ) : null;
 
             el.appendChild(label);
             el.appendChild(content);
@@ -135,6 +135,16 @@
 
         Polymer.dom(that.$.settings).appendChild( el );
       });
+    },
+
+    _getValueName: function ( options , optionValue ) {
+      for ( var index in options ) {
+        if ( options.hasOwnProperty( index ) ) {
+          if ( optionValue == options[ index ].value ) {
+            return options[ index ].name;
+          }
+        }
+      }
     },
 
     _computeContainerClass: function ( color, tint ) {
@@ -175,7 +185,7 @@
       this.fire( 'option-value-changed', {
         name: e.target.innerText.trim(),
         value: e.target.checked,
-        plugin: this.filter.config.id,
+        plugin: this.filter.config.name,
         index: e.target[ 'data-index' ],
         isActivated: this.isActivated
       } );

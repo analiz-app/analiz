@@ -5,8 +5,8 @@ module.exports = {
       'fr': 'HTML'
     },
     color: {
-      main: 'red',
-      accent: 'green'
+      main: 'indigo',
+      accent: 'pink'
     }
   },
   css: {
@@ -25,8 +25,8 @@ module.exports = {
       'en': 'Medias'
     },
     color: {
-      main: 'purple',
-      accent: 'lime'
+      main: 'light-blue',
+      accent: 'amber'
     }
   },
   js: {
@@ -36,7 +36,7 @@ module.exports = {
     },
     color: {
       main: 'teal',
-      accent: 'red'
+      accent: 'cyan'
     }
   },
   misc: {
@@ -45,8 +45,8 @@ module.exports = {
       'en': 'Miscs'
     },
     color: {
-      main: 'grey',
-      accent: 'blue-grey'
+      main: 'brown',
+      accent: 'lime'
     }
   },
   // 'deep-purple': {

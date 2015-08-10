@@ -89,6 +89,10 @@
       top: 100px;
     }
 
+    .first-large {
+      top: 2px;
+    }
+
     .caption-box {
       padding: 1em 1.5em;
       width: 100%;
@@ -98,33 +102,43 @@
     <template id="animated-grid-repeat" is="dom-repeat" items="[[data]]" index="index">
       <paper-material class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
         <div class$="[[_computeColorBoxClass(item.category)]]">
-          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-            <paper-item-body two-line>
-              <div>
-                <span>[[arrayItem(analyzeSummary.*, index, 'infoValue')]]</span> %
-              </div>
-              <div secondary>{{__('Info')}}</div>
-            </paper-item-body>
-            <iron-icon icon="info"></iron-icon>
-          </paper-item>
-          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-            <paper-item-body two-line>
-              <div>
-                <span>[[arrayItem(analyzeSummary.*, index, 'warningValue')]]</span> %
-              </div>
-              <div secondary>{{__('Warning')}}</div>
-            </paper-item-body>
-            <iron-icon icon="warning"></iron-icon>
-          </paper-item>
-          <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-            <paper-item-body two-line>
-              <div>
-                <span>[[arrayItem(analyzeSummary.*, index, 'errorValue')]]</span> %
-              </div>
-              <div secondary>{{__('Error')}}</div>
-            </paper-item-body>
-            <iron-icon icon="error"></iron-icon>
-          </paper-item>
+          <template is="dom-if" if="[[arrayItem(analyzeSummary.*, index, 'isValidate')]]">
+            <!-- If no errors -->
+            <paper-item class$="[[_computeSummaryClass( 'large' )]]">
+              <paper-item-body>[[__('No errors found')]]</paper-item-body>
+              <iron-icon icon="check"></iron-icon>
+            </paper-item>
+          </template>
+          <template is="dom-if" if="[[!arrayItem(analyzeSummary.*, index, 'isValidate')]]">
+            <!-- There are errors -->
+            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+              <paper-item-body two-line>
+                <div>
+                  <span>[[arrayItem(analyzeSummary.*, index, 'infoValue')]]</span> %
+                </div>
+                <div secondary>{{__('Info')}}</div>
+              </paper-item-body>
+              <iron-icon icon="info"></iron-icon>
+            </paper-item>
+            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+              <paper-item-body two-line>
+                <div>
+                  <span>[[arrayItem(analyzeSummary.*, index, 'warningValue')]]</span> %
+                </div>
+                <div secondary>{{__('Warning')}}</div>
+              </paper-item-body>
+              <iron-icon icon="warning"></iron-icon>
+            </paper-item>
+            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
+              <paper-item-body two-line>
+                <div>
+                  <span>[[arrayItem(analyzeSummary.*, index, 'errorValue')]]</span> %
+                </div>
+                <div secondary>{{__('Error')}}</div>
+              </paper-item-body>
+              <iron-icon icon="error"></iron-icon>
+            </paper-item>
+          </template>
           <paper-item class$="[[_computeSummaryClass( 'large', item.category )]]">
             <paper-item-body two-line>
               <div>
@@ -199,7 +213,8 @@
         warningValue: 0,
         errorCount: 0,
         errorValue: 0,
-        fileCount: 0
+        fileCount: 0,
+        isValidate: false
       };
 
       // Get the analyze synthese
@@ -225,7 +240,8 @@
         summary.warningValue = Math.round( ( summary.warningCount / total ) * 10000 ) / 100;
         summary.errorValue = Math.round( ( summary.errorCount / total ) * 10000 ) / 100;
       } else {
-        // no error
+        // no errors
+        summary.isValidate = true;
       }
 
       return summary;
@@ -237,25 +253,28 @@
 
     _onClick: function( e ) {
       var target = e.target;
-      while ( target !== this && !target._templateInstance ) {
+      while ( !target.classList.contains( 'result-card' ) ) {
         target = target.parentNode;
       }
 
-      // configure the page animation
-      this.sharedElements = {
-        'hero': target.querySelector('.color-box'),
-        'fade-in-title': target.querySelector('.caption-box'),
-        'ripple': target
-      };
-      this.animationConfig[ 'exit' ][ 0 ].gesture = {
-        x: event.x || event.pageX,
-        y: event.y || event.pageY
-      };
+      if ( !this.analyzeSummary[ target._templateInstance.index ].isValidate ) {
+        // configure the page animation
+        this.sharedElements = {
+          'hero': target.querySelector('.color-box'),
+          'fade-in-title': target.querySelector('.caption-box'),
+          'ripple': target
+        };
+        this.animationConfig[ 'exit' ][ 0 ].gesture = {
+          x: event.x || event.pageX,
+          y: event.y || event.pageY
+        };
 
-      this.fire('tile-click', {
-        tile: target,
-        data: target.data
-      });
+        this.fire('tile-click', {
+          tile: target,
+          data: target.data
+        });
+      }
+
     },
 
     _computeColorBoxClass: function ( category ) {
@@ -263,11 +282,15 @@
     },
 
     _compututePaperClass: function ( category ) {
-      return 'result-card-' + category;
+      return 'result-card result-card-' + category;
     },
 
     _computeSummaryClass:function ( size, category ) {
-      return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
+      if ( category ) {
+        return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
+      } else {
+        return 'summary-info summary-info--' + size + ' first-large light-green-500';
+      }
     },
 
     computeItemLanguage: function ( item ) {

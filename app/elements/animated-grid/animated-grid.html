@@ -104,6 +104,8 @@
           result['color'] = app.categories[ result.category ].color.main;
           card.data = result;
 
+          card.querySelector( '.color-box' ).innerHTML = "";
+
           var el;
 
           switch ( result.type ) {

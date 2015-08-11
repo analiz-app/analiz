@@ -46,58 +46,9 @@
       min-width: 500px;
     }
 
-    .content paper-material {
-      background-color: white;
-      margin: 1em 0;
-      padding: 1em;
-    }
-
-    .content paper-material:hover {
-      @apply(--shadow-elevation-6dp);
-    }
-
     paper-header-panel::shadow #mainPanel {
       margin-top: 70px;
       z-index: 0;
-    }
-
-    .file-details {
-      max-height: 0;
-      overflow: hidden;
-
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .file-details--active {
-      max-height: 5000px;
-    }
-
-    .file-details .circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      color: #fff;
-    }
-
-    .file-details .circle.amber-500::shadow svg {
-      width: 75% !important;
-      height: 75% !important;
-      position: relative;
-      top: -2px;
-    }
-
-    .file-details paper-icon-item {
-      --paper-item-icon-width: 46px;
-      --paper-item-body-secondary-color: var(--secondary-text-color);
-      padding: .5em;
-    }
-
-    .file-details paper-icon-item paper-item-body {
-      @apply(--paper-font-body1);
-    }
-
-    .file-details paper-icon-item paper-item-body div {
-        white-space: initial;
     }
   </style>
   <template>
@@ -111,29 +62,8 @@
           </div>
         </div>
 
-        <div class="content" id="content">
-          <template id="filesList" is="dom-repeat" items="[[data.data]]" index-as="index">
-            <template is="dom-if" if="[[!_isEmpty(item.errors)]]">
-              <paper-material elevation="1" on-click="_showFileDetails" class="file-box">
-                <div class="file-title">
-                  <paper-icon-button icon="expand-more"></paper-icon-button>
-                  <span>[[_computeFileName(item.file)]]</span>
-                </div>
-                <div class="file-details">
-                  <template is="dom-repeat" items="[[item.errors]]" as="error">
-                    <paper-icon-item>
-                      <iron-icon icon="[[error.type]]" class$="[[_computeCircleColor(error.type)]]" item-icon></iron-icon>
-                      <paper-item-body two-line>
-                        <div>[[error.message]]</div>
-                        <div secondary>{{__('Line')}}<span>&nbsp;</span><span>[[error.line]]</span><div>
-                      </paper-item-body>
-                    </paper-icon-item>
-                  </template>
-                </div>
-              </paper-material>
-            </template>
-          </template>
-        </div>
+        <div class="content" id="content"></div>
+
       </paper-header-panel>
     </div>
   </template>
@@ -147,7 +77,10 @@
     ],
 
     properties: {
-      data: Object,
+      data: {
+        type: Object,
+        observer: '_dataChanged'
+      },
       sharedElements: {
         type: Object,
         value: function() {
@@ -205,6 +138,25 @@
       }
     },
 
+    _dataChanged: function () {
+      var el;
+
+      switch ( this.data.type ) {
+        case 'errors':
+          el = document.createElement( 'fullsize-page-type-errors' );
+          el.data = this.data;
+
+          break;
+        case 'raw':
+          el = document.createElement( 'fullsize-page-type-errors' );
+          // el.item = result;
+          // el.setSummaryData();
+
+          break;
+      }
+      this.$.content.appendChild( el );
+    },
+
     _computeCardClass: function( color ) {
       var cls = 'paper-header tall';
       if ( color ) {
@@ -215,6 +167,8 @@
 
     ready: function() {
       var that = this;
+
+      // Set the events for responsive design
 
       window.addEventListener( 'WebComponentsReady', function() {
         if (app.isNarrow) {
@@ -238,24 +192,6 @@
       } );
     },
 
-    _isEmpty:function ( errors ) {
-      return ( errors.length == 0 )
-    },
-
-    _showFileDetails: function ( e ) {
-      var target = e.target;
-      while ( !target.classList.contains( 'file-box' ) ) {
-        target = target.parentNode;
-        if ( target.classList.contains( 'file-details' ) ) {
-          return false;
-        }
-      }
-
-      var button = target.querySelector( 'paper-icon-button' );
-      button.icon = ( button.icon == 'expand-more' ) ? 'expand-less' : 'expand-more';
-      target.querySelector( '.file-details' ).classList.toggle( 'file-details--active' );
-    },
-
     _computeFixedBackgroundClass: function( color ) {
       var cls = 'fixed';
       if ( color ) {
@@ -269,34 +205,8 @@
       this.fire( 'back-click' );
     },
 
-    _computeFileName:function ( filePath ) {
-      var appDir = app.directory.path.basename(app.analyzeConfig.path);
-      return filePath.replace( app.analyzeConfig.path, appDir );
-    },
-
-    _computeCircleColor:function ( errorType ) {
-      var className = 'circle ';
-      switch ( errorType ) {
-        case 'error':
-          className += 'red-500';
-          break;
-        case 'warning':
-          className += 'amber-500';
-          break;
-        case 'info':
-          className += 'blue-500';
-          break;
-      }
-
-      return className;
-    },
-
     computeItemLanguage: function ( item ) {
       return app.computeItemLanguage( item );
-    },
-
-    __:function ( string ) {
-      return app.__(string)
     }
   });
 </script>

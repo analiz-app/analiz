@@ -47,52 +47,6 @@
       padding: 2.5px;
     }
 
-    .summary-info {
-      position: absolute;
-      color: #fff;
-      height: 90px;
-      margin: 2.5px 5px;
-
-      --paper-item: {
-        @apply(--paper-font-title);
-      };
-    }
-
-    .summary-info paper-item-body {
-      --paper-item-body-secondary-color: var(--light-primary-color);
-      --paper-item-body-secondary: {
-        @apply(--paper-font-body1);
-      };
-    }
-
-    .summary-info iron-icon {
-      position: absolute;
-      right: 5px;
-      top: 5px;
-      width: 20px;
-    }
-
-    .summary-info--small {
-      width: 121.33333px;
-    }
-
-    .summary-info--small + .summary-info--small {
-      left: 133.333333px;
-    }
-
-    .summary-info--small + .summary-info--small + .summary-info--small {
-      left: 264.666666px;
-    }
-
-    .summary-info--large {
-      width: 383px;
-      top: 100px;
-    }
-
-    .first-large {
-      top: 2px;
-    }
-
     .caption-box {
       padding: 1em 1.5em;
       width: 100%;
@@ -100,55 +54,8 @@
   </style>
   <template>
     <template id="animated-grid-repeat" is="dom-repeat" items="[[data]]" index="index">
-      <paper-material class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
-        <div class$="[[_computeColorBoxClass(item.category)]]">
-          <template is="dom-if" if="[[arrayItem(analyzeSummary.*, index, 'isValidate')]]">
-            <!-- If no errors -->
-            <paper-item class$="[[_computeSummaryClass( 'large' )]]">
-              <paper-item-body>[[__('No errors found')]]</paper-item-body>
-              <iron-icon icon="check"></iron-icon>
-            </paper-item>
-          </template>
-          <template is="dom-if" if="[[!arrayItem(analyzeSummary.*, index, 'isValidate')]]">
-            <!-- There are errors -->
-            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-              <paper-item-body two-line>
-                <div>
-                  <span>[[arrayItem(analyzeSummary.*, index, 'infoValue')]]</span> %
-                </div>
-                <div secondary>{{__('Info')}}</div>
-              </paper-item-body>
-              <iron-icon icon="info"></iron-icon>
-            </paper-item>
-            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-              <paper-item-body two-line>
-                <div>
-                  <span>[[arrayItem(analyzeSummary.*, index, 'warningValue')]]</span> %
-                </div>
-                <div secondary>{{__('Warning')}}</div>
-              </paper-item-body>
-              <iron-icon icon="warning"></iron-icon>
-            </paper-item>
-            <paper-item class$="[[_computeSummaryClass( 'small', item.category )]]">
-              <paper-item-body two-line>
-                <div>
-                  <span>[[arrayItem(analyzeSummary.*, index, 'errorValue')]]</span> %
-                </div>
-                <div secondary>{{__('Error')}}</div>
-              </paper-item-body>
-              <iron-icon icon="error"></iron-icon>
-            </paper-item>
-          </template>
-          <paper-item class$="[[_computeSummaryClass( 'large', item.category )]]">
-            <paper-item-body two-line>
-              <div>
-                <span>[[arrayItem(analyzeSummary.*, index, 'fileCount')]]</span>
-              </div>
-              <div secondary>{{__('Analized files')}}</div>
-            </paper-item-body>
-            <iron-icon icon="description"></iron-icon>
-          </paper-item>
-        </div>
+      <paper-material id$="[[_compututePaperId(index)]]" class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
+        <div class$="[[_computeColorBoxClass(item.category)]]"></div>
         <div class="caption-box">[[computeItemLanguage(item.name)]]</div>
       </paper-material>
     </template>
@@ -191,64 +98,31 @@
       this.$[ 'animated-grid-repeat' ].addEventListener( 'dom-change' , function( e ) {
         e.target.items.forEach( function( result, index ) {
           // Get the current card
-          var card = that.querySelector( '.result-card-' + result.category );
+          var card = that.querySelector( '#result-card-' + index );
 
           // Set the data in the card for the binding in the fullsize card
-          result['color'] = app.categories[ result.category ].color.main
+          result['color'] = app.categories[ result.category ].color.main;
           card.data = result;
 
-          that.set( 'analyzeSummary.' + index, that._getSummaryData( result, index ) );
+          var el;
+
+          switch ( result.type ) {
+            case 'errors':
+              el = document.createElement( 'data-type-error' );
+              el.item = result;
+              el.setSummaryData();
+
+              break;
+            case 'raw':
+              el = document.createElement( 'data-type-raw' );
+              // el.item = result;
+              // el.setSummaryData();
+
+              break;
+          }
+          card.querySelector( '.color-box' ).appendChild( el );
         });
       });
-    },
-
-    _getSummaryData:function ( results, index ) {
-      var that = this;
-
-      // Set the init counters values
-      var summary = {
-        infoCount: 0,
-        infoValue: 0,
-        warningCount: 0,
-        warningValue: 0,
-        errorCount: 0,
-        errorValue: 0,
-        fileCount: 0,
-        isValidate: false
-      };
-
-      // Get the analyze synthese
-      results.data.forEach( function( file ) {
-        if ( file.errors.length > 0 ) {
-          file.errors.forEach( function( error ) {
-            if ( Array.isArray( error[ 0 ] ) ) {
-              error.forEach( function( subError ) {
-                summary[ subError.type + 'Count' ]++;
-              });
-            } else {
-              summary[ error.type  + 'Count' ]++;
-            }
-          });
-        }
-      });
-
-      summary.fileCount = results.fileCount;
-
-      var total = summary.infoCount + summary.warningCount + summary.errorCount;
-      if ( total ) {
-        summary.infoValue = Math.round( ( summary.infoCount / total ) * 10000 ) / 100;
-        summary.warningValue = Math.round( ( summary.warningCount / total ) * 10000 ) / 100;
-        summary.errorValue = Math.round( ( summary.errorCount / total ) * 10000 ) / 100;
-      } else {
-        // no errors
-        summary.isValidate = true;
-      }
-
-      return summary;
-    },
-
-    arrayItem: function(change, index, path) {
-      return this.get(path, change.base[index]);
     },
 
     _onClick: function( e ) {
@@ -257,7 +131,7 @@
         target = target.parentNode;
       }
 
-      if ( !this.analyzeSummary[ target._templateInstance.index ].isValidate ) {
+      if ( !target.querySelector('data-type-error') || !target.querySelector('data-type-error').analyzeSummary.isValidate ) {
         // configure the page animation
         this.sharedElements = {
           'hero': target.querySelector('.color-box'),
@@ -285,12 +159,8 @@
       return 'result-card result-card-' + category;
     },
 
-    _computeSummaryClass:function ( size, category ) {
-      if ( category ) {
-        return 'summary-info summary-info--' + size + ' ' + app.categories[ category ].color.main + '-400';
-      } else {
-        return 'summary-info summary-info--' + size + ' first-large light-green-500';
-      }
+    _compututePaperId: function ( index ) {
+      return 'result-card-' + index;
     },
 
     computeItemLanguage: function ( item ) {

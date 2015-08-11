@@ -171,6 +171,7 @@
               category: app.currentPlugin.config.category,
               options: app.currentPlugin.config.options,
               fileCount: app.currentPlugin.fileCount,
+              type: app.currentPlugin.config.renderType,
               data: []
             };
           }

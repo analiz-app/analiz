@@ -23,7 +23,14 @@
 
     paper-checkbox {
       margin: .5em 0;
-      cursor: default
+      cursor: default;
+      white-space: normal;
+    }
+
+    paper-checkbox::shadow .checkbox-content {
+      position: relative;
+      left: 28px;
+      margin-left: -22px;
     }
 
     paper-select {
@@ -111,7 +118,10 @@
 
           case 'boolean':
             el = document.createElement( 'paper-checkbox');
-            el.appendChild( document.createTextNode( option.name ) );
+            content = document.createElement( 'span' );
+            content.classList.add( 'checkbox-content' );
+            content.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) )
+            el.appendChild( content );
             el.checked = option.data;
             el[ 'data-index' ] = index;
             break;
@@ -144,6 +154,14 @@
             return options[ index ].name;
           }
         }
+      }
+    },
+
+    _computeOptionLabel: function ( option ) {
+      if ( option.label ) {
+        return option.label[app.settings.language];
+      } else {
+        return option.name;
       }
     },
 

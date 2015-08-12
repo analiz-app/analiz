@@ -112,7 +112,7 @@
             content = document.createElement( 'a' );
             content.href = option.data;
             content.classList.add('external-link');
-            content.appendChild( document.createTextNode( option.name ) );
+            content.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) );
             el.appendChild(content);
             break;
 
@@ -130,7 +130,7 @@
             el = document.createElement( 'div' );
 
             label = document.createElement( 'p' );
-            label.appendChild( document.createTextNode( option.name ) )
+            label.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) )
 
             content = document.createElement( 'paper-select' );
             content.data = option.data;

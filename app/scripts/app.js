@@ -278,7 +278,10 @@
 
   app.filterResults = function ( e ) {
     app.changeTab();
-    document.querySelector( '.result-card-' + e.detail.name ).classList.toggle( 'hide-result-card' );
+    var resultCards = document.querySelectorAll( '.result-card-' + e.detail.name );
+    for (var i = 0; i < resultCards.length; i++) {
+      resultCards[i].classList.toggle( 'hide-result-card' );
+    }
   };
 
   app.computeItemLanguage = function ( item ) {

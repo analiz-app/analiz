@@ -18,7 +18,7 @@
           <paper-toolbar id="drawerToolbar">
             <iron-pages selected="[[selected]]">
               <span>{{__( 'List of analysis' )}}</span>
-              <span></span>
+              <!-- <span></span> -->
               <span><iron-icon icon="filter-list"></iron-icon> <span>{{__( 'Filter results' )}}</span></span>
             </iron-pages>
           </paper-toolbar>
@@ -26,7 +26,7 @@
           <!-- Drawer Content -->
           <iron-pages selected="[[selected]]">
             <filter-list filters="{{filters}}"></filter-list>
-            <section></section>
+            <!-- <section></section> -->
             <section>
               <template is="dom-repeat" items="[[categoriesList]]">
                 <drawer-box data="[[item]]" color="[[item.color]]" on-box-clicked="filterResults" toggleable is-toggle>[[computeItemLanguage(item.label)]]</drawer-box>
@@ -40,7 +40,8 @@
             <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
             <paper-tabs selected="{{selected}}" class="paper-tabs" noink="true">
               <paper-tab on-click="changeTab">{{__('New analysis')}}</paper-tab>
-              <paper-tab on-click="changeTab">{{__('Historic')}}</paper-tab>
+              <!-- TODO Historic page -->
+              <!-- <paper-tab on-click="changeTab">{{__('Historic')}}</paper-tab> -->
               <template is="dom-if" if=[[isAudit]]>
                 <paper-tab>{{__('Audit')}}</paper-tab>
               </template>
@@ -49,10 +50,11 @@
             <paper-menu-button class="settings-dropdown" horizontal-align="right">
               <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
               <paper-menu class="dropdown-content">
-                <paper-item on-click="pluginOpen">
+                <!-- TODO: Plugin modal -->
+                <!-- <paper-item on-click="pluginOpen">
                   <paper-item-body>{{__('Plugins')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
-                </paper-item>
+                </paper-item> -->
                 <paper-item on-click="settingsOpen">
                   <paper-item-body>{{__('Parameters')}}</paper-item-body>
                   <paper-ripple></paper-ripple>
@@ -69,9 +71,9 @@
             <section>
               <page-new></page-new>
             </section>
-            <section>
+            <!-- <section>
               <page-history></page-history>
-            </section>
+            </section> -->
             <section>
               <page-audit></page-audit>
             </section>

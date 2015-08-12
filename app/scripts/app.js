@@ -209,7 +209,7 @@
                 app.analyzeResults = [];
 
                 app.isAudit = true;
-                app.selected = 2;
+                app.selected = 1;
               } else {
                   app.loadingModal.set( 'data.fileValue', 0 );
                   app.loadingModal.set( 'data.fileCount', 0 );

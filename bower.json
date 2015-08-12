@@ -1,6 +1,6 @@
 {
   "name": "analiz",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "ignore": [
     "**/.*",
     "node_modules",

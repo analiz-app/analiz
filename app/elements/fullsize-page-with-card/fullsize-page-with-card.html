@@ -148,12 +148,12 @@
 
           break;
         case 'raw':
-          el = document.createElement( 'fullsize-page-type-errors' );
-          // el.item = result;
-          // el.setSummaryData();
+          el = document.createElement( 'fullsize-page-type-raw' );
+          el.data = this.data;
 
           break;
       }
+      this.$.content.innerHTML = '';
       this.$.content.appendChild( el );
     },
 

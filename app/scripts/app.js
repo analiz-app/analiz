@@ -59,7 +59,6 @@
    * Get the filters from the external plugins
    */
   app.filters = [];
-  app.getFilters();
 
   /**
    * Analyze config object
@@ -256,6 +255,7 @@
   var i = 0;
 
   window.addEventListener( 'WebComponentsReady', function() {
+    app.getFilters();
     document.querySelector( 'body' ).removeAttribute( 'unresolved' );
     app.isNarrow = document.getElementById('paperDrawerPanel').narrow;
 

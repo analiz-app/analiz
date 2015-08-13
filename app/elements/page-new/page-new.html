@@ -120,6 +120,13 @@
 
       right: -100px;
     }
+
+    .file-list_message {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+    }
   </style>
   <template>
     <paper-drawer-panel>
@@ -137,6 +144,7 @@
         </div>
       </div>
       <div main class="file-list">
+        <div class="file-list_message">[[__('No files to analyze')]]</div>
         <aha-table id="directoryContent">
           <aha-column name="name" label="{{__('Name')}}" type="string" sortable></aha-column>
           <aha-column name="size" label="{{__('Size')}}" type="string" sortable></aha-column>
@@ -220,6 +228,7 @@
         var file = e.dataTransfer.files[0];
 
         that.directoryPath = file.path;
+        document.querySelector('.file-list_message').classList.add( 'hide' );
         that._getFolderContent();
 
         return true;
@@ -231,6 +240,7 @@
       var response;
       if ( response = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}) ) {
         this.directoryPath = response.toString();
+        document.querySelector('.file-list_message').classList.add( 'hide' );
         this._getFolderContent();
         app.toast( this.__('Folder contents loaded !') );
       }
@@ -239,6 +249,7 @@
     _resetFolder:function ( e ) {
       this.directoryPath = '';
       this.directoryContent = [];
+      document.querySelector('.file-list_message').classList.remove( 'hide' );
       this.$.directoryContent.data = this.directoryContent;
       // Set the analyze object informations
       app.analyzeConfig.set( 'path', '' );

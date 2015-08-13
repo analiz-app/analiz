@@ -39,5 +39,7 @@
 	"English": "English",
 	"French": "French",
 	"Folder deleted": "Folder deleted",
-	"No errors found": "No errors found"
+	"No errors found": "No errors found",
+	"Loading plugins": "Loading plugins",
+	"No files to analyze": "No files to analyze"
 }

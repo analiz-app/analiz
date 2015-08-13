@@ -36,5 +36,7 @@
 	"English": "Anglais",
 	"French": "Français",
 	"Folder deleted": "Dossier supprimé.",
-	"No errors found": "Aucune erreur trouvée"
+	"No errors found": "Aucune erreur trouvée",
+	"Loading plugins": "Chargement des plugins",
+	"No files to analyze": "Aucun fichier à analizer"
 }

@@ -21,11 +21,19 @@
     #filter-list-loader {
       position: absolute;
       top: 50%;
-      left: 45%;
+      text-align: center;
+      width: 100%;
+    }
+
+    #filter-list-loader span {
+      display: block;
     }
   </style>
   <template>
-    <paper-spinner id="filter-list-loader" alt="Loading filters list" active></paper-spinner>
+    <div id="filter-list-loader">
+      <paper-spinner alt="Loading filters list" active></paper-spinner>
+      <span>[[__('Loading plugins')]]</span>
+    </div>
     <neon-animated-pages id="filters" selected="0" >
       <section>
           <div>

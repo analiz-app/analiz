@@ -1,0 +1,340 @@
+<dom-module id="page-new">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+    }
+
+    .file-tree__container {
+      @apply(--layout-flex);
+      box-sizing: border-box;
+      overflow-y: auto;
+      background-color: white;
+      padding: .5em;
+      border-right: 1px solid var(--divider-color);
+    }
+
+    .add-button {
+      height: 99%;
+      @apply(--layout-vertical);
+      @apply(--layout-center-center);
+      text-align: center;
+      padding: auto .5em;
+      border: 2px dashed var(--primary-border-color);
+    }
+
+    .add-button--drag-hover {
+      border-color: var(--primary-active-border-color);
+    }
+
+    .add-button paper-button {
+      background-color: var(--default-primary-color);
+      color: white;
+    }
+
+    .add-button iron-icon {
+      height: 24px;
+      width: 24px;
+      margin-right: 5px;
+    }
+
+    .add-button p {
+      @apply(--paper-font-caption);
+    }
+
+    file-list {
+      overflow: auto;
+      height: 100%;
+    }
+
+    #directoryContent::shadow {
+      overflow: auto;
+      min-width: 400px;
+    }
+
+    #directoryContent::shadow table {
+      width: 100%;
+      border-spacing : 0;
+      border-collapse : collapse;
+    }
+
+    #directoryContent::shadow tfoot {
+      display: none;
+    }
+
+    #directoryContent::shadow tr {
+      height: 2.5em;
+    }
+
+    #directoryContent::shadow thead tr {
+      background-color: var(--primary-background-color);
+      border-bottom: 1px solid var(--divider-color);
+    }
+
+    #directoryContent::shadow thead th {
+      position: relative;
+      border-right: 1px solid var(--divider-color);
+      @apply(--paper-font-body1);
+      text-align: right;
+    }
+
+    #directoryContent::shadow th:first-child, #directoryContent::shadow td:first-child {
+      display: none;
+    }
+
+    #directoryContent::shadow th:nth-child(2), #directoryContent::shadow td:nth-child(2) {
+      max-width: 200px;
+      overflow: hidden;
+    }
+
+    #directoryContent::shadow .column-head {
+      padding: 0 1em;
+      display: block;
+      height: 2.5em;
+      line-height: 2.5em;
+    }
+
+    #directoryContent::shadow .sorting {
+      position: absolute;
+      left: 10%;
+      top: 50%;
+    }
+
+    #directoryContent::shadow td {
+      padding: 0 1em;
+    }
+
+    #analyzeButton {
+      background-color: var(--accent-color);
+      min-width: 150px;
+      color: white;
+      opacity: 1;
+
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #analyzeButton[disabled] {
+      background-color: var(--disabled-text-color);
+      color: var(--secondary-text-color);
+      opacity: 0;
+
+      right: -100px;
+    }
+
+    .file-list_message {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+  <template>
+    <paper-drawer-panel>
+      <div drawer class="file-tree__container">
+        <div class="add-button" id="holder">
+          <paper-button raised on-click="_openFolder">
+            <iron-icon icon="folder"></iron-icon>
+            <span>{{__('Add a folder')}}</span>
+          </paper-button>
+          <p>{{__('or drag and drop the folder to scan')}}</p>
+        </div>
+        <div class="file-tree__content">
+          <folder-tree id="folderTree" on-folder-click="_getFolderContent"></folder-tree>
+          <paper-fab mini icon="undo" class="red-500 fab--bottom" on-click="_resetFolder"></paper-fab>
+        </div>
+      </div>
+      <div main class="file-list">
+        <div class="file-list_message">[[__('No files to analyze')]]</div>
+        <aha-table id="directoryContent">
+          <aha-column name="name" label="{{__('Name')}}" type="string" sortable></aha-column>
+          <aha-column name="size" label="{{__('Size')}}" type="string" sortable></aha-column>
+          <aha-column name="modified" label="{{__('Edited')}}" type="datetime" sortable></aha-column>
+        </aha-table>
+        <paper-fab mini icon="folder-open" class="fab--bottom-left" paper-drawer-toggle></paper-fab>
+
+        <paper-button
+          id="analyzeButton"
+          class="fab--bottom"
+          on-click="_launchAnalyze"
+          disabled
+          raised>
+          <iron-icon icon="send"></iron-icon>
+          Analiz !
+        </paper-button>
+      </div>
+    </paper-drawer-panel>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'page-new',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      filters: {
+        type: Object,
+        value: {}
+      },
+      directoryPath: {
+        type: String,
+        value: '',
+        observer: '_listFolderContent'
+      },
+      treeDirectories: {
+        type: Object,
+        value: {},
+        notify: true
+      },
+      directoryContent: {
+        type: Array,
+        value: [],
+        notify: true
+      },
+      animationConfig: {
+        value: function() {
+          return {
+            'entry': {
+              name: 'slide-from-left-animation',
+              node: this
+            },
+            'exit': {
+              name: 'slide-left-animation',
+              node: this
+            }
+          };
+        }
+      }
+    },
+
+    ready: function () {
+      var that = this;
+
+
+      this.$.holder.ondragover = function () {
+        this.classList.add( 'add-button--drag-hover' );
+        return false;
+      };
+      this.$.holder.ondragleave = this.$.holder.ondragend = function () {
+        this.classList.remove( 'add-button--drag-hover' );
+        return false;
+      };
+      this.$.holder.ondrop = function ( e ) {
+        e.preventDefault();
+
+        this.classList.remove( 'add-button--drag-hover' );
+        var file = e.dataTransfer.files[0];
+
+        that.directoryPath = file.path;
+        document.querySelector('.file-list_message').classList.add( 'hide' );
+        that._getFolderContent();
+
+        return true;
+      };
+    },
+
+    _openFolder: function ( e ) {
+      var dialog = app.remote.require('dialog');
+      var response;
+      if ( response = dialog.showOpenDialog({ properties: [ 'openDirectory' ]}) ) {
+        this.directoryPath = response.toString();
+        document.querySelector('.file-list_message').classList.add( 'hide' );
+        this._getFolderContent();
+        app.toast( this.__('Folder contents loaded !') );
+      }
+    },
+
+    _resetFolder:function ( e ) {
+      this.directoryPath = '';
+      this.directoryContent = [];
+      document.querySelector('.file-list_message').classList.remove( 'hide' );
+      this.$.directoryContent.data = this.directoryContent;
+      // Set the analyze object informations
+      app.analyzeConfig.set( 'path', '' );
+      app.toast( this.__('Folder deleted') );
+    },
+
+    _listFolderContent: function () {
+      if (this.directoryPath) {
+        this.$.holder.classList.add('hide');
+        this.querySelector('.file-tree__content').classList.remove('hide');
+        this.treeDirectories = app.directory.directoryTree(this.directoryPath);
+
+        this.$.folderTree.data = this.treeDirectories;
+      } else {
+        this.$.holder.classList.remove('hide');
+        this.querySelector('.file-tree__content').classList.add('hide');
+      }
+    },
+
+    _getFolderContent: function ( e ) {
+      if ( !e ) {
+        var path = this.directoryPath;
+      } else {
+        var path = this.directoryPath + '/' + e.detail.dataset.path;
+        // If root directory remove the final "/"
+        path = ( path[path.length - 1] == '/' ) ? path.substring(0, path.length - 1) : path;
+      }
+
+      // Set the analyze object informations
+      app.analyzeConfig.set( 'path', path );
+
+      this.directoryContent = [];
+
+      // Get the content of the folder
+      var items = app.directory.fs.readdirSync(path);
+      for ( var i=0; i < items.length; i++ ) {
+        var file = path + '/' + items[i];
+        var stats = app.directory.fs.statSync(file);
+
+        if (stats.isFile()) {
+          this.directoryContent.push({
+            name: file.split('/').pop(),
+            modified: this.formatDate( stats.mtime ),
+            size: this.getSize( stats.size ),
+            path: file
+          });
+        }
+      }
+
+      this.$.directoryContent.data = this.directoryContent;
+    },
+
+    formatDate:function ( date ) {
+      var now = new Date();
+
+      // If date is today use today as date
+      if ( now.toDateString() == date.toDateString() ) {
+        return app.dateFormat( date, 'HH:MM' );
+      } else {
+        return app.dateFormat( date, 'dd/mm/yyyy HH:MM' );
+
+      }
+
+      return app.dateFormat(date, 'fullDate');
+    },
+
+    getSize:function ( size ) {
+      if( Math.abs( size ) < 1024 ) {
+        return size + ' B';
+      }
+      var units = ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+      var u = -1;
+      do {
+        size /= 1024;
+        ++u;
+      } while( Math.abs( size ) >= 1024 && u < units.length - 1 );
+      return size.toFixed( 1 ) + ' ' + units[u];
+    },
+
+    _launchAnalyze: function () {
+      app.analiz (app.analyzeConfig);
+    },
+
+    __:function ( string ) {
+      return app.__(string)
+    }
+  });
+</script>

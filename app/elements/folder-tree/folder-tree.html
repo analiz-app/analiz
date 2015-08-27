@@ -1,0 +1,161 @@
+<dom-module id="folder-tree">
+  <style>
+    :host {
+      display: block;
+      position: relative;
+      z-index: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .children {
+      padding-left: 10px;
+      overflow: hidden;
+      height: auto;
+    }
+
+    .children.close { height: 0; }
+
+    paper-icon-item {
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+      color: var(--secondary-text-color);
+      font-size: .9em;
+      height: 40px;
+
+      --paper-item-icon-width: auto;
+    }
+
+    paper-icon-item::shadow .content-icon {
+      margin-right: 10px;
+    }
+
+    paper-icon-item paper-ripple {
+      z-index: -1
+    }
+
+    paper-icon-item:hover {
+      background-color: var(--primary-background-color);
+    }
+
+    .folder-selected, .folder-selected:hover {
+      background-color: var(--accent-color);
+    }
+
+  </style>
+  <template>
+    <div id="tree"></div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'folder-tree',
+
+    properties: {
+      data: {
+        type: Object,
+        value: {
+          path: "",
+          name: ".",
+          children: [],
+        },
+        notify: true,
+        observer: '_valueChanged'
+      },
+      tree: {
+        type: String,
+        value: ''
+      },
+      ignoredFiles: {
+        type: Array,
+        value: [
+          'bower_components',
+          'node_modules',
+          'dist',
+          'builds',
+          'cache'
+        ]
+      }
+    },
+
+    listeners: {
+      'click': '_toggleItem'
+    },
+
+    _valueChanged: function ( e ) {
+      this.tree = this.createNode(this.data, true);
+
+      Polymer.dom(this.$.tree).innerHTML = '<div>' + this.tree + '</div>';
+    },
+
+    createNode: function (data, isFirst) {
+      if ( data.type == 'directory' && ( this.ignoredFiles.indexOf( data.name ) < 0 || isFirst ) ) {
+        var icon = (!isFirst) ? 'chevron-right' : 'expand-more';
+        var openClass = (!isFirst) ? 'close' : 'open';
+
+        var html = '<paper-icon-item data-path="' +  data.path + '" class="item ';
+        html += (isFirst) ? 'folder-selected' : '';
+        html += '">';
+
+        if ( data.children.length > 0 && this.isParent(data.children) ) {
+          html += '<iron-icon class="open-folder" icon="' + icon + '" item-icon></iron-icon>';
+        }
+        html += '<iron-icon icon="folder" item-icon></iron-icon> ';
+        html += data.name;
+        html += '<paper-ripple></paper-ripple>';
+        html +='</paper-icon-item>';
+
+        html += '<div id="' + data.name + '-tree" class="children ' + openClass + '">';
+        while ( data.children.length > 0 ) {
+          html += this.createNode(data.children.shift(), false);
+        }
+        html += '</div>';
+
+        return html;
+      } else {
+        return '';
+      }
+    },
+
+    _toggleItem: function ( e ) {
+      var target = e.target;
+      if ( target.classList.contains( 'open-folder' ) ) {
+        // Toggle the clicked folder
+        var childrens = target.parentNode.parentNode.nextElementSibling;
+        childrens.classList.toggle('close');
+        // Change the icon
+        if ( childrens.classList.contains( 'close' ) ) {
+          target.setAttribute('icon', 'chevron-right');
+        } else {
+          target.setAttribute('icon', 'expand-more');
+        }
+      } else {
+        // Get the paper-icon-item element
+        while ( !target.classList.contains( 'item' ) ) {
+          target = target.parentNode;
+        }
+
+        // Change the selected folder
+        document.querySelector( '.folder-selected' ).classList.remove( 'folder-selected' );
+        target.classList.add( 'folder-selected' );
+
+        // Fire the clicked folder event
+        this.fire( 'folder-click', target );
+      }
+    },
+
+    isParent: function ( children ) {
+      for ( var i = 0; i < children.length; i++ ) {
+        if ( children[i].type == 'directory' ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+  });
+</script>

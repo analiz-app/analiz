@@ -1,0 +1,57 @@
+<dom-module id="data-type-raw">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .summary-info {
+      color: #fff;
+      height: 190px;
+      margin: 2.5px 5px;
+
+      --paper-item: {
+        @apply(--paper-font-title);
+      };
+    }
+
+    .summary-info iron-icon {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 20px;
+    }
+  </style>
+  <template>
+    <paper-item class$="[[_computePaperItemClass( item.category )]]">
+      <paper-item-body two-line>
+        <div>
+          <span>[[item.fileCount]]</span>
+        </div>
+        <div secondary>{{__('Analized files')}}</div>
+      </paper-item-body>
+      <iron-icon icon="description"></iron-icon>
+    </paper-item>
+  </template>
+  <script>
+    Polymer({
+      is: 'data-type-raw',
+
+      properties: {
+        item: Object
+      },
+
+      _computePaperItemClass:function ( category ) {
+        return 'summary-info ' + app.categories[ category ].color.main + '-400';
+      },
+
+      __:function ( string ) {
+        return app.__(string)
+      }
+    });
+  </script>
+</dom-module>

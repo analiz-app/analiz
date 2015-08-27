@@ -1,0 +1,54 @@
+<dom-module id="animated-filters">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <template is="dom-repeat" items="[[filters]]">
+      <drawer-box data="[[item]]" color=[[item.category.color]] on-click="_onClick">{{computeItemLanguage(item.config.name)}}</drawer-box>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'animated-filters',
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      filters: Object,
+
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'exit': [{
+              name: 'fade-out-animation',
+              node: this,
+            }]
+          }
+        }
+      }
+    },
+
+    _onClick: function ( e ) {
+      var target = e.target;
+      while (target !== this && !target._templateInstance) {
+        target = target.parentNode;
+      }
+
+      if (target.localName == 'drawer-box') {
+        this.fire('filter-click', {
+          filter: target.data
+        });
+      }
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    }
+  });
+</script>

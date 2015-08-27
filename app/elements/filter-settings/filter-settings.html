@@ -1,0 +1,232 @@
+<dom-module id="filter-settings">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      min-height: 100%;
+    }
+
+    .content {
+      padding: 1em;
+    }
+
+    paper-checkbox {
+      margin: .5em 0;
+      cursor: default;
+      white-space: normal;
+    }
+
+    paper-checkbox::shadow .checkbox-content {
+      position: relative;
+      left: 28px;
+      margin-left: -22px;
+    }
+
+    paper-select {
+      --paper-select-border-color: #fff;
+    }
+
+  </style>
+  <template>
+    <div class$="{{_computeContainerClass(filter.category.color.main, 100)}}">
+    </div>
+    <paper-header-panel class="flex">
+      <paper-toolbar class$="{{_computeTitleClass(filter.category.color.main, 500)}}">
+        <paper-icon-button on-click="_onBackClick" icon="arrow-back"></paper-icon-button>
+        <div title>[[computeItemLanguage(filter.config.name)]]</div>
+        <div class="bottom">
+          <paper-fab mini class$="{{_computeFabClass(filter.category.color.accent, 500)}}" icon="{{fabIcon}}" on-click="_onFabFilterClick"></paper-fab>
+        </div>
+      </paper-toolbar>
+      <div class="content layout vertical" id="settings"></div>
+    </paper-header-panel>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-settings',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      filter: Object,
+      color: Object,
+      isActivated: {
+        type: Boolean,
+        notify: true,
+        observer: '_changeFabIcon'
+      },
+      fabIcon: String,
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'slide-from-left-animation',
+              node: this
+            },
+            'exit': {
+              name: 'slide-left-animation',
+              node: this
+            }
+          }
+        }
+      }
+    },
+
+    listeners: {
+      'select-changed': '_onSelectChanged',
+      'change': '_onChanged',
+      'click': '_clicked'
+    },
+
+    renderOptions: function () {
+      var that = this;
+      this.$.settings.innerHTML = '';
+
+      this.filter.config.options.forEach( function( option, index ) {
+        var el, label, content;
+        switch ( option.type ) {
+
+          case 'separator':
+            el = document.createElement( 'h2' );
+            el.appendChild( document.createTextNode( option.data ) );
+            break;
+
+          case 'documentation-link':
+            el = document.createElement( 'p' );
+            content = document.createElement( 'a' );
+            content.href = option.data;
+            content.classList.add('external-link');
+            content.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) );
+            el.appendChild(content);
+            break;
+
+          case 'boolean':
+            el = document.createElement( 'paper-checkbox');
+            content = document.createElement( 'span' );
+            content.classList.add( 'checkbox-content' );
+            content.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) )
+            el.appendChild( content );
+            el.checked = option.data;
+            el[ 'data-index' ] = index;
+            break;
+
+          case 'list':
+            el = document.createElement( 'div' );
+
+            label = document.createElement( 'p' );
+            label.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) )
+
+            content = document.createElement( 'paper-select' );
+            content.data = option.data;
+            content.name = option.name;
+            content[ 'data-index' ] = index;
+            content.selectedName = ( option.value ) ? that._getValueName( option.data, option.value ) : null;
+
+            el.appendChild(label);
+            el.appendChild(content);
+            break;
+        }
+
+        Polymer.dom(that.$.settings).appendChild( el );
+      });
+    },
+
+    _getValueName: function ( options , optionValue ) {
+      for ( var index in options ) {
+        if ( options.hasOwnProperty( index ) ) {
+          if ( optionValue == options[ index ].value ) {
+            return options[ index ].name;
+          }
+        }
+      }
+    },
+
+    _computeOptionLabel: function ( option ) {
+      if ( option.label ) {
+        return option.label[app.settings.language];
+      } else {
+        return option.name;
+      }
+    },
+
+    _computeContainerClass: function ( color, tint ) {
+      return 'container ' + color + '-' + tint;
+    },
+
+    _computeTitleClass: function ( color, tint ) {
+      return color + '-' + tint;
+    },
+
+    _computeFabClass: function ( color, tint ) {
+      return color + '-' + tint + ' mini-fab--half-bottom';
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    },
+
+    _computeItemName: function ( item ) {
+      return item.charAt(0).toUpperCase() + item.substr(1);
+    },
+
+    _changeFabIcon: function () {
+      this.fabIcon = ( this.isActivated ) ? 'remove' : 'add';
+    },
+
+    _onSelectChanged: function ( e ) {
+      this.fire( 'option-value-changed', {
+        name: e.target.name,
+        value: e.detail,
+        plugin: this.filter.config.name,
+        index: e.target[ 'data-index' ],
+        isActivated: this.isActivated
+      } );
+    },
+
+    _onChanged :function ( e ) {
+      this.fire( 'option-value-changed', {
+        name: e.target.innerText.trim(),
+        value: e.target.checked,
+        plugin: this.filter.config.name,
+        index: e.target[ 'data-index' ],
+        isActivated: this.isActivated
+      } );
+    },
+
+    _onBackClick: function ( e ) {
+      this.fire( 'back-click' );
+    },
+
+    _onFabFilterClick: function ( e ) {
+      if (this.isActivated) {
+        this.fire( 'remove-filter-click', this['__data__'].filter );
+      } else {
+        this.fire( 'add-filter-click', this['__data__'].filter );
+      }
+      this.fire( 'back-click' );
+    },
+
+    _clicked:function ( e ) {
+      if ( e.target.classList && e.target.classList.contains( 'external-link' ) ) {
+        e.preventDefault();
+        require( 'shell' ).openExternal( e.target.href );
+      }
+    }
+  });
+</script>

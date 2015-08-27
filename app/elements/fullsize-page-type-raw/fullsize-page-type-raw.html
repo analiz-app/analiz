@@ -1,0 +1,71 @@
+<dom-module id="fullsize-page-type-raw">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    paper-material {
+      background-color: white;
+      margin: 1em 0;
+      padding: 2em;
+    }
+
+    paper-material:hover {
+      @apply(--shadow-elevation-6dp);
+    }
+
+    .file-title {
+      @apply(--paper-font-title);
+      margin-bottom: 1.5em;
+    }
+  </style>
+  <template>
+    <template id="file-list" is="dom-repeat" items="[[data.data]]" index-as="index">
+      <paper-material elevation="1" class="file-box">
+        <div class="file-title">[[_computeFileName(item.file)]]</div>
+        <div id$="[[_computeContentId(index)]]"></div>
+      </paper-material>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'fullsize-page-type-raw',
+
+      properties: {
+        data: Object,
+      },
+
+      ready: function () {
+        var that = this;
+
+        this.addEventListener( 'dom-change', function( e ) {
+          e.target.items.forEach(function( item, index ) {
+            that.querySelector( '#content-' + index ).innerHTML = item.data;
+          });
+        } );
+      },
+
+      _isEmpty:function ( data ) {
+        return ( data.length == 0 )
+      },
+
+      _computeContentId: function ( index ) {
+        return 'content-' + index;
+      },
+
+      _computeFileName:function ( filePath ) {
+        var appDir = app.directory.path.basename(app.analyzeConfig.path);
+        return filePath.replace( app.analyzeConfig.path, appDir );
+      },
+
+      __:function ( string ) {
+        return app.__(string)
+      }
+    });
+  </script>
+</dom-module>

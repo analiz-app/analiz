@@ -1,0 +1,178 @@
+<dom-module id="filter-list">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    neon-animated-pages {
+      height: 100%;
+      width: 100%;
+    }
+
+    .filter-status {
+      color: var(--secondary-text-color);
+      @apply(--paper-font-caption);
+      padding: 0 1.5em;
+    }
+
+    #filter-list-loader {
+      position: absolute;
+      top: 50%;
+      text-align: center;
+      width: 100%;
+    }
+
+    #filter-list-loader span {
+      display: block;
+    }
+  </style>
+  <template>
+    <div id="filter-list-loader">
+      <paper-spinner alt="Loading filters list" active></paper-spinner>
+      <span>[[__('Loading plugins')]]</span>
+    </div>
+    <neon-animated-pages id="filters" selected="0" >
+      <section>
+          <div>
+          <p class="filter-status">{{__('Activated analysis')}}</p>
+          <template is="dom-repeat" items="{{activatedFilters}}">
+            <drawer-box data="[[item]]" color=[[item.category.color]] on-box-clicked="_onFilterActivatedClick">{{computeItemLanguage(item.config.name)}}</drawer-box>
+          </template>
+          <p class="filter-status">{{__('Desactivated analysis')}}</p>
+        </div>
+
+        <animated-filters filters="{{filters}}" on-filter-click="_onFilterClick"></animated-filters>
+      </section>
+
+      <filter-settings id="filter-settings" on-back-click="_onBackClick" on-add-filter-click="_onAddFilterClick" on-remove-filter-click="_onRemoveFilterClick" on-option-value-changed="_optionValueChanged"></filter-settings>
+    </neon-animated-pages>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'filter-list',
+    properties: {
+      filters: {
+        type: Array,
+        notify: true
+      },
+      activatedFilters: {
+        type: Array,
+        value: function () {
+          return []
+        }
+      },
+      isActivatedFilters: {
+        type: Boolean,
+        value: false
+      },
+      filtersOption: {
+        type: Array,
+        value: function () {
+          return {}
+        }
+      }
+    },
+
+    _changeActivatedFilter: function () {
+      app.analyzeConfig.set( 'plugins', this.activatedFilters );
+    },
+
+    _optionValueChanged: function ( e ) {
+      if ( e.detail.index !== undefined ) {
+        if ( e.detail.value === 'false' ) {
+          e.detail.value = false;
+        } else if ( e.detail.value === 'true' ) {
+          e.detail.value = false;
+        }
+
+        var updatedFilter = this.$['filter-settings'].filter;
+
+        switch ( updatedFilter.config.options[ e.detail.index ].type ) {
+          case 'list':
+            updatedFilter.config.options[ e.detail.index ].value = e.detail.value;
+            break;
+          case 'boolean':
+            updatedFilter.config.options[ e.detail.index ].data = e.detail.value;
+            break;
+        }
+
+        if ( e.detail.isActivated ) {
+          this.activatedFilters.forEach( function( filter, index ) {
+          if ( filter.config.name.en == e.detail.plugin.en ) {
+            this.activatedFilters[ index ] = updatedFilter;
+          }
+        }, this);
+
+          this._changeActivatedFilter();
+        } else {
+          this.filters.forEach( function( filter, index ) {
+            if ( filter.config.name.en == e.detail.plugin.en ) {
+              this.filters[ index ] = updatedFilter;
+            }
+          }, this);
+        }
+      }
+    },
+
+    _onFilterClick: function ( e ) {
+      this.$['filter-settings'].filter = e.detail.filter;
+      this.$['filter-settings'].renderOptions();
+      this.$.filters.selected = 1;
+
+      this.$['filter-settings'].isActivated = false;
+    },
+
+    _onFilterActivatedClick: function ( e ) {
+      this.$['filter-settings'].filter = e.detail;
+      this.$['filter-settings'].renderOptions();
+      this.$.filters.selected = 1;
+
+      this.$['filter-settings'].isActivated = true;
+    },
+
+    _onBackClick: function () {
+      this.$.filters.selected = 0;
+    },
+
+    _onAddFilterClick:function ( e ) {
+      this.filters.forEach(function ( element, index, array ) {
+        if ( element.config.name.en == e.detail.config.name.en ) {
+          this.splice( 'filters', index, 1 );
+        }
+      }, this);
+      this.push( 'activatedFilters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      app.toast( this.__( 'Analyze' ) + ' “' + this.computeItemLanguage( e.detail.config.name ) + '” ' + this.__('added') + '.' );
+
+      this._changeActivatedFilter();
+    },
+
+    _onRemoveFilterClick:function ( e ) {
+      this.activatedFilters.forEach(function ( element, index, array ) {
+        if ( element.config.name.en == e.detail.config.name.en ) {
+          this.splice( 'activatedFilters', index, 1 );
+        }
+      }, this);
+      this.push( 'filters', e.detail );
+      this.isActivatedFilters = ( this.activatedFilters.length > 0 );
+
+      app.toast( this.__( 'Analyze' ) + ' “' + this.computeItemLanguage( e.detail.config.name ) + '” ' + this.__('deleted') + '.' );
+
+      this._changeActivatedFilter();
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    },
+
+    __:function ( string ) {
+      return app.__(string)
+    }
+  });
+</script>

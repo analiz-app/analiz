@@ -1,0 +1,38 @@
+<dom-module id="page-audit">
+  <style>
+    :host {
+      display: block;
+      position: relative;
+    }
+
+    neon-animated-pages {
+      height: 100%;
+    }
+  </style>
+  <template>
+    <neon-animated-pages id="pages" selected="0">
+
+      <animated-grid data="[[data]]" on-tile-click="_onTileClick"></animated-grid>
+
+      <fullsize-page-with-card id="fullsize-card" hero-id="hero" on-back-click="_onFullsizeClick">
+      </fullsize-page-with-card>
+
+    </neon-animated-pages>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'page-audit',
+
+    _onTileClick:function( e ) {
+      this.$[ 'fullsize-card' ].data = e.detail.data;
+      this.$.pages.selected = 1;
+    },
+
+    _onFullsizeClick:function( e ) {
+      this.$.pages.selected = 0;
+    }
+
+  });
+</script>

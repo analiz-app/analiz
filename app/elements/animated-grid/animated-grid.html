@@ -1,0 +1,175 @@
+<dom-module id="animated-grid">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+      margin: 1em 0;
+
+      min-width: 500px;
+      overflow-x: auto;
+
+      position: relative;
+      top: 0;
+      left: 0;
+      @apply(--layout-horizontal);
+      @apply(--layout-center-center);
+      @apply(--layout-wrap);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    paper-material {
+      width: 400px;
+      opacity: 1;
+      margin: 1em;
+      overflow: hidden;
+      border-radius: 3px;
+      cursor: pointer;
+
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hide-result-card {
+      width: 0;
+      margin: 0;
+      opacity: 0;
+      transform: scale(0,0);
+    }
+
+    paper-material:hover {
+      @apply(--shadow-elevation-8dp);
+    }
+
+    .color-box {
+      height: 200px;
+      padding: 2.5px;
+    }
+
+    .caption-box {
+      padding: 1em 1.5em;
+      width: 100%;
+    }
+  </style>
+  <template>
+    <template id="animated-grid-repeat" is="dom-repeat" items="[[data]]" index="index">
+      <paper-material id$="[[_compututePaperId(index)]]" class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
+        <div class$="[[_computeColorBoxClass(item.category)]]"></div>
+        <div class="caption-box">[[computeItemLanguage(item.name)]]</div>
+      </paper-material>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'animated-grid',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      analyzeSummary: {
+        type: Array,
+        value: []
+      },
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'exit': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              fromPage: this
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              fromPage: this
+            }]
+          }
+        }
+      }
+    },
+
+    ready: function () {
+      var that = this;
+      this.$[ 'animated-grid-repeat' ].addEventListener( 'dom-change' , function( e ) {
+        e.target.items.forEach( function( result, index ) {
+          // Get the current card
+          var card = that.querySelector( '#result-card-' + index );
+
+          // Set the data in the card for the binding in the fullsize card
+          result['color'] = app.categories[ result.category ].color.main;
+          card.data = result;
+
+          card.querySelector( '.color-box' ).innerHTML = "";
+
+          var el;
+
+          switch ( result.type ) {
+            case 'errors':
+              el = document.createElement( 'data-type-error' );
+              el.item = result;
+              el.setSummaryData();
+
+              break;
+            case 'raw':
+              el = document.createElement( 'data-type-raw' );
+              el.item = result;
+
+              break;
+          }
+          card.querySelector( '.color-box' ).appendChild( el );
+        });
+      });
+    },
+
+    _onClick: function( e ) {
+      var target = e.target;
+      while ( !target.classList.contains( 'result-card' ) ) {
+        target = target.parentNode;
+      }
+
+      if ( !target.querySelector('data-type-error') || !target.querySelector('data-type-error').analyzeSummary.isValidate ) {
+        // configure the page animation
+        this.sharedElements = {
+          'hero': target.querySelector('.color-box'),
+          'fade-in-title': target.querySelector('.caption-box'),
+          'ripple': target
+        };
+        this.animationConfig[ 'exit' ][ 0 ].gesture = {
+          x: event.x || event.pageX,
+          y: event.y || event.pageY
+        };
+
+        this.fire('tile-click', {
+          tile: target,
+          data: target.data
+        });
+      }
+
+    },
+
+    _computeColorBoxClass: function ( category ) {
+      return 'color-box ' + app.categories[ category ].color.main + '-500';
+    },
+
+    _compututePaperClass: function ( category ) {
+      return 'result-card result-card-' + category;
+    },
+
+    _compututePaperId: function ( index ) {
+      return 'result-card-' + index;
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    },
+
+    __:function ( string ) {
+      return app.__(string)
+    }
+  });
+</script>

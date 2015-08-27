@@ -1,0 +1,212 @@
+<dom-module id="fullsize-page-with-card">
+  <link rel="import" type="css" href="../colors.css">
+  <style>
+    :host {
+      display: block;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container {
+      position: fixed;
+      top: 64px;
+      left: 256px;
+      width: 100%;
+
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container-small {
+      top: 56px;
+      left: 0px;
+    }
+
+    #fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+    }
+
+    #card {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      padding: 15px 1.5em;
+      color: white;
+    }
+
+    .content {
+      width: 80%;
+      margin: 0 auto;
+      min-width: 500px;
+    }
+
+    paper-header-panel::shadow #mainPanel {
+      margin-top: 70px;
+      z-index: 0;
+    }
+  </style>
+  <template>
+    <div class="container">
+      <div id="fixed" class$="[[_computeFixedBackgroundClass(data.color)]]"></div>
+      <paper-header-panel id="paper-header-panel" mode="waterfall">
+        <div id="card" class$="[[_computeCardClass(data.color)]]">
+          <div id="caption-title">
+            <paper-icon-button icon="arrow-back" on-click="_backClicked"></paper-icon-button>
+            <span>[[computeItemLanguage(data.name)]]</span>
+          </div>
+        </div>
+
+        <div class="content" id="content"></div>
+
+      </paper-header-panel>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'fullsize-page-with-card',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior
+    ],
+
+    properties: {
+      data: {
+        type: Object,
+        observer: '_dataChanged'
+      },
+      sharedElements: {
+        type: Object,
+        value: function() {
+          return {
+            'hero': this.$.card,
+            'ripple': this.$.fixed
+          }
+        }
+      },
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'ripple-animation',
+              id: 'ripple',
+              toPage: this,
+            }, {
+              name: 'hero-animation',
+              id: 'hero',
+              toPage: this,
+              timing: {
+                delay: 150
+              }
+            }, {
+              name: 'fade-in-animation',
+              node: this.$['caption-title'],
+              timing: {
+                delay: 150
+              }
+            }, {
+              name: 'fade-in-animation',
+              node: this.$.content,
+              timing: {
+                delay: 250
+              }
+            }, {
+              name: 'slide-down-animation',
+              node: this.$.content,
+              timing: {
+                delay: 250
+              }
+            }],
+            'exit': [{
+              name: 'fade-out-animation',
+              node: this.$.fixed
+            }, {
+              name: 'transform-animation',
+              transformFrom: 'none',
+              transformTo: 'translate(0px,-200vh) scale(0.9,1)',
+              node: this.$['paper-header-panel']
+            }]
+          }
+        }
+      }
+    },
+
+    _dataChanged: function () {
+      var el;
+
+      switch ( this.data.type ) {
+        case 'errors':
+          el = document.createElement( 'fullsize-page-type-errors' );
+          el.data = this.data;
+
+          break;
+        case 'raw':
+          el = document.createElement( 'fullsize-page-type-raw' );
+          el.data = this.data;
+
+          break;
+      }
+      this.$.content.innerHTML = '';
+      this.$.content.appendChild( el );
+    },
+
+    _computeCardClass: function( color ) {
+      var cls = 'paper-header tall';
+      if ( color ) {
+        cls += ' ' + color + '-500';
+      }
+      return cls;
+    },
+
+    ready: function() {
+      var that = this;
+
+      // Set the events for responsive design
+
+      window.addEventListener( 'WebComponentsReady', function() {
+        if (app.isNarrow) {
+          that.querySelector('.container').classListadd.add( 'container-small' );
+        }
+        that.$[ 'paper-header-panel' ].style.height = document.getElementById( 'mainContainer' ).offsetHeight + 'px';
+        that.$[ 'paper-header-panel' ].style.width = document.getElementById( 'mainContainer' ).offsetWidth + 'px';
+      });
+
+      window.addEventListener( 'paper-responsive-change', function( e ) {
+        if ( e.detail.narrow ) {
+          that.querySelector('.container').classList.add( 'container-small' );
+        } else {
+          that.querySelector('.container').classList.remove( 'container-small' );
+        }
+      });
+
+      window.addEventListener( 'resize', function ( e ) {
+        that.$[ 'paper-header-panel' ].style.height = document.getElementById( 'mainContainer' ).offsetHeight + 'px';
+        that.$[ 'paper-header-panel' ].style.width = document.getElementById( 'mainContainer' ).offsetWidth + 'px';
+      } );
+    },
+
+    _computeFixedBackgroundClass: function( color ) {
+      var cls = 'fixed';
+      if ( color ) {
+        cls += ' ' + color + '-100';
+      }
+      return cls;
+    },
+
+    _backClicked:function ( e ) {
+      this.$['paper-header-panel'].scroller.scrollTop = 0;
+      this.fire( 'back-click' );
+    },
+
+    computeItemLanguage: function ( item ) {
+      return app.computeItemLanguage( item );
+    }
+  });
+</script>

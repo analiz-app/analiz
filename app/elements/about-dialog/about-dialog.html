@@ -1,0 +1,30 @@
+<dom-module id="about-dialog">
+  <style>
+    :host {
+      display: block;
+    }
+
+    paper-dialog p {
+      padding: 0 1.5em
+    }
+  </style>
+  <template>
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation" modal>
+      <h2>{{__('About')}}</h2>
+        <p>{{__('aboutContent')}}</p>
+      <div>
+        <paper-button dialog-confirm>{{__('Close')}}</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'about-dialog',
+    __:function ( string ) {
+      return app.__(string)
+    }
+
+  });
+</script>

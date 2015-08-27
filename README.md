@@ -8,10 +8,7 @@
 
 ### Download the binaries
 
-* **windows**: _soon_
-* **mac osx**: _soon_
-* **linux (32bits)**: _soon_
-* **linux (64bits)**: _soon_
+You can download the binaries on the [releases page](https://github.com/analiz-app/analiz/releases)
 
 ### Build the app from the source
 
@@ -31,8 +28,7 @@ You can build the app by yourself:
 During the active development, some of the pull requests can be delayed until the deliverance of the project, which will be at mid-2015.
 
 ## Release History
-* **2015/06/13** Project running with Polymer 1.0 & electron !
-* **2015/03/12:** Base project is running with Polymer and ExpressJs ! Yepeeee !
+* **2015/08/12:** V0.1.0 running
 * **2014/09/21:** starting project
 
 ## License

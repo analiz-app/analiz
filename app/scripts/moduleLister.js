@@ -4,9 +4,7 @@ module.exports = function () {
   return this.async.waterfall([
     // Get the plugins name
     function ( callback ) {
-
-
-      that.npm.load( { 'prefix': that.npmPrefix }, function () {
+      that.npm.load( { 'prefix': that.pluginsDir }, function () {
         that.npm.commands.ls( [], true, function ( error, data ) {
           var pluginsName = [];
 
@@ -24,8 +22,9 @@ module.exports = function () {
     // Require the plugins & fill app.filters
     function ( pluginsName, callback ) {
       var plugins = [];
+      var pluginsPath = that.directory.path.resolve( that.pluginsDir , 'node_modules' );
       pluginsName.forEach( function ( element, index, array ) {
-        var plugin = require( element );
+        var plugin = require( pluginsPath + that.directory.path.sep + element );
         var name = plugin.config.category.toLowerCase();
         plugin.category = that.categories[name];
         plugin.category.name = name;

@@ -9,6 +9,7 @@
    * Require modules
    */
   app.remote = require( 'remote' );
+  app.shell = require('shell');
   app.npm = require( 'npm' );
   app.async = require( 'async' );
   app.categories = require( './categories.js' );
@@ -22,6 +23,7 @@
   app.settings = require( app.settingsFile );
 
   app.npmPrefix = app.directory.path.resolve( __dirname, '..' );
+  app.pluginsDir = app.directory.path.resolve( app.npmPrefix, 'plugins' );
 
   /**
    * Configure i18n
@@ -274,6 +276,12 @@
 
     document.querySelector( '.settings-dropdown' ).close();
     document.querySelector( 'settings-modal' ).open();
+  };
+
+  // Open plugins folder
+  app.pluginOpen = function ( e ) {
+    var pluginPath = app.directory.path.resolve( __dirname, '..', 'plugins', 'node_modules' );
+    app.shell.openItem(pluginPath);
   };
 
   app.filterResults = function ( e ) {

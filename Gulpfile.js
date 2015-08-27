@@ -15,7 +15,7 @@ var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 var sAppFolder = path.resolve( 'builds', electronVersion, aPlatforms[0], 'resources', 'app' );
 
 // Build the app
-gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
+gulp.task('electron', ['copy', 'install', 'install-plugins', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({
       src: './dist',
@@ -46,7 +46,7 @@ gulp.task('electron', ['copy', 'install', 'cleanBuilds'], function() {
 });
 
 // Build the app for dev
-gulp.task('electron-dev', ['copy', 'install', 'cleanBuilds'], function() {
+gulp.task('electron-dev', ['copy', 'install', 'install-plugins', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({
       src: './dist',
@@ -89,6 +89,12 @@ gulp.task('copy', [], function () {
 gulp.task('install', [], function () {
   return gulp.src(['./dist/package.json'])
   .pipe(install({production: false}));
+});
+
+gulp.task('install-plugins', [], function () {
+  return gulp.src('./dist/package.json')
+  .pipe(gulp.dest('./dist/plugins/'))
+  .pipe(install());
 });
 
 // Clean Output Directory

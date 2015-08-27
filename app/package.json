@@ -5,10 +5,6 @@
   "description": "A complete analysis toolkit for web developers.",
   "homepage": "https://github.com/hepl-ria/analiz",
   "dependencies": {
-    "analiz-plugin-html-validator": "quelu/analiz-plugin-html-validator",
-    "analiz-plugin-css-validator": "quelu/analiz-plugin-css-validator",
-    "analiz-plugin-jshint": "quelu/analiz-plugin-jshint",
-    "analiz-plugin-cssstats": "Quelu/analiz-plugin-cssstats",
     "async": "^1.4.0",
     "dateformat": "^1.0.11",
     "directory-tree": "^0.1.1",

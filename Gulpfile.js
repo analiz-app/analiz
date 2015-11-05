@@ -8,7 +8,7 @@ var path = require('path');
 var packageJson = require('./app/package.json');
 
 // CONFIG
-var electronVersion = 'v0.30.0';
+var electronVersion = 'v0.34.1';
 // Set the platforms for builds
 var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
 // Set the folder for dev (use the first element in aPlatforms)

@@ -26,9 +26,12 @@
       margin: 1em;
       overflow: hidden;
       border-radius: 3px;
-      cursor: pointer;
 
       transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .result-card--clickable {
+      cursor: pointer;      
     }
 
     .hide-result-card {
@@ -54,7 +57,7 @@
   </style>
   <template>
     <template id="animated-grid-repeat" is="dom-repeat" items="[[data]]" index="index">
-      <paper-material id$="[[_compututePaperId(index)]]" class$="[[_compututePaperClass(item.category)]]" elevation="1" on-click="_onClick">
+      <paper-material id$="[[_compututePaperId(index)]]" class$="[[_compututePaperClass(item)]]" elevation="1" on-click="_onClick">
         <div class$="[[_computeColorBoxClass(item.category)]]"></div>
         <div class="caption-box">[[computeItemLanguage(item.name)]]</div>
       </paper-material>
@@ -111,13 +114,13 @@
           switch ( result.type ) {
             case 'errors':
               el = document.createElement( 'data-type-error' );
-              el.item = result;
+              el.set( 'item', result );
               el.setSummaryData();
 
               break;
             case 'raw':
               el = document.createElement( 'data-type-raw' );
-              el.item = result;
+              el.set( 'item', result );
 
               break;
           }
@@ -156,8 +159,13 @@
       return 'color-box ' + app.categories[ category ].color.main + '-500';
     },
 
-    _compututePaperClass: function ( category ) {
-      return 'result-card result-card-' + category;
+    _compututePaperClass: function ( item ) {
+      for (var i = 0; i < item.data.length; i++) {
+        if ( item.data[i].data.length > 0 ) {
+          return 'result-card result-card-' + item.category + ' result-card--clickable';
+        }
+      }
+      return 'result-card result-card-' + item.category;
     },
 
     _compututePaperId: function ( index ) {

@@ -34,3 +34,7 @@ paper-toolbar {
 .settings-dropdown paper-item {
   position: relative;
 }
+
+.pointer {
+  cursor: default;
+}

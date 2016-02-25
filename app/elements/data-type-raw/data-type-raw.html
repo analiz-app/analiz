@@ -1,8 +1,13 @@
 <dom-module id="data-type-raw">
-  <link rel="import" type="css" href="../colors.css">
   <style>
     :host {
       display: block;
+
+      --paper-item-disabled-color: #fff;
+      --paper-item-body-secondary-color: #cecece;
+      --paper-item-body-secondary: {
+        @apply(--paper-font-body1);
+      }
     }
 
     * {
@@ -10,13 +15,9 @@
     }
 
     .summary-info {
-      color: #fff;
+      background-color: rgba(255, 255, 255, 0.12);
       height: 190px;
       margin: 2.5px 5px;
-
-      --paper-item: {
-        @apply(--paper-font-title);
-      };
     }
 
     .summary-info iron-icon {
@@ -27,7 +28,7 @@
     }
   </style>
   <template>
-    <paper-item class$="[[_computePaperItemClass( item.category )]]">
+    <paper-item class="summary-info" disabled>
       <paper-item-body two-line>
         <div>
           <span>[[item.fileCount]]</span>
@@ -43,10 +44,6 @@
 
       properties: {
         item: Object
-      },
-
-      _computePaperItemClass:function ( category ) {
-        return 'summary-info ' + app.categories[ category ].color.main + '-400';
       },
 
       __:function ( string ) {

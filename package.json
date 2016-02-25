@@ -1,6 +1,6 @@
 {
   "name": "analiz",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A complete analysis toolkit for web developers.",
   "private": true,
   "homepage": "https://github.com/hepl-ria/analiz",
@@ -37,9 +37,9 @@
   "devDependencies": {
     "del": "^1.1.1",
     "gulp": "^3.9.0",
-    "gulp-electron": "Cu3PO42/gulp-electron",
-    "gulp-install": "^0.4.0",
+    "gulp-electron": "^0.0.10",
+    "gulp-install": "^0.6.0",
     "gulp-run": "^1.6.8",
-    "merge-stream": "^0.1.7"
+    "merge-stream": "^1.0.0"
   }
 }

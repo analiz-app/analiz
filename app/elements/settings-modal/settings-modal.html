@@ -21,10 +21,6 @@
     paper-toolbar {
       margin: 0;
     }
-
-    paper-select {
-      width: 300px;
-    }
   </style>
   <template>
     <paper-dialog entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
@@ -35,10 +31,12 @@
       </paper-toolbar>
       <section>
         <h1><iron-icon icon="settings"></iron-icon><span>[[__('Main settings')]]</span></h1>
-        <div>
-          <p>[[__('Language selection')]]</p>
-          <paper-select id="languageSelector" name="language" on-select-changed="_updateLanguage"></paper-select>
-        </div>
+        <paper-dropdown-menu label="[[__('Language selection')]]" id="languageSelector">
+          <paper-listbox class="dropdown-content">
+            <paper-item on-click="_updateSettings" data-value="en" data-type="language">{{__('English')}}</paper-item>
+            <paper-item on-click="_updateSettings" data-value="fr" data-type="language">{{__('French')}}</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
       </section>
     </paper-dialog>
   </template>
@@ -56,35 +54,27 @@
       languages: Array
     },
 
-    ready: function () {
-      this.languages = [{
-        'name': this.__('English'),
-        'value': 'en'
-      },{
-        'name': this.__('French'),
-        'value': 'fr'
-      }];
-    },
-
     open: function () {
-      var selected;
-      for ( var index in this.languages ) {
-        if ( this.languages.hasOwnProperty( index ) ) {
-          if ( this.languages[ index ].value == app.settings.language ) {
-            selected = this.languages[index].name;
-            break;
-          }
+      for (var i = 0; i < app.languagesAvailable.length; i++) {
+        if( app.languagesAvailable[i] == this.settings.language ) {
+          this.$$('#languageSelector paper-listbox').select( i );
         }
       }
-
-      this.$.languageSelector.data = this.languages;
-      this.$.languageSelector.selectedName = selected;
 
       this.querySelector( 'paper-dialog' ).open();
     },
 
-    _updateLanguage: function ( e ) {
-      this.settings.language = e.detail;
+    _updateSettings: function ( e ) {
+      var data = e.target.dataset;
+      switch ( data.type ) {
+        case 'language':
+          this._updateLanguage( data.value );
+          break;
+      }
+    },
+
+    _updateLanguage: function ( language ) {
+      this.set( 'settings.language', language );
     },
 
     _saveSettings: function () {

@@ -10,7 +10,7 @@
     "directory-tree": "^0.1.1",
     "i18n": "^0.5.0",
     "node-dir": "^0.1.8",
-    "npm": "^3.3.9"
+    "npm": "^3.0.0"
   },
   "devDependencies": {
     "electron-debug": "^0.1.0"

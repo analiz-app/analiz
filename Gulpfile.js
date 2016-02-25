@@ -8,9 +8,9 @@ var path = require('path');
 var packageJson = require('./app/package.json');
 
 // CONFIG
-var electronVersion = 'v0.34.1';
+var electronVersion = 'v0.36.8';
 // Set the platforms for builds
-var aPlatforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
+var aPlatforms = ['win32-x64', 'linux-x64', 'darwin-x64'];
 // Set the folder for dev (use the first element in aPlatforms)
 var sAppFolder = path.resolve( 'builds', electronVersion, aPlatforms[0], 'resources', 'app' );
 
@@ -56,6 +56,7 @@ gulp.task('electron-dev', ['copy', 'install', 'install-plugins', 'cleanBuilds'],
       version: electronVersion,
       platforms: aPlatforms[0],
       packaging: false,
+      asar: false,
       platformResources: {
         darwin: {
           CFBundleDisplayName: packageJson.name,

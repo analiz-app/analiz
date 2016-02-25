@@ -89,7 +89,6 @@
     },
 
     listeners: {
-      'select-changed': '_onSelectChanged',
       'change': '_onChanged',
       'click': '_clicked'
     },
@@ -127,31 +126,40 @@
             break;
 
           case 'list':
-            el = document.createElement( 'div' );
+            el = document.createElement( 'paper-dropdown-menu' );
+            el.setAttribute( 'label', that._computeOptionLabel( option ) );
+            el.setAttribute( 'name', option.name );
 
-            label = document.createElement( 'p' );
-            label.appendChild( document.createTextNode( that._computeOptionLabel( option ) ) )
+            content = document.createElement( 'paper-listbox' );
+            content.setAttribute( 'class', 'dropdown-content' );
+            content.setAttribute( 'selected', ( option.value ) ? that._getValueIndex( option.data, option.value ) : 0 );
 
-            content = document.createElement( 'paper-select' );
-            content.data = option.data;
-            content.name = option.name;
-            content[ 'data-index' ] = index;
-            content.selectedName = ( option.value ) ? that._getValueName( option.data, option.value ) : null;
+            var list =  Array();
+            for ( var i = 0; i < option.data.length; i++ ) {
+              list[i] = document.createElement( 'paper-item' );
+              list[i].textContent = option.data[i].name;
+              list[i].dataset.value = option.data[i].value;
+              list[i].dataset.index = index;
+              list[i].dataset.name = option.name;
+              list[i].setAttribute( 'class', 'listItem' );
 
-            el.appendChild(label);
-            el.appendChild(content);
+              Polymer.dom( content ).appendChild( list[i] );
+            }
+
+            Polymer.dom(el).appendChild( content );
+
             break;
         }
 
-        Polymer.dom(that.$.settings).appendChild( el );
+        Polymer.dom( that.$.settings ).appendChild( el );
       });
     },
 
-    _getValueName: function ( options , optionValue ) {
+    _getValueIndex: function ( options , optionValue ) {
       for ( var index in options ) {
         if ( options.hasOwnProperty( index ) ) {
           if ( optionValue == options[ index ].value ) {
-            return options[ index ].name;
+            return  index ;
           }
         }
       }
@@ -191,10 +199,10 @@
 
     _onSelectChanged: function ( e ) {
       this.fire( 'option-value-changed', {
-        name: e.target.name,
-        value: e.detail,
+        name: e.target.dataset.name,
+        value: e.target.dataset.value,
         plugin: this.filter.config.name,
-        index: e.target[ 'data-index' ],
+        index: e.target.dataset.index,
         isActivated: this.isActivated
       } );
     },
@@ -226,6 +234,9 @@
       if ( e.target.classList && e.target.classList.contains( 'external-link' ) ) {
         e.preventDefault();
         require( 'shell' ).openExternal( e.target.href );
+      }
+      if ( e.target.classList && e.target.classList.contains( 'listItem' ) ) {
+        this._onSelectChanged( e );
       }
     }
   });

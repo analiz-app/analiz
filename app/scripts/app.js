@@ -28,8 +28,9 @@
   /**
    * Configure i18n
    */
+  app.languagesAvailable = ['en', 'fr'];
   app.i18n.configure({
-    locales:['en', 'fr'],
+    locales: app.languagesAvailable,
     defaultLocale: app.settings.language,
     directory: app.directory.path.resolve(app.npmPrefix, 'locales')
   });

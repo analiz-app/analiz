@@ -8,7 +8,7 @@
 
 ### Download the binaries
 
-You can download the binaries on the [releases page](https://github.com/analiz-app/analiz/releases)
+You can download the binaries on the [releases page](https://github.com/analiz-app/analiz/releases) or on the [analiz website](https://analiz-app.github.io).
 
 ### Build the app from the source
 
@@ -24,8 +24,6 @@ You can build the app by yourself:
 ## Contributing
 
 **Analiz** is a supervised educational project. The school initiating it, the [HEPL](http://www.provincedeliege.be/hauteecole) from Liège, Belgium, is a french-speaking school.
-
-During the active development, some of the pull requests can be delayed until the deliverance of the project, which will be at mid-2015.
 
 ## Release History
 * **2015/08/12:** V0.1.0 running

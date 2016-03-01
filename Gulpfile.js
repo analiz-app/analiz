@@ -14,8 +14,21 @@ var aPlatforms = ['win32-x64', 'linux-x64', 'darwin-x64'];
 // Set the folder for dev (use the first element in aPlatforms)
 var sAppFolder = path.resolve( 'builds', electronVersion, aPlatforms[0], 'resources', 'app' );
 
+// Copy files then install dependencies
+gulp.task('get-dependencies', ['copy'], function() {
+  return gulp.src(['./dist/package.json'])
+    .pipe(install({production: false}));
+});
+
+// Prepare then install plugins
+gulp.task('plugins-installation', ['get-dependencies'], function() {
+  return gulp.src('./dist/plugins/package.json')
+    .pipe(gulp.dest('./dist/plugins/'))
+    .pipe(install());
+});
+
 // Build the app
-gulp.task('electron', ['copy', 'install', 'install-plugins', 'cleanBuilds'], function() {
+gulp.task('electron', ['plugins-installation', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({
       src: './dist',
@@ -46,7 +59,7 @@ gulp.task('electron', ['copy', 'install', 'install-plugins', 'cleanBuilds'], fun
 });
 
 // Build the app for dev
-gulp.task('electron-dev', ['copy', 'install', 'install-plugins', 'cleanBuilds'], function() {
+gulp.task('electron-dev', ['plugins-installation', 'cleanBuilds'], function() {
   return gulp.src("")
     .pipe(electron({
       src: './dist',
